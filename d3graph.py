@@ -145,12 +145,13 @@
    df=pd.DataFrame(index=adjmat.index)
    df['degree']=np.array([*G.degree()])[:,1]
    df['other info']=np.array([*G.degree()])[:,1]
-   node_size=df.degree.values*10
+   node_size=df.degree.values*2
    node_color=[]
    for i in range(0,len(G.nodes)):
        node_color.append(G.nodes[i]['club'])
    node_name=node_color
 
+   A = d3graph(adjmat, df=df, path='c://temp/magweg/',node_size=node_size)
    A = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, node_name=node_name, path='c://temp/magweg/', directed=False)
    A = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, node_name=node_name, path='c://temp/magweg/', edge_distance=100, savename='index_ld')
    A = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, node_name=node_name, path='c://temp/magweg/', charge=50, savename='index_charge')
@@ -608,8 +609,8 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
     for i in range(0,len(uilabels)):
         I1=tmplabels['source']==uilabels[i]
         I2=tmplabels['target']==uilabels[i]
-        adjmat['source'][I1]=str(i)
-        adjmat['target'][I2]=str(i)
+        adjmat['source'].loc[I1]=str(i)
+        adjmat['target'].loc[I2]=str(i)
     
 #    adjmat['source']=ismember(tmplabels['source'],uilabels)[1].astype(str)
 #    adjmat['target']=ismember(tmplabels['target'],uilabels)[1].astype(str)
@@ -625,7 +626,7 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
     A=A.groupby([0, 1]).size().reset_index(name='Freq')
     [IA,IB]=ismember(df['node_name'], A[1])
     df=df.loc[IA,:]
-    df.index=A[0][IB].values.astype(str)
+    df.index=A[0].loc[IB].values.astype(str)
     
     if not df.empty:
         getnodes=np.array([*G.nodes])
@@ -677,9 +678,9 @@ def set_configurations(width, height, collision, charge, edge_distance_minmax, e
     config['edge_distance_minmax'] = edge_distance_minmax
     config['directed']             = directed
     config['showfig']              = showfig
-    config['d3_library']           = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/d3.v3.js'))
-    config['d3_script']            = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/d3graphscript.js'))
-    config['css']                  = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/style.css'))
+    config['d3_library']           = os.path.abspath(os.path.join(curpath,'d3graph/d3js/d3.v3.js'))
+    config['d3_script']            = os.path.abspath(os.path.join(curpath,'d3graph/d3js/d3graphscript.js'))
+    config['css']                  = os.path.abspath(os.path.join(curpath,'d3graph/d3js/style.css'))
 
     config['cmap']                 = cmap
 
