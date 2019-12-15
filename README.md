@@ -77,10 +77,10 @@ G_d3   = d3graph(adjmat)
 The output looks as below:
 
 <p align="center">
-  <img src="examples/karateclub/d3graph_1.png" width="600" />
-  <img src="examples/karateclub/d3graph_2.png" width="600" />
-  <img src="examples/karateclub/d3graph_3.png" width="600" />
-  <img src="examples/karateclub/d3graph_$.png" width="600" />
+  <img src="examples/karateclub/d3graph_1.png" width="300" />
+  <img src="examples/karateclub/d3graph_2.png" width="300" />
+  <img src="examples/karateclub/d3graph_3.png" width="300" />
+  <img src="examples/karateclub/d3graph_4.png" width="300" />
 </p>
 
 
