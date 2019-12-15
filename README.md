@@ -66,7 +66,6 @@ adjmat = nx.adjacency_matrix(G).todense()
 adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 adjmat.iloc[3,4]=5
 adjmat.iloc[4,5]=6
-adjmat.iloc[5,6]=7
 ```
 - Make d3graph
 
