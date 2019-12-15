@@ -2,7 +2,6 @@
 Creation of an interactive network in d3 javascript from an adjacency matrix
 
 [![Build Status](https://travis-ci.org/erdoganta/d3graph.svg?branch=master)](https://travis-ci.org/erdoganta/d3graph)
-[![Docs](https://img.shields.io/badge/docs-online-brightgreen)](https://erdoganta.github.io/d3graph/)
 [![codecov](https://codecov.io/gh/erdoganta/d3graph/branch/master/graph/badge.svg)](https://codecov.io/gh/erdoganta/d3graph)
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdoganta/d3graph/blob/master/LICENSE)
