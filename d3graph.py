@@ -188,28 +188,26 @@
 
 #--------------------------------------------------------------------------
 # Name        : d3graph.py
-# Version     : 1.0
+# Version     : 0.1
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
-# Date        : March. 2019
+# Date        : Dec. 2019
 #--------------------------------------------------------------------------
-
-#from matplotlib.pyplot import plot
-#import GENERAL.log as log
-import networkx as nx
-import json
-#from networkx.readwrite import json_graph
-import os, sys
+#%% Libraries
+# Basics
+import os
+import sys
+from shutil import copyfile
+import webbrowser
+# Popular
 import pandas as pd
 import numpy as np
-from shutil import copyfile
-from sklearn.preprocessing import MinMaxScaler 
 import seaborn as sns
+import json
+import networkx as nx
+from sklearn.preprocessing import MinMaxScaler 
+# Custom
 from GENERAL.ismember import ismember
-import webbrowser
-#import matplotlib.pyplot as plt
-#import NETWORKS.network as network
-#%matplotlib inline
 
 #%%
 #def G2d3(G, width=1800, height=500, collision=0.5, charge=250, edge_distance_minmax=[1,100], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', verbose=log.INFO):
@@ -227,6 +225,11 @@ import webbrowser
 #    config['min_slider']=min_slider
 #    config['max_slider']=max_slider
 #
+    # A=pd.DataFrame([*G.node.values()])
+    # A=pd.DataFrame([*G.edges.values()])
+    # edges = G.edges()
+    # edge_weights = np.array([G[u][v]['source'] for u,v in edges])
+
 #    # Check path
 #    set_source_dir(config)
 #    # Write to json
@@ -238,6 +241,12 @@ import webbrowser
 #    # Cleaning
 #    os.remove(jsonpath)
 #    
+#    import NETWORKS.network as network
+#    node_name=pd.DataFrame([*G.node.values()])['node_name']
+#    node_size=pd.DataFrame([*G.node.values()])['node_size'].values
+#    node_color=pd.DataFrame([*G.node.values()])['node_color'].values
+#    network.plot(G, node_color=node_color, node_size=node_size.astype(float), node_size_scale=[400,800], alpha=0.8, cmap='Paired', width=20, height=15, pos=None, filename=None, title=None, methodtype='default', verbose=3)
+
 #    out=dict()
 #    out['G']=G1
 #    out['path']=config['path']+'index.html'
@@ -245,55 +254,21 @@ import webbrowser
 #    
 #    return(out)
 
-def do_checks(adjmat):
-    assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
-    if 'numpy' in str(type(adjmat)):
-        adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
-
-    adjmat.index=adjmat.index.astype(str)
-    adjmat.columns=adjmat.columns.astype(str)
-#    if not df.empty: assert df.shape[0]==adjmat.shape[0], 'df must be of same length as the nodes in adjmat'
-#    if not df.empty: assert np.all(df.index.values==adjmat.index.values), 'adjmat and df must have the same identifiers'
-    assert np.all(adjmat.columns==adjmat.index.values), 'adjmat columns and index must have the same identifiers'
-    return(adjmat)
-    
 #%% Main
 def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_size=10, node_size_edge=1, node_color_edge='#000000', width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', showfig=True, verbose=3):
     # Checks
     adjmat=do_checks(adjmat)
-	# PARAMETERS
+	# Parameters
     config = set_configurations(width, height, collision, charge, edge_distance_minmax, edge_distance, edge_width, directed, title, slider, path, savename, cmap, showfig, verbose)
-    out = dict()
-    if isinstance(df, type(None)): df=pd.DataFrame()
-
     # Make node configurations
-    [node_name, node_color, node_size, node_size_edge, node_color_edge] = node_config(node_name, node_color, node_size, node_size_edge, node_color_edge, adjmat=adjmat, cmap=config['cmap'])
-
-    # Store in dataframe
-    df['node_name']=node_name
-    df['node_color']=node_color.astype(str)
-    df['node_size']=node_size.astype(str)
-    df['node_size_edge']=node_size_edge.astype(str)
-    df['node_color_edge']=node_color_edge
-    
-    #%% Make strings of the identifiers
-    df.index=df.index.astype(str)
-    df.columns=df.columns.str.replace(' ','_')
-    df.columns=df.columns.str.replace('.','_')
-    
-    #%% create dataframe from co-occurence matrix
+    df = node_config(df, node_name, node_color, node_size, node_size_edge, node_color_edge, adjmat=adjmat, cmap=config['cmap'])
+    # Create dataframe from co-occurence matrix
     [G, df] = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'])
-    # A=pd.DataFrame([*G.node.values()])
-    # A=pd.DataFrame([*G.edges.values()])
-
-    #%%
-    # edges = G.edges()
-    # edge_weights = np.array([G[u][v]['source'] for u,v in edges])
+    # Make slider
     [min_slider, max_slider]=setup_slider(G, slider=slider)
     config['min_slider']=min_slider
     config['max_slider']=max_slider
-    
-    #%% Check path
+    # Check path
     set_source_dir(config)
     # Write to json
     jsonpath = write_json(G, config)
@@ -303,25 +278,16 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_size=10,
     write_jscript(df, config)
     # Cleaning
     os.remove(jsonpath)
-
-    #%%
-#    import NETWORKS.network as network
-#    node_name=pd.DataFrame([*G.node.values()])['node_name']
-#    node_size=pd.DataFrame([*G.node.values()])['node_size'].values
-#    node_color=pd.DataFrame([*G.node.values()])['node_color'].values
-#    network.plot(G, node_color=node_color, node_size=node_size.astype(float), node_size_scale=[400,800], alpha=0.8, cmap='Paired', width=20, height=15, pos=None, filename=None, title=None, methodtype='default', verbose=3)
-    
-    #%% Final
+    # Final
+    out = dict()
     out['G']=G
     out['path']=config['path']+'index.html'
-#    out['path']=config['path']
     # Open the webbrowser
-    if config['showfig']:
-        webbrowser.open(os.path.abspath(out['path']), new=2)
+    if config['showfig']: webbrowser.open(os.path.abspath(out['path']), new=2)
     # Return
     return(out)
 
-#%%
+#%% Setup slider
 def setup_slider(G, slider=None):
     tmplist=[*G.edges.values()]
     edge_weight=[]
@@ -341,7 +307,7 @@ def setup_slider(G, slider=None):
 
     return(min_slider, max_slider)
     
-    #%% Source directory
+#%% Source directory
 def set_source_dir(config):
     if config['path']==None:
         config['path']=''
@@ -436,7 +402,7 @@ def write_jscript(df, config):
 
     # Read in the file
     with open(jspathscript, 'r') as file :
-      d3graphscript = file.read()
+        d3graphscript = file.read()
     
     # Create hover-over textbox for the nodes
     idx=np.where(df.columns.str.contains('node_')==False)[0]
@@ -474,10 +440,10 @@ def write_jscript(df, config):
     
     # Write the file out again
     with open(jspathscript, 'w') as file:
-      file.write(d3graphscript)
+        file.write(d3graphscript)
 
 #%%
-def node_config(node_name, node_color, node_size, node_size_edge, node_color_edge, cmap='Paired', adjmat=None):
+def node_config(df, node_name, node_color, node_size, node_size_edge, node_color_edge, cmap='Paired', adjmat=None):
 
 #    getcolors=sns.color_palette(cmap, nodecount).as_hex()
     nodecount=adjmat.shape[0]
@@ -556,7 +522,20 @@ def node_config(node_name, node_color, node_size, node_size_edge, node_color_edg
     assert len(node_color_edge)==nodecount, 'Node color edge must be of same length as the number of nodes'
     assert len(node_name)==nodecount, 'Node label must be of same length as the number of nodes'
 
-    return(node_name, node_color, node_size, node_size_edge, node_color_edge)
+    # Store in dataframe
+    if isinstance(df, type(None)): df=pd.DataFrame()
+    df['node_name']=node_name
+    df['node_color']=node_color.astype(str)
+    df['node_size']=node_size.astype(str)
+    df['node_size_edge']=node_size_edge.astype(str)
+    df['node_color_edge']=node_color_edge
+    # Make strings of the identifiers
+    df.index=df.index.astype(str)
+    df.columns=df.columns.str.replace(' ','_')
+    df.columns=df.columns.str.replace('.','_')
+    
+    # Return
+    return(df)
 
 #%% Convert adjacency matrix to graph
 def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_width=None):
@@ -619,6 +598,7 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
     try:
         G = nx.from_pandas_edgelist(adjmat, 'source', 'target', ['weight', 'edge_weight','edge_width','source_label','target_label','source', 'target'])
     except:
+        # Version of networkx<2
         G = nx.from_pandas_dataframe(adjmat, 'source', 'target', edge_attr=['weight', 'edge_weight','edge_width','source_label','target_label','source', 'target'])
 
     # Add node information
@@ -701,3 +681,20 @@ def set_configurations(width, height, collision, charge, edge_distance_minmax, e
         config['edge_distance'] = '.linkDistance(function(d) {return d.edge_weight;})' # Distance of nodes depends on the weight of the edges
     
     return(config)
+
+#%% Do checks
+def do_checks(adjmat):
+    assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
+    if 'numpy' in str(type(adjmat)):
+        adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
+
+    adjmat.index=adjmat.index.astype(str)
+    adjmat.columns=adjmat.columns.astype(str)
+#    if not df.empty: assert df.shape[0]==adjmat.shape[0], 'df must be of same length as the nodes in adjmat'
+#    if not df.empty: assert np.all(df.index.values==adjmat.index.values), 'adjmat and df must have the same identifiers'
+    assert np.all(adjmat.columns==adjmat.index.values), 'adjmat columns and index must have the same identifiers'
+    return(adjmat)
+
+#%% Main
+# if __name__ == '__main__':
+    # main(sys.argv[1:])
