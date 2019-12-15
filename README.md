@@ -13,8 +13,6 @@ d3graph is a python package that simplifies the task of creating **interactive**
 
 This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
 
-Detailed documentation for the package can be found at: [https://erdoganta.github.io/d3graph/](https://erdoganta.github.io/d3graph/)
-
 d3graph is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. 
 It is distributed under the Apache 2.0 license.
 
