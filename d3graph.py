@@ -115,7 +115,7 @@
    %reset -f
    %matplotlib auto
    import networkx as nx
-   from D3GRAPH.d3graph import d3graph
+   from d3graph.d3graph import d3graph
    import pandas as pd
    import numpy as np
 
@@ -129,7 +129,7 @@
    A = d3graph(adjmat, node_color=adjmat.index.values, path='c://temp/magweg/')
    A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#fffff',path='c://temp/magweg/')
    A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge=adjmat.index.values, path='c://temp/magweg/')
-   A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#000', node_size_edge=5, path='c://temp/magweg/')
+   A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#00000', node_size_edge=5, path='c://temp/magweg/')
 
    ###########################################################################
    # Extended example
@@ -198,7 +198,7 @@
 import networkx as nx
 import json
 #from networkx.readwrite import json_graph
-import os
+import os, sys
 import pandas as pd
 import numpy as np
 from shutil import copyfile
@@ -256,8 +256,8 @@ def do_checks(adjmat):
     assert np.all(adjmat.columns==adjmat.index.values), 'adjmat columns and index must have the same identifiers'
     return(adjmat)
     
-#%%
-def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_size=10, node_size_edge=1, node_color_edge='#000000', width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=True, edge_distance_minmax=[None,None], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', showfig=True, verbose=3):
+#%% Main
+def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_size=10, node_size_edge=1, node_color_edge='#000000', width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', showfig=True, verbose=3):
     # Checks
     adjmat=do_checks(adjmat)
 	# PARAMETERS
@@ -662,6 +662,8 @@ def get_hexcolor(label, cmap='Paired'):
 
 #%%
 def set_configurations(width, height, collision, charge, edge_distance_minmax, edge_distance, edge_width, directed, title, slider, path, savename, cmap, showfig, verbose):
+    curpath=os.path.realpath(sys.argv[0])
+
     config = dict()
     config['verbose']              = verbose
     config['path']                 = path
@@ -675,9 +677,9 @@ def set_configurations(width, height, collision, charge, edge_distance_minmax, e
     config['edge_distance_minmax'] = edge_distance_minmax
     config['directed']             = directed
     config['showfig']              = showfig
-    config['d3_library']           = './NETWORKS/d3graph/d3.v3.js'
-    config['d3_script']            = './NETWORKS/d3graph/d3graphscript.js'
-    config['css']                  = './NETWORKS/d3graph/style.css'
+    config['d3_library']           = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/d3.v3.js'))
+    config['d3_script']            = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/d3graphscript.js'))
+    config['css']                  = os.path.abspath(os.path.join(curpath,'d3graph/d3graph/style.css'))
 
     config['cmap']                 = cmap
 
