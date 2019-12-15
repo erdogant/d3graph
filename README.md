@@ -13,7 +13,7 @@ d3graph is a python package that simplifies the task of creating **interactive**
   <img src="examples/titanic/d3graph.png" width="600" />
 </p>
 
-This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. The required input data is an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents a edge between the vertices. Node links are build in a directed manner from row to column. The edges, and nodes are adjusted according to the input parameters. 
+This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
 
 Detailed documentation for the package can be found at: [https://erdoganta.github.io/d3graph/](https://erdoganta.github.io/d3graph/)
 
@@ -37,14 +37,14 @@ There are two ways to install d3graph:
 pip install d3graph
 ```
 
-> ⚠️ **Note**: d3graph requires networkx to be v2 or higher. 
+> **Note**: d3graph requires networkx to be v2 or higher. 
 
 * Install d3graph from the GitHub source:
 
 ```bash
 git clone https://github.com/erdoganta/d3graph.git
 cd d3graph
-pip install "cython>=0.29"
+pip install "networkx>=2"
 python setup.py install
 ```  
 
@@ -61,7 +61,7 @@ from d3graph import d3graph
 - Create simple example dataset
 
 ```python
-G      = nx.karate_club_graph()
+G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
 adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 adjmat.iloc[3,4]=5
@@ -77,7 +77,7 @@ G_d3   = d3graph(adjmat)
 The output looks as below:
 
 <p align="center">
-  <img src="readme_figures/plot_d3graph_1.png" width="600" />
+  <img src="readme_figures/d3graph_karate_club.png" width="600" />
 </p>
 
 
