@@ -11,7 +11,7 @@ import pkg_resources
 
 from setuptools import find_packages, setup
 
-from bootdf import Installer, DataFolderException
+from d3graph.bootdf import Installer, DataFolderException
 
 # write the name of the package (in this case 'mypkg'!)
 MYPKG = 'd3graph'
@@ -52,21 +52,25 @@ except DataFolderException:
 data_files = [(DATAPATH, MYRESOURCES)]
 
 # now, setup can do his thing...
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 setup(
-    name=MYPKG,
-    packages=find_packages(),
-    data_files=data_files,
-    author='Erdogan Taskesen',                 # <-- ADAPT THIS
-    author_email='erdogant@gmail.com',    # <-- ADAPT THIS
-    url='https://github.com/erdoganta/d3graph',                    # <-- ADAPT THIS
-    license='Apache 2.0',                # <-- ADAPT THIS
-    description='Interactive network in d3js',            # <-- ADAPT THIS
-    classifiers=[
+     name=MYPKG,  
+     version='0.1',
+     author="Erdogan Taskesen",
+     author_email="erdogant@gmail.com",
+     data_files=data_files,
+     description="Interactive network in d3js",
+     long_description=long_description,
+     long_description_content_type="text/markdown",
+     url="https://github.com/erdoganta/d3graph",
+     packages=find_packages(),
+     classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: Apache 2.0 License",
          "Operating System :: OS Independent",
-    ],
-)
+     ],
+ )
 
 # but we are NOT READY, in some cases the data files
 # don't have the appropriate permissions and 'pip'

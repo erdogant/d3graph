@@ -1,28 +1,22 @@
 import setuptools
-#MYPKG = 'd3graph'
-
-#MYDATAFILES = ['d3.v3.js', 'd3graphscript.js', 'style.css']
-
-# tell setup were these files are in your package
-# (I assume that they are together with the first __init__.py)
-#MYRESOURCES = [pkg_resources.resource_filename(MYPKG, datafile)
-#               for datafile in MYDATAFILES]
-
-#data_files = [(DATAPATH, MYRESOURCES)]
+import versioneer
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
+     install_requires=['pandas','numpy','seaborn','networkx>2'],
      name='d3graph',  
-     version='0.1',
-     scripts=['d3graph_bash'],
+     version='0.1.0',
+#     version=versioneer.get_version(),    # VERSION CONTROL
+#     cmdclass=versioneer.get_cmdclass(),  # VERSION CONTROL
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",
      description="Interactive network in d3js",
      long_description=long_description,
-   long_description_content_type="text/markdown",
+     long_description_content_type="text/markdown",
      url="https://github.com/erdoganta/d3graph",
-     packages=setuptools.find_packages(),
+     packages=setuptools.find_packages(), # Searches throughout all dirs for files to include
+     include_package_data=True, # Must be true to include files depicted in MANIFEST.in
      classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: Apache 2.0 License",

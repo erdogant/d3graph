@@ -1,6 +1,7 @@
 """ This function creates an interactive network using D3 javascript and html.
+	from d3graph import d3graph
 
-	A= d3graph(data, <optional>)
+	out = d3graph(data, <optional>)
 
  INPUT:
    adjmat:          [Pandas DataFrame] Adjacency matrix (symmetric)
@@ -107,19 +108,17 @@
 
  DESCRIPTION
    Use Networkx and D3 to produce interactive network diagrams to display multiple layers of data. 
-   https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/
-   http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
-   http://bl.ocks.org/d3noob/5141278
 
  EXAMPLE
+   #=======================================================================
    %reset -f
    %matplotlib auto
    import networkx as nx
-   from D3GRAPH.d3graph import d3graph
    import pandas as pd
    import numpy as np
+   from d3graph import d3graph
 
-   ###########################################################################
+   #=======================================================================
    # Simple example
    G = nx.karate_club_graph()
    adjmat = nx.adjacency_matrix(G).todense()
@@ -131,7 +130,7 @@
    A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge=adjmat.index.values, path='c://temp/magweg/')
    A = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#00000', node_size_edge=5, path='c://temp/magweg/')
 
-   ###########################################################################
+   #=======================================================================
    # Extended example
    G = nx.karate_club_graph()
    adjmat = nx.adjacency_matrix(G).todense()
@@ -157,28 +156,11 @@
    A = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, node_name=node_name, path='c://temp/magweg/', charge=50, savename='index_charge')
    A = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_name=node_name, node_size_edge=node_size, node_color_edge='#00FFFF', path='c://temp/magweg/', cmap='Set1', collision=1, charge=250)
 
-   ###########################################################################
-   # Simple example
-   from D3GRAPH.d3graph import d3graph
-
+   #=======================================================================
    G = nx.karate_club_graph()
    A = d3graph.G2d3(G.copy(), path='c://temp/magweg/')
-   ###########################################################################
+   #=======================================================================
 
-   import STATS.hnet as hnet
-   from D3GRAPH.d3graph import d3graph
-   import pandas as pd
-
-   df=pd.read_csv('../DATA/OTHER/titanic/titanic_train.csv')
-   out=hnet.structure_learning(df, min_y=10, alpha=0.05, multtest='holm')
-   G=hnet.plot(out, dist_between_nodes=0.4, scale=2)
-
-   A = d3graph(out['simmatLogP'].copy(), path='c://temp/magweg/', charge=500,  width=1200, height=1000, collision=0.1, node_color=out['labx'])
-   ########################################################################
-   
-   >python -m http.server
-   >http://localhost:8000/
-   
  SEE ALSO
    http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
    https://www.alanzucconi.com/2015/11/01/interactive-graphs-in-the-browser/
@@ -193,6 +175,7 @@
 # Contact     : erdogant@gmail.com
 # Date        : Dec. 2019
 #--------------------------------------------------------------------------
+
 #%% Libraries
 # Basics
 import os
@@ -207,52 +190,7 @@ import json
 import networkx as nx
 from sklearn.preprocessing import MinMaxScaler 
 # Custom
-from GENERAL.ismember import ismember
-
-#%%
-#def G2d3(G, width=1800, height=500, collision=0.5, charge=250, edge_distance_minmax=[1,100], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', verbose=log.INFO):
-#    
-#    config = set_configurations(width, height, collision, charge, edge_distance_minmax, title, slider, path, savename, cmap, verbose)
-#    config['edge_distance'] = '.linkDistance(function(d) {return d.edge_weight;})' # Distance of nodes depends on the weight of the edges
-#    
-#    # Inlucde information in Graph
-#    [df_nodes, df_edges] = network.G2df(G, edge_distance_minmax=edge_distance_minmax)
-#    # And back to graph
-#    G1 = network.df2G(df_nodes, df_edges)
-#
-#    # Slider
-#    [min_slider, max_slider]=setup_slider(G1, slider=slider)
-#    config['min_slider']=min_slider
-#    config['max_slider']=max_slider
-#
-    # A=pd.DataFrame([*G.node.values()])
-    # A=pd.DataFrame([*G.edges.values()])
-    # edges = G.edges()
-    # edge_weights = np.array([G[u][v]['source'] for u,v in edges])
-
-#    # Check path
-#    set_source_dir(config)
-#    # Write to json
-#    jsonpath = write_json(G1, config)
-#    # Create html with json file embedded
-#    write_index_html(config, jsonpath)
-#    # Set user-defined parameters in javascript
-#    write_jscript(df_nodes, config)
-#    # Cleaning
-#    os.remove(jsonpath)
-#    
-#    import NETWORKS.network as network
-#    node_name=pd.DataFrame([*G.node.values()])['node_name']
-#    node_size=pd.DataFrame([*G.node.values()])['node_size'].values
-#    node_color=pd.DataFrame([*G.node.values()])['node_color'].values
-#    network.plot(G, node_color=node_color, node_size=node_size.astype(float), node_size_scale=[400,800], alpha=0.8, cmap='Paired', width=20, height=15, pos=None, filename=None, title=None, methodtype='default', verbose=3)
-
-#    out=dict()
-#    out['G']=G1
-#    out['path']=config['path']+'index.html'
-#    webbrowser.open(out['path'], new=2)
-#    
-#    return(out)
+from d3graph.ismember import ismember
 
 #%% Main
 def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_size=10, node_size_edge=1, node_color_edge='#000000', width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', showfig=True, verbose=3):
@@ -643,7 +581,8 @@ def get_hexcolor(label, cmap='Paired'):
 
 #%%
 def set_configurations(width, height, collision, charge, edge_distance_minmax, edge_distance, edge_width, directed, title, slider, path, savename, cmap, showfig, verbose):
-    curpath=os.path.realpath(sys.argv[0])
+    #curpath=os.path.realpath(sys.argv[0])
+    curpath = os.path.dirname(os.path.abspath( __file__ ))
 
     config = dict()
     config['verbose']              = verbose
@@ -658,9 +597,9 @@ def set_configurations(width, height, collision, charge, edge_distance_minmax, e
     config['edge_distance_minmax'] = edge_distance_minmax
     config['directed']             = directed
     config['showfig']              = showfig
-    config['d3_library']           = os.path.abspath(os.path.join(curpath,'d3graph/d3js/d3.v3.js'))
-    config['d3_script']            = os.path.abspath(os.path.join(curpath,'d3graph/d3js/d3graphscript.js'))
-    config['css']                  = os.path.abspath(os.path.join(curpath,'d3graph/d3js/style.css'))
+    config['d3_library']           = os.path.abspath(os.path.join(curpath,'d3js/d3.v3.js'))
+    config['d3_script']            = os.path.abspath(os.path.join(curpath,'d3js/d3graphscript.js'))
+    config['css']                  = os.path.abspath(os.path.join(curpath,'d3js/style.css'))
 
     config['cmap']                 = cmap
 
@@ -694,6 +633,51 @@ def do_checks(adjmat):
 #    if not df.empty: assert np.all(df.index.values==adjmat.index.values), 'adjmat and df must have the same identifiers'
     assert np.all(adjmat.columns==adjmat.index.values), 'adjmat columns and index must have the same identifiers'
     return(adjmat)
+
+#%%
+#def G2d3(G, width=1800, height=500, collision=0.5, charge=250, edge_distance_minmax=[1,100], title='d3graph', slider=None, path=None, savename='index', cmap='Paired', verbose=log.INFO):
+#    
+#    config = set_configurations(width, height, collision, charge, edge_distance_minmax, title, slider, path, savename, cmap, verbose)
+#    config['edge_distance'] = '.linkDistance(function(d) {return d.edge_weight;})' # Distance of nodes depends on the weight of the edges
+#    
+#    # Inlucde information in Graph
+#    [df_nodes, df_edges] = network.G2df(G, edge_distance_minmax=edge_distance_minmax)
+#    # And back to graph
+#    G1 = network.df2G(df_nodes, df_edges)
+#
+#    # Slider
+#    [min_slider, max_slider]=setup_slider(G1, slider=slider)
+#    config['min_slider']=min_slider
+#    config['max_slider']=max_slider
+#
+    # A=pd.DataFrame([*G.node.values()])
+    # A=pd.DataFrame([*G.edges.values()])
+    # edges = G.edges()
+    # edge_weights = np.array([G[u][v]['source'] for u,v in edges])
+
+#    # Check path
+#    set_source_dir(config)
+#    # Write to json
+#    jsonpath = write_json(G1, config)
+#    # Create html with json file embedded
+#    write_index_html(config, jsonpath)
+#    # Set user-defined parameters in javascript
+#    write_jscript(df_nodes, config)
+#    # Cleaning
+#    os.remove(jsonpath)
+#    
+#    import NETWORKS.network as network
+#    node_name=pd.DataFrame([*G.node.values()])['node_name']
+#    node_size=pd.DataFrame([*G.node.values()])['node_size'].values
+#    node_color=pd.DataFrame([*G.node.values()])['node_color'].values
+#    network.plot(G, node_color=node_color, node_size=node_size.astype(float), node_size_scale=[400,800], alpha=0.8, cmap='Paired', width=20, height=15, pos=None, filename=None, title=None, methodtype='default', verbose=3)
+
+#    out=dict()
+#    out['G']=G1
+#    out['path']=config['path']+'index.html'
+#    webbrowser.open(out['path'], new=2)
+#    
+#    return(out)
 
 #%% Main
 # if __name__ == '__main__':

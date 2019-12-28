@@ -1,2 +1,4 @@
-include d3js/*.js
-include d3js/*.css
+include d3graph/d3js/*.js
+include d3graph/d3js/*.css
+include versioneer.py
+include caerus/_version.py
