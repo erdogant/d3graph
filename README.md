@@ -53,6 +53,7 @@ from d3graph import d3graph
 <p align="left">
   <img src="docs/figs/input_adjmat.png" width="500" />
 </p>
+
 ```python
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
