@@ -8,7 +8,7 @@ Creation of an interactive network in d3 javascript from an adjacency matrix
 d3graph is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript**.
 
 <p align="center">
-  <img src="examples/titanic/d3graph.png" width="600" />
+  <img src="docs/figs/titanic_example/d3graph.png" width="600" />
 </p>
 
 This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
@@ -72,10 +72,10 @@ G_d3   = d3graph(adjmat)
 The output looks as below:
 
 <p align="center">
-  <img src="examples/karateclub/d3graph_1.png" width="300" />
-  <img src="examples/karateclub/d3graph_2.png" width="300" />
-  <img src="examples/karateclub/d3graph_3.png" width="300" />
-  <img src="examples/karateclub/d3graph_4.png" width="300" />
+  <img src="docs/figs/d3graph_1.png" width="300" />
+  <img src="docs/figs/d3graph_2.png" width="300" />
+  <img src="docs/figs/d3graph_3.png" width="300" />
+  <img src="docs/figs/d3graph_4.png" width="300" />
 </p>
 
 
