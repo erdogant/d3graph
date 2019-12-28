@@ -14,9 +14,6 @@ For this package I was inspired by the examples shown on this webpage: http://ww
 
 This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
 
-d3graph is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. 
-It is distributed under the Apache 2.0 license.
-
 ## Contents
 - [Installation](#%EF%B8%8F-installation)
 - [Quick Start](#-quick-start)
@@ -26,18 +23,16 @@ It is distributed under the Apache 2.0 license.
 - [License](#-copyright)
 
 ## Installation
-There are two ways to install d3graph:
+d3graph is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. **Note**: d3graph requires networkx to be v2 or higher.
+It is distributed under the Apache 2.0 license. There are two ways to install d3graph:
+
 
 * Install d3graph from PyPI (recommended):
-
 ```
 pip install d3graph
 ```
 
-> **Note**: d3graph requires networkx to be v2 or higher. 
-
 * Install d3graph from the GitHub source:
-
 ```bash
 git clone https://github.com/erdoganta/d3graph.git
 cd d3graph
