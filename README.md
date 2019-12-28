@@ -51,7 +51,7 @@ from d3graph import d3graph
 
 - Create simple example dataset for which the input matrix should look this:
 <p align="center">
-  <img src="docs/figs/input_adjmat.png" width="100" />
+  <img src="docs/figs/input_adjmat.png" width="300" />
 </p>
 ```python
 G = nx.karate_club_graph()
