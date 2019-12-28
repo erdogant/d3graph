@@ -45,13 +45,14 @@ python setup.py install
 In order to create an interactive and stand-alone d3graph, following workflow can be used:
 
 - Import d3graph method
-
 ```python
 from d3graph import d3graph
 ```
 
-- Create simple example dataset
-
+- Create simple example dataset for which the input matrix should look this:
+<p align="center">
+  <img src="docs/figs/input_adjmat.png" width="100" />
+</p>
 ```python
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
@@ -66,7 +67,6 @@ G_d3   = d3graph(adjmat)
 ```
 
 The output looks as below:
-
 <p align="center">
   <img src="docs/figs/d3graph_1.png" width="300" />
   <img src="docs/figs/d3graph_2.png" width="300" />
