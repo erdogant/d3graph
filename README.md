@@ -7,7 +7,7 @@ d3graph is a python package that simplifies the task of creating **interactive**
 For this package I was inspired by various examples shown on the internet, such as www.alanzucconi.com/2015/11/01/interactive-graphs-in-the-browser/ or https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/ or http://bl.ocks.org/d3noob/5141278. But all of these examples are purely based on javascript without any easy python package to generate the networks. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python! Huray!
 
 <p align="center">
-  <img src="docs/titanic_example/d3graph.png" width="600" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/titanic_example/d3graph.png" width="600" />
 </p>
 
 This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
@@ -49,7 +49,7 @@ from d3graph import d3graph
 
 - Create simple example dataset for which the input matrix should look this:
 <p align="left">
-  <img src="docs/figs/input_adjmat.png" width="500" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/figs/input_adjmat.png" width="500" />
 </p>
 
 ```python
@@ -67,16 +67,15 @@ G_d3   = d3graph(adjmat)
 
 The output looks as below:
 <p align="center">
-  <img src="docs/figs/d3graph_1.png" width="300" />
-  <img src="docs/figs/d3graph_2.png" width="300" />
-  <img src="docs/figs/d3graph_3.png" width="300" />
-  <img src="docs/figs/d3graph_4.png" width="300" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/figs/d3graph_1.png" width="300" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/figs/d3graph_2.png" width="300" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/figs/d3graph_3.png" width="300" />
+  <img src="https://github.com/erdoganta/d3graph/blob/master/docs/figs/d3graph_4.png" width="300" />
 </p>
 
 
 ## Contribute
 We welcome all kinds of contributions.
-See the [Contribution](CONTRIBUTING.md) guide for more details.
 
 ## Citation
 Please cite d3graph in your publications if this is useful for your research. Here is an example BibTeX entry:
