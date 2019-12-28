@@ -6,7 +6,7 @@ Creation of an interactive network in d3 javascript from an adjacency matrix.
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdoganta/d3graph/blob/master/LICENSE)
 
 d3graph is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript**.
-For this package I was inspired by the examples shown on this webpage: http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/. But all of this purely javascript and not python. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python!
+For this package I was inspired by various examples shown on the internet, such as www.alanzucconi.com/2015/11/01/interactive-graphs-in-the-browser/ or https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/ or http://bl.ocks.org/d3noob/5141278. But all of these examplares are purely based on javascript without any easy python package to generate the networks. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python! Huray!
 
 <p align="center">
   <img src="docs/titanic_example/d3graph.png" width="600" />
