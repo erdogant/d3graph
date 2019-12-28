@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/erdoganta/d3graph.svg?branch=master)](https://travis-ci.org/erdoganta/d3graph)
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdoganta/d3graph/blob/master/LICENSE)
+
 Creation of an interactive network in d3 javascript from an adjacency matrix.
 
 d3graph is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript**.
