@@ -19,7 +19,7 @@ setuptools.setup(
 	 download_url = 'https://github.com/erdoganta/d3graph/archive/0.1.0.tar.gz',
      packages=setuptools.find_packages(), # Searches throughout all dirs for files to include
      include_package_data=True, # Must be true to include files depicted in MANIFEST.in
-     license=read_text("LICENSE.txt")
+     license=read_text("LICENSE.txt"),
      classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: Apache Software License",
