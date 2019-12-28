@@ -1,5 +1,4 @@
 # Interactive network creator (d3graph)
-[![Build Status](https://travis-ci.org/erdoganta/d3graph.svg?branch=master)](https://travis-ci.org/erdoganta/d3graph)
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdoganta/d3graph/blob/master/LICENSE)
 
