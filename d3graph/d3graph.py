@@ -675,5 +675,5 @@ def do_checks(adjmat):
 #    return(out)
 
 #%% Main
-# if __name__ == '__main__':
-    # main(sys.argv[1:])
+if __name__ == '__main__':
+    d3graph(sys.argv[1:])
