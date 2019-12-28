@@ -161,11 +161,6 @@
    A = d3graph.G2d3(G.copy(), path='c://temp/magweg/')
    #=======================================================================
 
- SEE ALSO
-   http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
-   https://www.alanzucconi.com/2015/11/01/interactive-graphs-in-the-browser/
-   https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/
-   http://bl.ocks.org/d3noob/5141278
 """
 
 #--------------------------------------------------------------------------
