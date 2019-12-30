@@ -11,11 +11,10 @@ python setup.py sdist
 
 echo ""
 read -p "Press [Enter] to install the pip package..."
-pip install -U dist/d3graph-0.1.0-py3-none-any.whl
+pip install -U dist/d3graph-0.1.2-py3-none-any.whl
 
 echo ""
-read -p "Press [Enter] to UPLOAD to PYPI..."
-twine upload dist/*
-
+read -p ">twine upload dist/* TO UPLOAD TO PYPI..."
+C:\Users\Erdogan\AppData\Roaming\Python\Python37\Scripts\twine.exe upload dist/*
 echo ""
 read -p "Press [Enter] key to close window..."

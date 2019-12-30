@@ -102,13 +102,15 @@ svg.append("defs").selectAll("marker")
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 25)
     .attr("refY", 0)
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
+    .attr("markerWidth", 10)
+    .attr("markerHeight", 10)
     .attr("orient", "auto")
+    .attr("markerUnits", "userSpaceOnUse") // MAKE FIXED ARROW WIDTH
   .append("path")
     .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
-    .style("stroke", "#4679BD")
-    .style("opacity", "0.6");
+    .style("stroke", "grey") // ARROWHEAD GREY
+    .style("opacity", "0.6")
+    .style("stroke-width", '1.5'); // THICKNESS OF ARROWHEAD
 
 // --------- End directed lines -----------
 

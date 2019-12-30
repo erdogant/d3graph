@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdoganta/d3graph/blob/master/LICENSE)
 
 d3graph is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript** using **python**.
-For this package I was inspired by various examples shown on the internet, such as www.alanzucconi.com/2015/11/01/interactive-graphs-in-the-browser/ or https://andrewmellor.co.uk/blog/articles/2014/12/14/d3-networks/ or http://bl.ocks.org/d3noob/5141278. But all of these examples are purely based on javascript without any easy python package to generate the networks. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python! Huray!
+For this package I was inspired by various examples shown on the internet. But all of these examples are purely based on javascript without any easy python package to generate the networks. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python! Huray!
 
 <p align="center">
   <img src="https://github.com/erdoganta/d3graph/blob/master/docs/titanic_example/d3graph.png" width="600" />
@@ -89,6 +89,7 @@ Please cite d3graph in your publications if this is useful for your research. He
 
 ## Maintainers
 * Erdogan Taskesen, github: [erdoganta](https://github.com/erdoganta)
+* Thanks to Oliver Verver for some d3js help (https://github.com/oliver3)
 
 ## © Copyright
 See [LICENSE](LICENSE) for details.
