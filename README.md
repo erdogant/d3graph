@@ -74,8 +74,8 @@ The output looks as below:
 
 
 ## Contribute
-* Thanks to Oliver Verver who helped to fix some bugs in d3js (https://github.com/oliver3)
-We welcome all kinds of contributions.
+* Thanks to Oliver Verver who helped to fix some bugs in d3js (https://github.com/oliver3).
+* All kinds of contributions are welcome!
 
 ## Citation
 Please cite d3graph in your publications if this is useful for your research. Here is an example BibTeX entry:
