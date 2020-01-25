@@ -94,7 +94,7 @@ Please cite d3graph in your publications if this is useful for your research. He
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
 
 ### Licence
-See [LICENSE](LICENSE) for details.
+* See [LICENSE](LICENSE) for details.
 
 ### Donation
 * This work is created and maintained in my free time. If this package is usefull to you and if want to see more like this, you can show your <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">gratitude</a> :) Thanks!
