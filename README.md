@@ -14,6 +14,8 @@ For this package I was inspired by various examples shown on the internet. But a
 
 This package provides functionality to create a interactive and stand-alone network that is build on d3 javascript. D3graph only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
 
+* href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">d3graph example</a> 
+
 ## Contents
 - [Installation](#%EF%B8%8F-installation)
 - [Quick Start](#-quick-start)
