@@ -1,4 +1,9 @@
-#conda create -n env_D3GRAPH python=3.7
+#conda create -n env_D3GRAPH python=3.6
 #conda activate env_D3GRAPH
-pip install numpy pandas networkx 
 #conda install spyder
+
+pandas
+numpy
+seaborn
+networkx>2
+ismember

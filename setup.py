@@ -1,16 +1,22 @@
 import setuptools
-import versioneer
-new_version='0.1.3'
+import re
 
+# versioning ------------
+VERSIONFILE="d3graph/__init__.py"
+getversion = re.search( r"^__version__ = ['\"]([^'\"]*)['\"]", open(VERSIONFILE, "rt").read(), re.M)
+if getversion:
+    new_version = getversion.group(1)
+else:
+    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+
+# Setup ------------
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     install_requires=['pandas','numpy','seaborn','networkx>2'],
+     install_requires=['pandas','numpy','seaborn','networkx>2','ismember'],
      python_requires='>=3',
      name='d3graph',  
      version=new_version,
-#     version=versioneer.get_version(),    # VERSION CONTROL
-#     cmdclass=versioneer.get_cmdclass(),  # VERSION CONTROL
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",
      description="Interactive network in d3js",
