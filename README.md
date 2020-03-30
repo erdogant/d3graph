@@ -101,4 +101,4 @@ Please cite d3graph in your publications if this is useful for your research. He
 * See [LICENSE](LICENSE) for details.
 
 ### Donation
-* This package is created and maintained in my free time. If this package is usefull, you can show your <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">gratitude</a> :) Thanks!
+* This work is created and maintained in my free time. If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated.
