@@ -2,7 +2,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/d3graph)](https://img.shields.io/pypi/pyversions/d3graph)
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdogant/d3graph/blob/master/LICENSE)
-[![Downloads](https://pepy.tech/badge/d3graph/week)](https://pepy.tech/project/d3graph/week)
+[![Downloads](https://pepy.tech/badge/d3graph)](https://pepy.tech/project/d3graph)
 [![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)
 
 d3graph is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript** using **python**.
