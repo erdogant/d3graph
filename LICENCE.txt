@@ -1,5 +1,5 @@
-Copyright 2019 Erdogan Taskesen
-d3graph is a python package that simplifies the task of creating interactive and stand-alone networks in d3 javascript using python.
+Copyright 1 August 2019 Erdogan Taskesen
+d3graph
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
