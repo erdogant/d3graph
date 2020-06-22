@@ -5,17 +5,22 @@
 # Licence     : See licences
 # ---------------------------------
 
-import os
-import sys
-from shutil import copyfile
-import webbrowser
+# Custom packages
+from ismember import ismember
+
+# Popular
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import json
 import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
-from ismember import ismember
+import json
+
+# Internal
+from shutil import copyfile
+import webbrowser
+import os
+import sys
 
 # %% Main
 def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_edge='#000000', node_size=10, node_size_edge=1, width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, savepath=None, savename='index', cmap='Paired', showfig=True, verbose=3):
@@ -100,7 +105,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     >>> import numpy as np
     >>> import networkx as nx
     >>> from d3graph import d3graph
-    >>> 
+    >>>
     >>> # Easy Example
     >>> G = nx.karate_club_graph()
     >>> adjmat = nx.adjacency_matrix(G).todense()
@@ -134,6 +139,19 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     >>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, edge_distance=1000)
     >>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, charge=1000)
     >>> out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, node_color_edge='#00FFFF', cmap='Set1', collision=1, charge=250)
+    >>>
+    >>> # Example with conversion to adjacency matrix
+    >>> G = nx.karate_club_graph()
+    >>> adjmat = nx.adjacency_matrix(G).todense()
+    >>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
+    >>> # Import library
+    >>> import d3graph
+    >>> # Convert adjacency matrix to vector with source and target
+    >>> vec = d3graph.adjmat2vec(adjmat)
+    >>> # Convert vector (source and target) to adjacency matrix.
+    >>> adjmat1 = d3graph.vec2adjmat(vec['source'], vec['target'], vec['weight'])
+    >>> # Check
+    >>> np.all(adjmat==adjmat1.astype(int))
 
     Returns
     -------
@@ -150,8 +168,8 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     [G, df] = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'])
     # Make slider
     [min_slider, max_slider] = _setup_slider(G, slider=slider)
-    config['min_slider']=min_slider
-    config['max_slider']=max_slider
+    config['min_slider'] = min_slider
+    config['max_slider'] = max_slider
     # Check path
     _set_source_dir(config)
     # Write to json
@@ -175,9 +193,9 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
 # %% Setup slider
 def _setup_slider(G, slider=None):
     tmplist = [*G.edges.values()]
-    edge_weight=[]
+    edge_weight = []
     for i in range(0,len(tmplist)):
-        edge_weight=np.append(edge_weight, tmplist[i]['edge_weight'])
+        edge_weight = np.append(edge_weight, tmplist[i]['edge_weight'])
 
     if slider is None:
         max_slider = np.ceil(np.max(edge_weight))
