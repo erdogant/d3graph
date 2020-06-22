@@ -159,7 +159,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
 
     """
     # Checks
-    adjmat = _do_checks(adjmat)
+    adjmat = _do_checks(adjmat.copy())
     # Parameters
     config = _set_configurations(width, height, collision, charge, edge_distance_minmax, edge_distance, edge_width, directed, title, slider, savepath, savename, cmap, showfig, verbose)
     # Make node configurations
