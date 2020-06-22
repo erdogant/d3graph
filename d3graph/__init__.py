@@ -1,5 +1,9 @@
 from d3graph.d3graph import d3graph
 
+from d3graph.utils.adjmat_vec import (
+    vec2adjmat,
+    adjmat2vec,
+    )
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
@@ -57,6 +61,17 @@ Examples
 >>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, edge_distance=1000)
 >>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, charge=1000)
 >>> out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, node_color_edge='#00FFFF', cmap='Set1', collision=1, charge=250)
-
+>>>
+>>> # Example with conversion to adjacency matrix
+>>> G = nx.karate_club_graph()
+>>> adjmat = nx.adjacency_matrix(G).todense()
+>>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
+>>> import d3graph
+>>> # Convert adjacency matrix to vector with source and target
+>>> vec = d3graph.adjmat2vec(adjmat)
+>>> # Convert vector (source and target) to adjacency matrix.
+>>> adjmat1 = d3graph.vec2adjmat(vec['source'], vec['target'], vec['weight'])
+>>> # Check
+>>> np.all(adjmat==adjmat1.astype(int))
 
 """
