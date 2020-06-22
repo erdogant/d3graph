@@ -43,3 +43,13 @@ out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, charge=1
 out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, node_color_edge='#00FFFF', cmap='Set1', collision=1, charge=250)
 
 # %%
+source = ['Prod A','Prod F','Prod B','Prod B','Prod B','Prod A','Prod C','Prod Z']
+target = ['Prod F','Prod B','Prod J','Prod F','Prod F','Prod M','Prod M','Prod A']
+weight = [0.56, 0.5, 0.64, 0.23, 0.9,0.28,0.5,0.45]
+
+import d3graph
+adjmat=d3graph.vec2adjmat(source, target, weight=weight)
+
+d3graph.d3graph(adjmat)
+
+
