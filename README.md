@@ -1,4 +1,4 @@
-# Interactive network creator (d3graph)
+# Interactive fore-directed network creator (d3graph)
 [![Python](https://img.shields.io/pypi/pyversions/d3graph)](https://img.shields.io/pypi/pyversions/d3graph)
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdogant/d3graph/blob/master/LICENSE)
@@ -97,10 +97,6 @@ The output looks as below:
   <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_4.png" width="300" />
 </p>
 
-
-source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
-target = ['node F','node B','node J','node F','node F','node M','node M','node A']
-weight = [5.56, 0.5, 0.64, 0.23, 0.9,3.28,0.5,0.45]
 
 ```python
 
