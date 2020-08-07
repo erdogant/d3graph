@@ -56,9 +56,6 @@ from d3graph import d3graph
 ```
 
 * Create simple example dataset for which the input matrix should look this:
-<p align="left">
-  <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/input_adjmat.png" width="500" />
-</p>
 
 ```python
 
