@@ -204,7 +204,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
 def _setup_slider(G, slider=None):
     tmplist = [*G.edges.values()]
     edge_weight = []
-    for i in range(0,len(tmplist)):
+    for i in range(0, len(tmplist)):
         edge_weight = np.append(edge_weight, tmplist[i]['edge_weight'])
 
     if slider is None:
@@ -254,7 +254,7 @@ def _write_json(G, config):
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodeid = [*G.nodes]
     nodes_new = [None] * len(nodes)
-    for i in range(0,len(nodes)):
+    for i in range(0, len(nodes)):
         nodes_new[int(nodeid[i])] = nodes[i]
     data['nodes'] = nodes_new
 
@@ -283,7 +283,7 @@ def _write_index_html(config, jsonpath):
     f.write('<script type="application/json" id="d3graph"> {\n')
 
     # Write graph
-    fs = open(jsonpath,'r')
+    fs = open(jsonpath, 'r')
     lines = fs.readlines()[1:]
     for line in lines:
         f.write(line)
@@ -316,7 +316,7 @@ def _write_jscript(df, config):
         d3graphscript = file.read()
 
     # Create hover-over textbox for the nodes
-    idx = np.where(df.columns.str.contains('node_') is False)[0]
+    idx = np.where(df.columns.str.contains('node_')==False)[0]
     idx = np.append(idx, np.where(df.columns == 'node_name')[0])
     HOVEROVER = ''
     DIRECTED_LINKS = '//'
@@ -330,8 +330,11 @@ def _write_jscript(df, config):
         str_middle = ''
         for i in range(0, len(idx)):
             str_middle = str_middle + ('+ "\\n" + "' + df.columns[idx[i]] + ': " + d.' + df.columns[idx[i]] + ' ')
+            # str_middle = str_middle + (df.columns[idx[i]] + ': " + d.' + df.columns[idx[i]] + '+ "\\n" + "')
+        str_middle = str_middle[9:]
 
-        str_start = 'function(d) { return "Node: " + d.id '
+        # str_start = 'function(d) { return "Node: " + d.id '
+        str_start = 'function(d) { return '
         str_end = ';}'
         HOVEROVER = str_start + str_middle + str_end
 
@@ -366,7 +369,8 @@ def _node_config(df, node_name, node_color, node_size, node_size_edge, node_colo
         pass
     elif isinstance(node_name, str):
         node_name = np.array([node_name] * nodecount)
-    elif isinstance(adjmat, type(None)) is False:
+    # elif isinstance(adjmat, type(None)) is False:
+    elif adjmat is not None:
         node_name = adjmat.columns.astype(str)
     else:
         node_name = np.array([''] * nodecount)
