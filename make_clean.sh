@@ -9,3 +9,7 @@ rm -rf .pylint.d
 rm *.js
 rm *.css
 rm *.html
+
+rm d3graph/*.js
+rm d3graph/*.css
+rm d3graph/*.html

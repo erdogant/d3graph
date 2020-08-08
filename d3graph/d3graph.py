@@ -446,8 +446,8 @@ def _node_config(df, node_name, node_color, node_size, node_size_edge, node_colo
     df['node_color_edge']=node_color_edge
     # Make strings of the identifiers
     df.index=df.index.astype(str)
-    df.columns=df.columns.str.replace(' ','_')
-    df.columns=df.columns.str.replace('.','_')
+    df.columns=df.columns.str.replace(' ', '_')
+    df.columns=df.columns.str.replace('.', '_')
 
     return(df)
 
@@ -478,14 +478,14 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
     node_names = adjmat.index.values
     adjmat.reset_index(drop=True, inplace=True)
     adjmat.index = adjmat.index.values.astype(str)
-    adjmat.columns = np.arange(0,adjmat.shape[1]).astype(str)
+    adjmat.columns = np.arange(0, adjmat.shape[1]).astype(str)
     adjmat = adjmat.stack().reset_index()
     adjmat.columns = ['source', 'target', 'weight']
 
     # Width of edge, scale between [1-10] if there is are more then 2 diferent weights
     if isinstance(edge_width, type(None)):
-        if len(np.unique(adjmat['weight'].values.reshape(-1,1)))>2:
-            adjmat['edge_width'] = _normalize_size(adjmat['weight'].values.reshape(-1,1), 1, 20)
+        if len(np.unique(adjmat['weight'].values.reshape(-1, 1)))>2:
+            adjmat['edge_width'] = _normalize_size(adjmat['weight'].values.reshape(-1, 1), 1, 20)
         else:
             edge_width=1
     if not isinstance(edge_width, type(None)):
@@ -493,34 +493,34 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
 
     # Scale the weights towards an edge weight
     if not isinstance(edge_distance_min, type(None)):
-        adjmat['edge_weight'] = _normalize_size(adjmat['weight'].values.reshape(-1,1), edge_distance_min, edge_distance_max)
+        adjmat['edge_weight'] = _normalize_size(adjmat['weight'].values.reshape(-1, 1), edge_distance_min, edge_distance_max)
     else:
-        adjmat['edge_weight'] = adjmat['weight'].values.reshape(-1,1)
+        adjmat['edge_weight'] = adjmat['weight'].values.reshape(-1, 1)
 
     # Keep only edges with weight
-    edge_weight_original = adjmat['weight'].values.reshape(-1,1).flatten()
-    adjmat = adjmat.loc[edge_weight_original > 0,:].reset_index(drop=True)
+    edge_weight_original = adjmat['weight'].values.reshape(-1, 1).flatten()
+    adjmat = adjmat.loc[edge_weight_original > 0, :].reset_index(drop=True)
 
     # Remove self-loops
-    I = adjmat['source'] != adjmat['target']
-    adjmat = adjmat.loc[I,:].reset_index(drop=True)
+    Iloc = adjmat['source'] != adjmat['target']
+    adjmat = adjmat.loc[Iloc, :].reset_index(drop=True)
 
     # Include source-target label
-    source_label = np.repeat('',adjmat.shape[0]).astype('O')
-    target_label = np.repeat('',adjmat.shape[0]).astype('O')
-    for i in range(0,len(node_names)):
+    source_label = np.repeat('', adjmat.shape[0]).astype('O')
+    target_label = np.repeat('', adjmat.shape[0]).astype('O')
+    for i in range(0, len(node_names)):
         source_label[adjmat['source']==str(i)] = node_names[i]
-    for i in range(0,len(node_names)):
+    for i in range(0, len(node_names)):
         target_label[adjmat['target']==str(i)] = node_names[i]
     adjmat['source_label'] = source_label
     adjmat['target_label'] = target_label
 
     # Make sure indexing of nodes is correct with the edges.
     uilabels = np.unique(np.append(adjmat['source'], adjmat['target']))
-    tmplabels=adjmat[['source','target']]
+    tmplabels=adjmat[['source', 'target']]
     adjmat['source']=None
     adjmat['target']=None
-    for i in range(0,len(uilabels)):
+    for i in range(0, len(uilabels)):
         I1 = tmplabels['source']==uilabels[i]
         I2 = tmplabels['target']==uilabels[i]
         adjmat['source'].loc[I1] = str(i)
