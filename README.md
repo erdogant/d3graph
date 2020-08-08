@@ -145,6 +145,37 @@ out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, nod
 
 ```
 
+### Example: including Dataframe with additional node information
+
+```python
+
+G = nx.karate_club_graph()
+adjmat = nx.adjacency_matrix(G).todense()
+adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
+adjmat.columns=adjmat.columns.astype(str)
+adjmat.index=adjmat.index.astype(str)
+
+# Make the dataframe
+df = pd.DataFrame(index=adjmat.index)
+
+# Add some columns. Note that columns that start with: node_ are removed from the information.
+
+df['degree']=np.array([*G.degree()])[:,1]
+df['other info']=np.array([*G.degree()])[:,1]
+
+node_color = []
+for i in range(0,len(G.nodes)):
+    node_color.append(G.nodes[i]['club'])
+    node_name=node_color
+df['name']=node_name
+
+node_size = df.degree.values*2
+
+# Make some graphs
+out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
+```
+
+
 ### Contribute
 * Thanks to Oliver Verver who helped to fix some bugs in d3js (https://github.com/oliver3).
 * All kinds of contributions are welcome!
