@@ -43,27 +43,27 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
         Label name for the nodes, e.g., ['1','2','3',...]
     node_color : list of strings (default : '#000080')
         Color of the node.
-        None: Do something style: All nodes will be have the same color (auto generated).
-        ['A']: Lazy  style: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
-        ['#000000']: Lazy+ style: All nodes will have the same hex color.
-        ['A','A','B',...]: Pro   style: Colors are generated using cmap and the unique labels recordingly colored.
-        ['#377eb8','#ffffff','#000000',...]: Pro+  style:        Hex colors are directly used.
+        * None: Do something style: All nodes will be have the same color (auto generated).
+        * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
+        * ['#000000']: All nodes will have the same hex color.
+        * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
+        * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
     node_color_edge : list of strings (default : '#000080')
         See node_color.
     node_size : array of integers (default=5)
         Size of the node edge., e.g.,  None 10: All nodes will be set on this size, [2,5,1,...]  Specify per node the size
     node_size_edge : array of integers (default : 1)
         Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
-        10: All nodes will be set on this size,
-        [2,5,1,...]  Specify per node the edge size.
+        * 10: All nodes will be set on this size,
+        * [2,5,1,...]  Specify per node the edge size.
     edge_width : float (default: None)
         width of the edges.
-        None: The values in the data are rescaled between [1-10] and used for the width.
-        1: all values have the same width
+        * None: The values in the data are rescaled between [1-10] and used for the width.
+        * 1: all values have the same width
     edge_distance : Int (default: None)
         Distance of nodes on the edges.
-        0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
-        80: Constant edge distance
+        * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
+        * 80: Constant edge distance
 
     NETWORK BEHAVOIR SETTINGS
     --------------------------
@@ -86,7 +86,17 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
         Title of the figure.
     cmap : String, (default: 'Set1')
         All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
-        'Set1','Set2','rainbow','bwr','binary','seismic','Blues','Reds','Pastel1','Paired','Set1'
+        * 'Set1'
+        * 'Set2'
+        * 'rainbow'
+        * 'bwr'
+        * 'binary'
+        * 'seismic'
+        * 'Blues'
+        * 'Reds'
+        * 'Pastel1'
+        * 'Paired'
+        * 'Set1'
     slider : typle [int, int]:, (default: [0,10])
         Slider to break the network on edge-strength, e.g. set slider in range 0 to 10
     savepath : String, (Default: user temp directory)
