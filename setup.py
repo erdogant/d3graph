@@ -19,7 +19,7 @@ setuptools.setup(
      version=new_version,
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",
-     description="Create interactive network in python with d3js",
+     description="Python package to create interactive network based on d3js.",
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://github.com/erdogant/d3graph",
