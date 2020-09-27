@@ -3,6 +3,9 @@
 [![PyPI Version](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/erdogant/d3graph/blob/master/LICENSE)
 [![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)
+[![Github Forks](https://img.shields.io/github/forks/erdogant/d3graph.svg)](https://github.com/erdogant/d3graph/network)
+[![GitHub Open Issues](https://img.shields.io/github/issues/erdogant/d3graph.svg)](https://github.com/erdogant/d3graph/issues)
+[![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![Downloads](https://pepy.tech/badge/d3graph)](https://pepy.tech/project/d3graph)
 [![Downloads](https://pepy.tech/badge/d3graph/month)](https://pepy.tech/project/d3graph/month)
 
