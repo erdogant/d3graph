@@ -15,12 +15,14 @@ import seaborn as sns
 import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
 import json
+from jinja2 import Environment, PackageLoader
 
 # Internal
 from shutil import copyfile
 import webbrowser
 import os
 import sys
+from pathlib import Path
 
 # %% Main
 def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_edge='#000000', node_size=10, node_size_edge=1, width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, savepath=None, savename='index', cmap='Paired', showfig=True, verbose=3):
@@ -266,45 +268,22 @@ def _write_json(G, config):
 
 # %% Write the index.html
 def _write_index_html(config, jsonpath):
-    f = open(config['savepath'],'w+')
-    f.write('<!DOCTYPE html>\n')
-    f.write('<html lang="en" >\n')
-    f.write('<head>\n')
-    f.write('<meta charset="UTF-8">\n')
+    jsonContent = Path(jsonpath).read_text()
 
-    config['network_title']
+    content = {
+        'title': config['network_title'],
+        'json_content': jsonContent,
+        'min_slider': config['min_slider'],
+        'max_slider': config['max_slider']
+    }
 
-    f.write(('<title>' + config['network_title'] + '</title>\n'))
-    f.write('<script type="text/javascript" src="' + os.path.basename(config['d3_library']) + '"></script>\n')
-    # f.write('<script type="text/javascript" src="//d3js.org/d3.v3.js"></script>\n')
-    f.write('<link rel="stylesheet" href="style.css">\n')
-    f.write('</head>\n')
-    f.write('<body>\n')
-    f.write('<script type="application/json" id="d3graph"> {\n')
-
-    # Write graph
-    fs = open(jsonpath, 'r')
-    lines = fs.readlines()[1:]
-    for line in lines:
-        f.write(line)
-    fs.close()
-
-    # Write last part html
-    f.write('\n')
-    f.write('</script>\n')
-
-    if (config['max_slider']>config['min_slider']):
-        f.write('<form>\n')
-        # f.write('<h3> Link threshold 0 <input type="range" id="thersholdSlider" name="points" value=0 min="0" max="10" onchange="threshold(this.value)"> 10 </h3>\n')
-        slidertxt='<h3> Link threshold 0 <input type="range" id="thersholdSlider" name="points" value=' + str(config['min_slider']) + ' min="' + str(config['min_slider']) + '" max="' + str(config['max_slider']) + '" onchange="threshold(this.value)"> ' + str(config['max_slider']) + ' </h3>\n'
-        f.write(slidertxt)
-        f.write('</form>\n')
-
-    f.write('<script  src="d3graphscript.js"></script>\n')
-    f.write('</body>\n')
-    f.write('</html>\n')
-
-    f.close()
+    jinja_env = Environment(
+        loader=PackageLoader(package_name=__name__, package_path='d3js')
+    )
+    index_template = jinja_env.get_template('index.html.j2')
+    index_file = Path(config['savepath'])
+    print('Writing %s' % index_file.absolute())
+    index_file.write_text(index_template.render(content))
 
 
 # %% Write javascript with the configurations

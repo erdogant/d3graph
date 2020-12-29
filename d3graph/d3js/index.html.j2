@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="d3.v3.js"></script>
+    <script>graph = {{ json_content }}</script>
+    <script type="text/javascript" src="d3graphscript.js"></script>
+</head>
+<body>
+    {% if max_slider > min_slider %}
+        <form>
+            <h3>
+                Link threshold
+                {{ min_slider }}
+                <input type="range" autocomplete="off" id="thresholdSlider"
+                       value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}">
+                {{ max_slider }}
+            </h3>
+        </form>
+    {% endif %}
+</body>
+</html>
+

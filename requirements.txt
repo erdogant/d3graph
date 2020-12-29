@@ -7,3 +7,5 @@ numpy
 seaborn
 networkx>2
 ismember
+sklearn
+Jinja2
