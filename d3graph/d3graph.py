@@ -62,7 +62,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
         width of the edges.
         * None: The values in the data are rescaled between [1-10] and used for the width.
         * 1: all values have the same width
-    edge_distance : Int (default: None)
+    edge_distance : Int (default: 30)
         Distance of nodes on the edges.
         * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
         * 80: Constant edge distance
@@ -184,14 +184,10 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     config['max_slider'] = max_slider
     # Check path
     _set_source_dir(config)
-    # Write to json
-    jsonpath = _write_json(G, config)
+    # Create json
+    json_data = _create_json(G)
     # Create html with json file embedded
-    _write_index_html(config, jsonpath)
-    # Set user-defined parameters in javascript
-    _write_jscript(df, config)
-    # Cleaning
-    os.remove(jsonpath)
+    _write_index_html(config, json_data)
     # Final
     out = dict()
     out['G'] = G
@@ -233,17 +229,9 @@ def _set_source_dir(config):
         if config['verbose']>=3: print('[d3graph] >Creating directory: %s' %(config['path']))
         os.mkdir(config['path'])
 
-    # Copy files to destination directory
-    copyfile(config['d3_script'], config['path'] + os.path.basename(config['d3_script']))
-    copyfile(config['css'], config['path'] + os.path.basename(config['css']))
-    copyfile(config['d3_library'], config['path'] + os.path.basename(config['d3_library']))
-
 
 # %% Write network in json file
-def _write_json(G, config):
-    jsonpath = config['path'] + 'd3graph.json'
-    # A=pd.DataFrame(data['links'])
-
+def _create_json(G):
     data=dict()
     links=pd.DataFrame([*G.edges.values()]).T.to_dict()
     links_new=[]
@@ -260,21 +248,22 @@ def _write_json(G, config):
         nodes_new[int(nodeid[i])] = nodes[i]
     data['nodes'] = nodes_new
 
-    with open(jsonpath, 'w') as f:
-        json.dump(data, f, indent=4)
-
-    return(jsonpath)
+    return json.dumps(data, separators=(',', ':'))
 
 
 # %% Write the index.html
-def _write_index_html(config, jsonpath):
-    jsonContent = Path(jsonpath).read_text()
-
+def _write_index_html(config, json_data):
     content = {
+        'json_data': json_data,
         'title': config['network_title'],
-        'json_content': jsonContent,
+        'width': config['network_width'],
+        'height': config['network_height'],
+        'charge': config['network_charge'],
+        'edge_distance': config['edge_distance'],
         'min_slider': config['min_slider'],
-        'max_slider': config['max_slider']
+        'max_slider': config['max_slider'],
+        'directed': config['directed'],
+        'collision': config['network_collision']
     }
 
     jinja_env = Environment(
@@ -284,56 +273,6 @@ def _write_index_html(config, jsonpath):
     index_file = Path(config['savepath'])
     print('Writing %s' % index_file.absolute())
     index_file.write_text(index_template.render(content))
-
-
-# %% Write javascript with the configurations
-def _write_jscript(df, config):
-    jspathscript = config['path'] + os.path.basename(config['d3_script'])
-
-    # Read in the file
-    with open(jspathscript, 'r') as file:
-        d3graphscript = file.read()
-
-    # Create hover-over textbox for the nodes
-    idx = np.where(df.columns.str.contains('node_')==False)[0]
-    idx = np.append(idx, np.where(df.columns == 'node_name')[0])
-    HOVEROVER = ''
-    DIRECTED_LINKS = '//'
-    DIRECTED_LINKS_RESTART = '//'
-
-    if config['directed']:
-        DIRECTED_LINKS=''
-        DIRECTED_LINKS_RESTART=''
-
-    if len(idx)>0:
-        str_middle = ''
-        for i in range(0, len(idx)):
-            str_middle = str_middle + ('+ "\\n" + "' + df.columns[idx[i]] + ': " + d.' + df.columns[idx[i]] + ' ')
-            # str_middle = str_middle + (df.columns[idx[i]] + ': " + d.' + df.columns[idx[i]] + '+ "\\n" + "')
-        str_middle = str_middle[9:]
-
-        # str_start = 'function(d) { return "Node: " + d.id '
-        str_start = 'function(d) { return '
-        str_end = ';}'
-        HOVEROVER = str_start + str_middle + str_end
-
-    # Replace the target string
-    d3graphscript = d3graphscript.replace('$CHARGE$', str(config['network_charge']))
-    if config['edge_distance']=='.linkDistance(function(d) {return d.edge_weight;})':
-        d3graphscript = d3graphscript.replace('$LINKDIST$', str(config['edge_distance']))
-    else:
-        d3graphscript = d3graphscript.replace('$LINKDIST$', '')
-
-    d3graphscript = d3graphscript.replace('$WIDTH$', str(config['network_width']))
-    d3graphscript = d3graphscript.replace('$HEIGHT$', str(config['network_height']))
-    d3graphscript = d3graphscript.replace('$COLLISION$', str(config['network_collision']))
-    d3graphscript = d3graphscript.replace('$HOVEROVER$', HOVEROVER)
-    d3graphscript = d3graphscript.replace('$DIRECTED_LINKS$', DIRECTED_LINKS)
-    d3graphscript = d3graphscript.replace('$DIRECTED_LINKS_RESTART$', DIRECTED_LINKS_RESTART)
-
-    # Write the file out again
-    with open(jspathscript, 'w') as file:
-        file.write(d3graphscript)
 
 
 # %%
@@ -567,7 +506,7 @@ def _set_configurations(width, height, collision, charge, edge_distance_minmax, 
     config['network_title'] = title
     config['network_charge'] = charge * -1
     config['network_collision'] = collision
-    config['edge_distance'] = edge_distance  # 80
+    config['edge_distance'] = edge_distance
     config['edge_width'] = edge_width
     config['edge_distance_minmax'] = edge_distance_minmax
     config['directed'] = directed
@@ -590,8 +529,8 @@ def _set_configurations(width, height, collision, charge, edge_distance_minmax, 
         if verbose>=2: print('[d3graph] >Creating directory [%s]' %(config['path']))
         os.mkdir(config['path'])
 
-    if not isinstance(config['edge_distance'], type(None)):
-        config['edge_distance'] = '.linkDistance(function(d) {return d.edge_weight;})'  # Distance of nodes depends on the weight of the edges
+    if config['edge_distance'] is None:
+        config['edge_distance'] = 30
 
     return(config)
 

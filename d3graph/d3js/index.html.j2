@@ -4,10 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="d3.v3.js"></script>
-    <script>graph = {{ json_content }}</script>
-    <script type="text/javascript" src="d3graphscript.js"></script>
+    <style type="text/css">
+        {% include "style.css" %}
+    </style>
+    <script>
+        {% include "d3.v3.js" %}
+        {% include "d3graphscript.js" %}
+
+        graph = {{ json_data }}
+
+        window.addEventListener('DOMContentLoaded', function () {
+            d3graphscript({
+                width: {{ width }},
+                height: {{ height }},
+                charge: {{ charge }},
+                distance: {{ edge_distance }},
+                directed: {{ directed | lower }},
+                collision: {{ collision }}
+            })
+        });
+    </script>
 </head>
 <body>
     {% if max_slider > min_slider %}

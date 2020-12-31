@@ -1,15 +1,24 @@
-function d3graphscript() {
+function d3graphscript(config = {
+  // Default values
+  width: 800,
+  height: 600,
+  charge: -250,
+  distance: 0,
+  directed: false,
+  collision: 0.5
+}) {
+  console.log('d3graphscript config = ', config);
 
   //Constants for the SVG
-  var width = $WIDTH$;
-  var height = $HEIGHT$;
+  var width = config.width;
+  var height = config.height;
 
   //Set up the colour scale
   var color = d3.scale.category20();
 
   var force = d3.layout.force()
-    .charge($CHARGE$)
-    $LINKDIST$
+    .charge(config.charge)
+    .linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
     .size([width, height]);
 
 
@@ -31,8 +40,7 @@ function d3graphscript() {
     .data(graph.links)
     .enter().append("line")
     .attr("class", "link")
-    //$DIRECTED_LINKS$.style('marker-start',  'url(#suit)') // ARROWS IN EDGES
-    $DIRECTED_LINKS$.style('marker-end',  'url(#suit)') // ARROWS IN EDGES
+    .style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
     .style("stroke-width", function(d) {return d.edge_width;}) // LINK-WIDTH
     ;
   //  .style("stroke-width", 1); // WIDTH OF THE LINKS
@@ -59,8 +67,13 @@ function d3graphscript() {
     .text(function(d) {return d.node_name}) // NODE-TEXT
   //  .style("stroke", "gray");
 
+  let showInHover = ["node_name"];
   node.append("title")
-      .text($HOVEROVER$); // HOVEROVER NODE TEXT
+      .text((d) => Object.keys(d)
+          .filter((key) => showInHover.indexOf(key) !== -1)
+          .map((key) => `${key}: ${d[key]}`)
+          .join('\n')
+      )
 
   //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
   force.on("tick", function() {
@@ -89,7 +102,7 @@ function d3graphscript() {
         return d.y;
       });
 
-    node.each(collide($COLLISION$)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
+    node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 
   });
 
@@ -211,12 +224,9 @@ function d3graphscript() {
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
     link.style("stroke-width", function(d) {return d.edge_width;}); // WIDTH OF THE LINKS AFTER BREAKING WITH SLIDER
-    //$DIRECTED_LINKS_RESTART$link.style('marker-start','url(#suit)') // ARROWS IN EDGES
-    $DIRECTED_LINKS_RESTART$link.style('marker-end','url(#suit)') // ARROWS IN EDGES
+    link.style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     force.start();
   }
 }
-
-window.addEventListener('DOMContentLoaded', d3graphscript);
