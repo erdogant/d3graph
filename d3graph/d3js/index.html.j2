@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style type="text/css">
+        {% include "style.css" %}
+    </style>
+    <script>
+        {% include "d3.v3.js" %}
+        {% include "d3graphscript.js" %}
+
+        graph = {{ json_data }}
+
+        window.addEventListener('DOMContentLoaded', function () {
+            d3graphscript({
+                width: {{ width }},
+                height: {{ height }},
+                charge: {{ charge }},
+                distance: {{ edge_distance }},
+                directed: {{ directed | lower }},
+                collision: {{ collision }}
+            })
+        });
+    </script>
+</head>
+<body>
+    {% if max_slider > min_slider %}
+        <form>
+            <h3>
+                Link threshold
+                {{ min_slider }}
+                <input type="range" autocomplete="off" id="thresholdSlider"
+                       value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}">
+                {{ max_slider }}
+            </h3>
+        </form>
+    {% endif %}
+</body>
+</html>
+
