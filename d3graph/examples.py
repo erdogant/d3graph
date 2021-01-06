@@ -118,3 +118,4 @@ out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, nod
 # Example H: Include directed links. Arrows are set from source -> target
 out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF', cmap='Set2', directed=True)
 
+# %%
