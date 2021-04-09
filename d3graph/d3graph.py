@@ -19,6 +19,7 @@ from jinja2 import Environment, PackageLoader
 
 # Internal
 from shutil import copyfile
+from packaging import version
 import webbrowser
 import os
 import sys
@@ -537,7 +538,8 @@ def _set_configurations(width, height, collision, charge, edge_distance_minmax, 
 
 # %% Do checks
 def _do_checks(adjmat):
-    assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
+    if not version.parse(nx.__version__) >= version.parse("2.5"):
+        print('[d3graph] >Error: networkx version should be >= 2.5.\nTry to: pip install -U networkx')
     if 'numpy' in str(type(adjmat)):
         adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 
