@@ -7,7 +7,7 @@ from d3graph.utils.adjmat_vec import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.1.9'
+__version__ = '0.1.10'
 
 # module level doc-string
 __doc__ = """
