@@ -47,6 +47,10 @@ out = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#00000', 
 
 
 # %% Extended example
+import networkx as nx
+import pandas as pd
+from d3graph import d3graph
+
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
 adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
