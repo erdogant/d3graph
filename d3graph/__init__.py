@@ -1,4 +1,5 @@
 from d3graph.d3graph import d3graph
+from packaging import version
 
 from d3graph.utils.adjmat_vec import (
     vec2adjmat,
@@ -7,7 +8,11 @@ from d3graph.utils.adjmat_vec import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.1.10'
+__version__ = '0.1.11'
+
+import jinja2
+if version.parse(jinja2.__version__) > version.parse("2.11.3"):
+    raise Exception('[d3graph] >Error: jinja2 versions > 2.11.3 gives an error! It is advised to create a new environment install d3graph or: pip install -U jinja2==2.11.3')
 
 # module level doc-string
 __doc__ = """

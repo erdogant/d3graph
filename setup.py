@@ -13,7 +13,7 @@ else:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     install_requires=['pandas','numpy','seaborn','networkx>2','ismember','jinja2', 'packaging', 'sklearn'],
+     install_requires=['pandas','numpy','seaborn','networkx>2','ismember','jinja2==2.11.3', 'packaging', 'sklearn'],
      python_requires='>=3',
      name='d3graph',  
      version=new_version,

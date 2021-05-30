@@ -1,11 +1,8 @@
-#conda create -n env_D3GRAPH python=3.6
-#conda activate env_D3GRAPH
-#conda install spyder
-
 pandas
 numpy
 seaborn
 networkx>2
 ismember
+packaging
 sklearn
-Jinja2
+jinja2==2.11.3

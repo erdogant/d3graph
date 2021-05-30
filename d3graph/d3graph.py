@@ -267,9 +267,7 @@ def _write_index_html(config, json_data):
         'collision': config['network_collision']
     }
 
-    jinja_env = Environment(
-        loader=PackageLoader(package_name=__name__, package_path='d3js')
-    )
+    jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js') )
     index_template = jinja_env.get_template('index.html.j2')
     index_file = Path(config['savepath'])
     print('Writing %s' % index_file.absolute())
