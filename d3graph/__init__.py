@@ -1,14 +1,14 @@
 from d3graph.d3graph import d3graph
 from packaging import version
 
-from d3graph.utils.adjmat_vec import (
+from d3graph.adjmat_vec import (
     vec2adjmat,
     adjmat2vec,
     )
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.1.11'
+__version__ = '0.1.12'
 
 import jinja2
 if version.parse(jinja2.__version__) > version.parse("2.11.3"):
