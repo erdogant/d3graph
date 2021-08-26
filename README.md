@@ -185,15 +185,7 @@ out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
 * All kinds of contributions are welcome!
 
 ### Citation
-Please cite d3graph in your publications if this is useful for your research. Here is an example BibTeX entry:
-```BibTeX
-@misc{erdogant2019d3graph,
-  title={d3graph},
-  author={Erdogan Taskesen},
-  year={2019},
-  howpublished={\url{https://github.com/erdogant/d3graph}},
-}
-```
+Please cite d3graph in your publications if this is useful for your research. See column right for citation information.
 
 ### Maintainer
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
