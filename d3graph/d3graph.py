@@ -16,9 +16,10 @@ import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
 import json
 from jinja2 import Environment, PackageLoader
+import unicodedata
 
 # Internal
-from shutil import copyfile
+# from shutil import copyfile
 from packaging import version
 import webbrowser
 import os
@@ -173,6 +174,8 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     """
     # Checks
     adjmat = _do_checks(adjmat.copy())
+    # Remove special chars
+    adjmat = _remove_special_chars(adjmat)
     # Parameters
     config = _set_configurations(width, height, collision, charge, edge_distance_minmax, edge_distance, edge_width, directed, title, slider, savepath, savename, cmap, showfig, verbose)
     # Make node configurations
@@ -543,10 +546,16 @@ def _do_checks(adjmat):
 
     adjmat.index=adjmat.index.astype(str)
     adjmat.columns=adjmat.columns.astype(str)
-#    if not df.empty: assert df.shape[0]==adjmat.shape[0], 'df must be of same length as the nodes in adjmat'
-#    if not df.empty: assert np.all(df.index.values==adjmat.index.values), 'adjmat and df must have the same identifiers'
     assert np.all(adjmat.columns==adjmat.index.values), 'adjmat columns and index must have the same identifiers'
     return(adjmat)
+
+
+# %% Remov special characters from column names
+def _remove_special_chars(adjmat, verbose=3):
+    if verbose>=3: print('[d3graph] >Removing special chars and replacing with "_"')
+    columns=adjmat.columns.values.astype(str)
+    adjmat.columns = list(map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ','_'), columns))
+    return adjmat
 
 
 # %% Main
