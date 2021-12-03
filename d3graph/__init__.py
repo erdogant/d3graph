@@ -8,7 +8,7 @@ from d3graph.adjmat_vec import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.1.12'
+__version__ = '1.0.0'
 
 import jinja2
 if version.parse(jinja2.__version__) > version.parse("2.11.3"):
