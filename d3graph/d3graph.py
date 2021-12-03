@@ -366,8 +366,8 @@ def _node_config(df, node_name, node_color, node_size, node_size_edge, node_colo
     df['node_color_edge']=node_color_edge
     # Make strings of the identifiers
     df.index=df.index.astype(str)
-    df.columns=df.columns.str.replace(' ', '_')
-    df.columns=df.columns.str.replace('.', '_')
+    df.columns=df.columns.str.replace(' ', '_', regex=True)
+    df.columns=df.columns.str.replace('.', '_', regex=True)
 
     return(df)
 
