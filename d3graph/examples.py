@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph
 
-
 # %%
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
@@ -28,22 +27,7 @@ df['name']=node_name
 
 # Make some graphs
 out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
-
-# %% Simple example
-G = nx.karate_club_graph()
-adjmat = nx.adjacency_matrix(G).todense()
-adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
-
-from d3graph import d3graph
-out = d3graph(adjmat, df=df.iloc[0:34, :], node_color=adjmat.index.values, node_color_edge='#00000', node_size_edge=5)
-
 out = d3graph(adjmat)
-out = d3graph(adjmat, savepath='c://temp/')
-out = d3graph(adjmat, node_color=adjmat.index.values, savepath='c://temp/')
-out = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#fffff',savepath='c://temp/')
-out = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge=adjmat.index.values)
-out = d3graph(adjmat, node_color=adjmat.index.values, node_color_edge='#00000', node_size_edge=5)
-
 
 
 # %% Extended example
