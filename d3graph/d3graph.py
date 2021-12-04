@@ -181,7 +181,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     # Make node configurations
     df = _node_config(df, node_name, node_color, node_size, node_size_edge, node_color_edge, adjmat=adjmat, cmap=config['cmap'])
     # Create dataframe from co-occurence matrix
-    [G, df] = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'])
+    G, df = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'])
     # Make slider
     [min_slider, max_slider] = _setup_slider(G, slider=slider)
     config['min_slider'] = min_slider
@@ -193,9 +193,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     # Create html with json file embedded
     _write_index_html(config, json_data)
     # Final
-    out = dict()
-    out['G'] = G
-    out['path'] = config['path'] + 'index.html'
+    out = {'G': G, 'path':config['path'] + 'index.html'}
     # Open the webbrowser
     if config['showfig']: webbrowser.open(os.path.abspath(out['path']), new=2)
     # Return
