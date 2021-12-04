@@ -28,14 +28,6 @@ This package provides functionality to create a interactive and stand-alone netw
 
 * <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">d3graph example</a> 
 
-## Contents
-- [Installation](#%EF%B8%8F-installation)
-- [Quick Start](#-quick-start)
-- [Contribute](#-contribute)
-- [Citation](#-citation)
-- [Maintainers](#-maintainers)
-- [License](#-copyright)
-
 ## Installation
 d3graph is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. **Note**: d3graph requires networkx to be v2 or higher.
 It is distributed under the Apache 2.0 license. There are two ways to install d3graph:
@@ -50,8 +42,7 @@ pip install d3graph
 ```bash
 git clone https://github.com/erdogant/d3graph.git
 cd d3graph
-pip install "networkx>=2"
-python setup.py install
+pip install -U .
 ```  
 
 ## Quick Start
