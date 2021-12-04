@@ -69,7 +69,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
         * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
         * 80: Constant edge distance
 
-    NETWORK BEHAVOIR SETTINGS
+    NETWORK BEHAVIOR SETTINGS
     --------------------------
     collision : float, (default: 0.5)
         Nodes wants to prevent a collision. The higher the number, the more collisions are prevented.
@@ -273,7 +273,7 @@ def _write_index_html(config, json_data):
     jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js') )
     index_template = jinja_env.get_template('index.html.j2')
     index_file = Path(config['savepath'])
-    print('Writing %s' % index_file.absolute())
+    print('[d3graph] >Writing %s' % index_file.absolute())
     index_file.write_text(index_template.render(content))
 
 
