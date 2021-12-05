@@ -5,6 +5,15 @@ import numpy as np
 from d3graph import d3graph
 
 # %%
+from d3graph import d3graph, vec2adjmat
+source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
+target = ['node F','node B','node J','node F','node F','node M','node M','node A']
+weight = [5.56, 0.5, 0.64, 0.23, 0.9,3.28,0.5,0.45]
+
+adjmat = vec2adjmat(source, target, weight=weight)
+out = d3graph(adjmat)
+
+# %%
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
 adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
