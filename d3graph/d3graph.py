@@ -181,7 +181,7 @@ def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_ed
     # Make node configurations
     df = _node_config(df, node_name, node_color, node_size, node_size_edge, node_color_edge, adjmat=adjmat, cmap=config['cmap'])
     # Create dataframe from co-occurence matrix
-    G, df = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'])
+    G, df = adjmat2G(adjmat, df, config['edge_distance_minmax'][0], config['edge_distance_minmax'][1], config['edge_width'], verbose=config['verbose'])
     # Make slider
     [min_slider, max_slider] = _setup_slider(G, slider=slider)
     config['min_slider'] = min_slider
@@ -271,8 +271,10 @@ def _write_index_html(config, json_data):
     jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js') )
     index_template = jinja_env.get_template('index.html.j2')
     index_file = Path(config['savepath'])
-    print('[d3graph] >Writing %s' % index_file.absolute())
-    index_file.write_text(index_template.render(content))
+    if config['verbose']>=3: print('[d3graph] >Writing %s' % index_file.absolute())
+    # index_file.write_text(index_template.render(content))
+    with open(index_file, "w", encoding="utf-8") as f:
+        f.write(index_template.render(content))
 
 
 # %%
@@ -371,7 +373,7 @@ def _node_config(df, node_name, node_color, node_size, node_size_edge, node_colo
 
 
 # %% Convert adjacency matrix to graph
-def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_width=None):
+def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_width=None, verbose=3):
     """Convert adjacency matrix to graph.
 
     Parameters
@@ -469,7 +471,7 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
                 if np.any(np.isin(getnodes, df.index.values[i])):
                     G.nodes[idx][col] = str(df[col][idx])
                 else:
-                    print('[d3graph] >not found')
+                    if verbose>=2: print('[d3graph] >WARNING: Not found')
 
     return(G, df)
 
@@ -538,7 +540,7 @@ def _set_configurations(width, height, collision, charge, edge_distance_minmax, 
 # %% Do checks
 def _do_checks(adjmat):
     if not version.parse(nx.__version__) >= version.parse("2.5"):
-        print('[d3graph] >Error: networkx version should be >= 2.5.\nTry to: pip install -U networkx')
+        print('[d3graph] >ERROR: networkx version should be >= 2.5.\nTry to: pip install -U networkx')
     if 'numpy' in str(type(adjmat)):
         adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 
