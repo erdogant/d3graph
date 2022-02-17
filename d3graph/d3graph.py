@@ -23,8 +23,10 @@ import unicodedata
 from packaging import version
 import webbrowser
 import os
-import sys
 from pathlib import Path
+
+import sys
+# sys.stdin.reconfigure(encoding='utf-8')
 
 # %% Main
 def d3graph(adjmat, df=None, node_name=None, node_color='#000080', node_color_edge='#000000', node_size=10, node_size_edge=1, width=1500, height=800, collision=0.5, charge=250, edge_width=None, edge_distance=None, directed=False, edge_distance_minmax=[None,None], title='d3graph', slider=None, savepath=None, savename='index', cmap='Paired', showfig=True, verbose=3):
