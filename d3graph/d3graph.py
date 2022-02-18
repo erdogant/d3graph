@@ -445,11 +445,9 @@ def adjmat2G(adjmat, df, edge_distance_min=None, edge_distance_max=None, edge_wi
     for i in range(0, len(uilabels)):
         I1 = tmplabels['source']==uilabels[i]
         I2 = tmplabels['target']==uilabels[i]
-        adjmat['source'].loc[I1] = str(i)
-        adjmat['target'].loc[I2] = str(i)
+        adjmat.loc[I1, 'source'] = str(i)
+        adjmat.loc[I2, 'target'] = str(i)
 
-    # adjmat['source']=ismember(tmplabels['source'],uilabels)[1].astype(str)
-    # adjmat['target']=ismember(tmplabels['target'],uilabels)[1].astype(str)
     G = nx.Graph()
     # G.add_nodes_from(np.unique(uilabels))
     try:
