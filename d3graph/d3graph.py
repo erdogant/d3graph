@@ -18,6 +18,7 @@ import json
 from jinja2 import Environment, PackageLoader
 import unicodedata
 import logging
+import time
 
 # Internal
 # from shutil import copyfile
@@ -112,6 +113,7 @@ class d3graph():
         None.
 
         """
+        time.sleep(0.5)
         self.config['network_width'] = width
         self.config['network_height'] = height
         self.config['network_title'] = title
@@ -119,7 +121,7 @@ class d3graph():
         self.config['showfig'] = showfig
 
         # Create dataframe from co-occurence matrix
-        self.G, self.node_properties = adjmat2G(self.adjmat.copy(), self.node_properties, self.edge_properties['edge_distance_minmax'], self.edge_properties['width'])
+        self.G = make_graph(self.node_properties, self.edge_properties)
         # Make slider
         self.setup_slider()
         # filepath
@@ -134,30 +136,41 @@ class d3graph():
         # Return
         return self.G
 
-    def set_edge_properties(self, edge_width=None, edge_distance=None, edge_distance_minmax=[None, None]):
+    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[None, None], directed=False):
         """Edge properties.
 
         Parameters
         ----------
-        edge_width : float (default: None)
-            width of the edges.
-            * None: The values in the data are rescaled between [1-10] and used for the width.
-            * 1: all values have the same width
         edge_distance : Int (default: 30)
             Distance of nodes on the edges.
             * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
             * 80: Constant edge distance
         edge_distance_minmax : tuple(int,int), (default: [None,None].)
             Min and max Distance of nodes on the edges. e.g., [10, 100] Weights are normalized between minimum and maximum (default)
+        directed : Bool, (default: False)
+            True: Directed edges (with arrow), False: Undirected edges (without arrow)
 
         Returns
         -------
         None
 
         """
-        self.edge_properties = {'width': edge_width, 'edge_distance': 30 if edge_distance is None else edge_distance, 'edge_distance_minmax': edge_distance_minmax}
+        self.config['directed'] = directed
+        self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
+        if edge_distance_minmax[0] is None: edge_distance_minmax[0]=1
+        if edge_distance_minmax[1] is None: edge_distance_minmax[1]=20
+        self.config['edge_distance_minmax'] = edge_distance_minmax
+        # edges to graph (G) (also works with lower versions of networkx)
+        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
 
-    def set_node_properties(self, label=None, color='#000080', weight=10, edge_color='#000000', edge_size=1, directed=False, cmap='Paired', return_properties=False):
+        # Create color column
+        # df['color']=None
+        # df.loc[df['weight']>0, 'color']='#FF0000'
+        # df.loc[df['weight']<0, 'color']='#0000FF'
+        # df.loc[df['weight']==0, 'color']='#000000'
+
+
+    def set_node_properties(self, label=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Paired', return_properties=False):
         """Node properties.
 
         Parameters
@@ -171,7 +184,7 @@ class d3graph():
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
         edge_color : list of strings (default : '#000080')
             See color.
-        weight : array of integers (default=5)
+        size : array of integers (default=5)
             Size of the node edge., e.g.,  None 10: All nodes will be set on this size, [2,5,1,...]  Specify per node the size
         edge_size : array of integers (default : 1)
             Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
@@ -180,8 +193,6 @@ class d3graph():
         cmap : String, (default: 'Set1')
             All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
             'Set1',  'Set2', 'rainbow', 'bwr', 'binary', 'seismic', 'Blues', 'Reds', 'Pastel1', 'Paired'
-        directed : Bool, (default: False)
-            True: Directed edges (with arrow), False: Undirected edges (without arrow)
 
         Returns
         -------
@@ -189,7 +200,6 @@ class d3graph():
 
         """
         self.config['cmap'] = 'Paired' if cmap is None else cmap
-        self.config['directed'] = directed
         nodecount = self.adjmat.shape[0]
 
         # Set node label
@@ -203,6 +213,7 @@ class d3graph():
             label = self.adjmat.columns.astype(str)
         else:
             label = np.array([''] * nodecount)
+        if not (len(label)==nodecount): raise Exception(logger.warning("Node label must be of same length as the number of nodes"))
 
         # Set node color
         if isinstance(color, list):
@@ -215,6 +226,8 @@ class d3graph():
             color = np.array(['#000080'] * nodecount)
         else:
             assert 'Node color not possible'
+        color = _get_hexcolor(color, cmap=self.config['cmap'])
+        if not (len(color)==nodecount): raise Exception(logger.warning("Node color must be of same length as the number of nodes"))
 
         # Set node color edge
         if isinstance(edge_color, list):
@@ -227,19 +240,22 @@ class d3graph():
             edge_color = np.array(['#000000'] * nodecount)
         else:
             assert 'Node color edge not possible'
+        edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
+        if not (len(edge_color)==nodecount): raise Exception(logger.warning("Node color edge must be of same length as the number of nodes"))
 
         # Set node size
-        if isinstance(weight, list):
-            weight = np.array(weight)
-        elif 'numpy' in str(type(weight)):
+        if isinstance(size, list):
+            size = np.array(size)
+        elif 'numpy' in str(type(size)):
             pass
-        elif isinstance(weight, type(None)):
+        elif isinstance(size, type(None)):
             # Set all nodes same default size
-            weight = np.ones(nodecount, dtype=int) * 5
-        elif isinstance(weight, int) or isinstance(weight, float):
-            weight = np.ones(nodecount, dtype=int) * weight
+            size = np.ones(nodecount, dtype=int) * 5
+        elif isinstance(size, int) or isinstance(size, float):
+            size = np.ones(nodecount, dtype=int) * size
         else:
             raise Exception(logger.error("Node size not possible"))
+        if not (len(size)==nodecount): raise Exception(logger.warning("Node size must be of same length as the number of nodes"))
 
         # Set node edge size
         if isinstance(edge_size, list):
@@ -254,36 +270,30 @@ class d3graph():
         else:
             raise Exception(logger.error("Node edge size not possible"))
 
-        # Scale the weights and get hex colors
+        # Scale the sizes and get hex colors
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.1, 4)
-        color = _get_hexcolor(color, cmap=self.config['cmap'])
-        edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
-
-        # Sanity checks
-        if not (len(weight)==nodecount): raise Exception(logger.warning("Node size must be of same length as the number of nodes"))
         if not (len(edge_size)==nodecount): raise Exception(logger.warning("Node size edge must be of same length as the number of nodes"))
-        if not (len(color)==nodecount): raise Exception(logger.warning("Node color must be of same length as the number of nodes"))
-        if not (len(edge_color)==nodecount): raise Exception(logger.warning("Node color edge must be of same length as the number of nodes"))
-        if not (len(label)==nodecount): raise Exception(logger.warning("Node label must be of same length as the number of nodes"))
 
         # Store in dict
-        # self.node_properties = {}
-        # for i, node in enumerate(label):
-        #     self.node_properties[node] = {
-        #         'node_color': color[i].astype(str),
-        #         'node_size': weight[i].astype(str),
-        #         'node_size_edge': edge_size[i].astype(str),
-        #         'node_color_edge': edge_color[i]}
+        node_names = self.adjmat.columns.astype(str)
+        self.node_properties = {}
+        for i, node in enumerate(node_names):
+            self.node_properties[node] = {
+                'label': label[i],
+                'color': color[i].astype(str),
+                'size': size[i],
+                'edge_size': edge_size[i],
+                'edge_color': edge_color[i]}
 
         # Store in dataframe
-        if not hasattr(self, 'node_properties') or (self.node_properties is None): self.node_properties=pd.DataFrame()
-        self.node_properties['node_name'] = label
-        self.node_properties['node_color'] = color.astype(str)
-        self.node_properties['node_size'] = weight.astype(str)
-        self.node_properties['node_size_edge'] = edge_size.astype(str)
-        self.node_properties['node_color_edge'] = edge_color
+        # if not hasattr(self, 'node_properties') or (self.node_properties is None): self.node_properties=pd.DataFrame()
+        # self.node_properties['node_name'] = label
+        # self.node_properties['node_color'] = color.astype(str)
+        # self.node_properties['node_size'] = size.astype(str)
+        # self.node_properties['node_size_edge'] = edge_size.astype(str)
+        # self.node_properties['node_color_edge'] = edge_color
         # Make strings of the identifiers
-        self.node_properties.index = self.node_properties.index.astype(str)
+        # self.node_properties.index = self.node_properties.index.astype(str)
         # Return properties
         if return_properties:
             return self.node_properties
@@ -297,10 +307,9 @@ class d3graph():
 
         """
         tmplist = [*self.G.edges.values()]
-        edge_weight = list(map(lambda x: x['edge_weight'], tmplist))
+        edge_weight = list(map(lambda x: x['weight_scaled'], tmplist))
 
         if self.config['slider'] == [None, None]:
-            logger.info('Set slider range based on edge weights')
             max_slider = np.ceil(np.max(edge_weight))
             if len(np.unique(edge_weight))>1:
                 min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
@@ -311,6 +320,7 @@ class d3graph():
             min_slider = self.config['slider'][0]
             max_slider = self.config['slider'][1]
         # Store the slider range
+        logger.info('Slider range is set to [%g, %g]' %(min_slider, max_slider))
         self.config['slider'] = [min_slider, max_slider]
 
     def graph(self, adjmat, df=None):
@@ -416,7 +426,7 @@ class d3graph():
             'width': self.config['network_width'],
             'height': self.config['network_height'],
             'charge': self.config['network_charge'],
-            'edge_distance': self.edge_properties['edge_distance'],
+            'edge_distance': self.config['edge_distance'],
             'min_slider': self.config['slider'][0],
             'max_slider': self.config['slider'][1],
             'directed': self.config['directed'],
@@ -455,41 +465,124 @@ def set_logger(verbose=20):
 
 # %% Write network in json file
 def json_create(G):
+    # Make sure indexing of nodes is correct with the edges
+    node_ui = np.array([*G.nodes()])
+    node_id = np.arange(0, len(node_ui)).astype(str)
+    edges = [*G.edges()]
+    source = []
+    target = []
+    for edge in edges:
+        source.append(node_id[edge[0]==node_ui][0])
+        target.append(node_id[edge[1]==node_ui][0])
+
     data = {}
     links = pd.DataFrame([*G.edges.values()]).T.to_dict()
     links_new = []
     for i in range(0, len(links)):
-        links[i]['target'] = int(links[i]['target'])
-        links[i]['source'] = int(links[i]['source'])
+    # for i in node_id:
+        links[i]['edge_width'] = links[i].pop('weight_scaled')
+        links[i]['edge_weight'] = links[i]['weight']
+        links[i]['source'] = int(source[i])
+        links[i]['target'] = int(target[i])
+        links[i]['source_label'] = edges[i][0]
+        links[i]['target_label'] = edges[i][1]
         links_new.append(links[i])
     data['links']=links_new
 
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
-    nodeid = [*G.nodes]
+    # nodeid = [*G.nodes]
     nodes_new = [None] * len(nodes)
     for i in range(0, len(nodes)):
-        nodes_new[int(nodeid[i])] = nodes[i]
+    # for i in node_id:
+        nodes[i]['node_name'] = nodes[i].pop('label')
+        nodes[i]['node_color'] = nodes[i].pop('color')
+        nodes[i]['node_size'] = nodes[i].pop('size')
+        nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
+        nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
+        nodes_new[i] = nodes[i]
     data['nodes'] = nodes_new
 
     return json.dumps(data, separators=(',', ':'))
 
 
-# %% Convert adjacency matrix to graph
-def adjmat2G(adjmat, node_properties, edge_distance_minmax, edge_width=None):
-    """Convert adjacency matrix to graph.
+# %%  Convert adjacency matrix to vector
+def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 20]):
+    """Convert adjacency matrix into vector with source and target.
 
     Parameters
     ----------
-    adjmat : dataframe
-        Dataframe for which the nodes are the columns and index and edges are the values in the array.
-    node_properties : dataframe
-        Dataframe that is connected to adjmat.
+    adjmat : pd.DataFrame()
+        Adjacency matrix.
+
+    min_weight : float
+        edges are returned with a minimum weight.
+
+    Returns
+    -------
+    pd.DataFrame()
+        nodes that are connected based on source and target
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+
+    """
+    # Convert adjacency matrix into vector
+    df = adjmat.stack().reset_index()
+    # Set columns
+    df.columns = ['source', 'target', 'weight']
+    # Remove self loops and no-connected edges
+    Iloc = df['source']!=df['target']
+    # Keep only edges with a minimum edge strength
+    if min_weight is not None:
+        logger.info("Keep only edges with weight>%g" %(min_weight))
+        Iloc2 = df['weight']>min_weight
+        Iloc = Iloc & Iloc2
+    df = df.loc[Iloc, :]
+    df.reset_index(drop=True, inplace=True)
+
+    # Scale the weights for visualization purposes
+    if len(np.unique(df['weight'].values.reshape(-1, 1)))>2:
+        df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), edge_distance_minmax[0], edge_distance_minmax[1])
+    else:
+        df['weight_scaled'] = np.ones(df.shape[0]) * 5
+
+    # Creation dictionary
+    source_target = list(zip(df['source'], df['target']))
+    dict_edges = {}
+    for i, edge in enumerate(source_target):
+        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#000000'}
+
+    # Return
+    return(dict_edges)
+
+
+# %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
+def edges2G(edge_properties, G=None):
+    # Create new graph G
+    if G is None:
+        G = nx.Graph()
+    edges = [*edge_properties]
+    # Create edges in graph
+    for edge in edges:
+        G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+    # Return
+    return(G)
+
+# %% Convert adjacency matrix to graph
+def make_graph(node_properties, edge_properties):
+    """Make graph from node and edge properties.
+
+    Parameters
+    ----------
+    node_properties : dictionary
+        Dictionary containing node properties
+    edge_properties : dictionary
+        Dictionary containing edge properties
     edge_distance_min : int, (default: None)
         Scale the weights with a minimum value.
     edge_distance_max : int, (default: None)
         Scale the weights with a maximum value.
-    edge_width : int, (default: None)
-        Width of edge, scale between [1-10] if there is are more then 2 diferent weights. The default is None.
 
     Returns
     -------
@@ -497,47 +590,39 @@ def adjmat2G(adjmat, node_properties, edge_distance_minmax, edge_width=None):
 
     """
     # Convert adjmat
-    node_names = adjmat.index.values
-    adjmat.reset_index(drop=True, inplace=True)
-    adjmat.index = adjmat.index.values.astype(str)
-    adjmat.columns = np.arange(0, adjmat.shape[1]).astype(str)
-    adjmat = adjmat.stack().reset_index()
-    adjmat.columns = ['source', 'target', 'weight']
+    # node_names = adjmat.index.values
+    # adjmat.reset_index(drop=True, inplace=True)
+    # adjmat.index = adjmat.index.values.astype(str)
+    # adjmat.columns = np.arange(0, adjmat.shape[1]).astype(str)
+    # adjmat = adjmat.stack().reset_index()
+    # adjmat.columns = ['source', 'target', 'weight']
+    adjmat = pd.DataFrame(edge_properties).T.reset_index(level=[0, 1])
+    adjmat.rename(columns={"level_0": "source", "level_1": "target"}, inplace=True)
+    node_names = [*node_properties.keys()]
 
     # Width of edge, scale between [1-10] if there is are more then 2 diferent weights
-    if isinstance(edge_width, type(None)):
-        if len(np.unique(adjmat['weight'].values.reshape(-1, 1)))>2:
-            adjmat['edge_width'] = _normalize_size(adjmat['weight'].values.reshape(-1, 1), 1, 20)
-        else:
-            edge_width=1
-    if not isinstance(edge_width, type(None)):
-        adjmat['edge_width'] = np.ones(adjmat.shape[0]) * edge_width
 
-    # Scale the weights towards an edge weight
-    if not isinstance(edge_distance_minmax[0], type(None)):
-        adjmat['edge_weight'] = _normalize_size(adjmat['weight'].values.reshape(-1, 1), edge_distance_minmax[0], edge_distance_minmax[1])
-    else:
-        adjmat['edge_weight'] = adjmat['weight'].values.reshape(-1, 1)
+    adjmat['edge_weight'] = adjmat['weight_scaled']
 
     # Keep only edges with weight
-    edge_weight_original = adjmat['weight'].values.reshape(-1, 1).flatten()
-    adjmat = adjmat.loc[edge_weight_original > 0, :].reset_index(drop=True)
+    # edge_weight_original = adjmat['weight'].values.reshape(-1, 1).flatten()
+    # adjmat = adjmat.loc[edge_weight_original > 0, :].reset_index(drop=True)
 
     # Remove self-loops
-    Iloc = adjmat['source'] != adjmat['target']
-    adjmat = adjmat.loc[Iloc, :].reset_index(drop=True)
+    # Iloc = adjmat['source'] != adjmat['target']
+    # adjmat = adjmat.loc[Iloc, :].reset_index(drop=True)
 
     # Include source-target label
     source_label = np.repeat('', adjmat.shape[0]).astype('O')
     target_label = np.repeat('', adjmat.shape[0]).astype('O')
     for i in range(0, len(node_names)):
-        source_label[adjmat['source']==str(i)] = node_names[i]
+        source_label[adjmat['source']==node_names[i]] = node_names[i]
     for i in range(0, len(node_names)):
-        target_label[adjmat['target']==str(i)] = node_names[i]
+        target_label[adjmat['target']==node_names[i]] = node_names[i]
     adjmat['source_label'] = source_label
     adjmat['target_label'] = target_label
 
-    # Make sure indexing of nodes is correct with the edges.
+    # Make sure indexing of nodes is correct with the edges
     uilabels = np.unique(np.append(adjmat['source'], adjmat['target']))
     tmplabels=adjmat[['source', 'target']]
     adjmat['source']=None
@@ -547,20 +632,26 @@ def adjmat2G(adjmat, node_properties, edge_distance_minmax, edge_width=None):
         I2 = tmplabels['target']==uilabels[i]
         adjmat.loc[I1, 'source'] = str(i)
         adjmat.loc[I2, 'target'] = str(i)
-
+    
+    # Create new Graph
     G = nx.Graph()
-    try:
-        G = nx.from_pandas_edgelist(adjmat, 'source', 'target', ['weight', 'edge_weight', 'edge_width', 'source_label', 'target_label', 'source', 'target'])
-    except:
-        G = nx.from_pandas_dataframe(adjmat, 'source', 'target', edge_attr=['weight', 'edge_weight', 'edge_width', 'source_label', 'target_label', 'source', 'target'])
+    # Add edges to graph
+    G = edges2G(edge_properties, G=G)
+    
+    # try:
+    #     G = nx.from_pandas_edgelist(adjmat, 'source', 'target', ['weight', 'edge_weight', 'weight_scaled', 'source_label', 'target_label', 'source', 'target'])
+    # except:
+    #     G = nx.from_pandas_dataframe(adjmat, 'source', 'target', edge_attr=['weight', 'edge_weight', 'weight_scaled', 'source_label', 'target_label', 'source', 'target'])
 
     # Add node information
-    A = pd.concat([pd.DataFrame(adjmat[['target', 'target_label']].values), pd.DataFrame(adjmat[['source', 'source_label']].values)], axis=0)
-    A = A.groupby([0, 1]).size().reset_index(name='Freq')
-    IA, IB = ismember(node_properties['node_name'], A[1])
-    # IA, IB = ismember(node_properties.index.values, A[0])
-    node_properties = node_properties.loc[IA, :]
-    node_properties.index = A[0].loc[IB].values.astype(str)
+    # A = pd.concat([pd.DataFrame(adjmat[['target', 'target_label']].values), pd.DataFrame(adjmat[['source', 'source_label']].values)], axis=0)
+    # A = A.groupby([0, 1]).size().reset_index(name='Freq')
+    # IA, IB = ismember(node_properties['node_names'], A[1])
+    # node_properties = node_properties.loc[IA, :]
+    # node_properties.index = A[0].loc[IB].values.astype(str)
+    
+    node_properties = pd.DataFrame(node_properties).T
+    # node_properties.rename(columns={"index": "node_name"}, inplace=True)
 
     if not node_properties.empty:
         getnodes = np.array([*G.nodes])
@@ -572,7 +663,7 @@ def adjmat2G(adjmat, node_properties, edge_distance_minmax, edge_width=None):
                 else:
                     logger.warning("Node not found")
 
-    return(G, node_properties)
+    return G
 
 
 # %% Normalize in good d3 range
@@ -634,6 +725,7 @@ def data_checks(adjmat):
         raise Exception(logger.error('adjmat columns and index must have the same identifiers'))
     # Remove special characters from column names
     adjmat = remove_special_chars(adjmat)
+
     # Return
     return adjmat
 
