@@ -57,7 +57,7 @@ function d3graphscript(config = {
     .attr("r", function(d) { return d.node_size; })					// NODE SIZE
     .style("fill", function(d) {return d.node_color;})				// NODE-COLOR
     .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
-    .style("stroke", function(d) {return d.node_color_edge;})			// NODE-COLOR-EDGE
+    .style("stroke", function(d) {return d.node_color_edge;})		// NODE-COLOR-EDGE
   //  .style("stroke", '#000')										// NODE-EDGE-COLOR (all black)
 
   // Text in nodes

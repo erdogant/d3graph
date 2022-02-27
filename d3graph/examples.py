@@ -2,16 +2,8 @@
 import networkx as nx
 import pandas as pd
 import numpy as np
-from d3graph import d3graph
-
-# %%
 from d3graph import d3graph, vec2adjmat
-source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
-target = ['node F','node B','node J','node F','node F','node M','node M','node A']
-weight = [5.56, 0.5, 0.64, 0.23, 0.9,3.28,0.5,0.45]
 
-adjmat = vec2adjmat(source, target, weight=weight)
-out = d3graph(adjmat)
 
 # %%
 G = nx.karate_club_graph()
@@ -35,8 +27,91 @@ for i in range(0,len(G.nodes)):
 df['name']=node_name
 
 # Make some graphs
-out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
-out = d3graph(adjmat)
+d3 = d3graph()
+d3.graph(adjmat)
+# d3.set_node_properties(color=node_color, cmap='Set1')
+d3.set_node_properties(color=node_color, cmap='Set1')
+d3.show()
+
+
+
+# %%
+from d3graph import d3graph, vec2adjmat
+
+source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
+target = ['node F','node B','node J','node F','node F','node M','node M','node A']
+weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+
+adjmat = vec2adjmat(source, target, weight=weight)
+d3 = d3graph()
+d3.graph(adjmat)
+d3.set_node_properties()
+d3.set_node_properties(label=['node AA','node BB','node FF','node JJ','node MM','node CC','node ZZ'])
+d3.show()
+
+
+
+
+# %%
+
+source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
+target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
+weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+
+# Convert to adjacency matrix
+adjmat = vec2adjmat(source, target, weight=weight)
+# print(adjmat)
+
+# Example A: simple interactive network
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
+
+# Example B: Color nodes
+# d3 = d3graph()
+d3.graph(adjmat)
+# Set node properties
+d3.set_node_properties(color=adjmat.columns.values)
+d3.show()
+
+
+weight = [10, 20, 10, 10, 15, 10, 5]
+
+# Example C: include node size
+d3.set_node_properties(color=adjmat.columns.values, weight=weight)
+d3.show()
+
+# Example D: include node-edge-size
+d3.set_node_properties(color=adjmat.columns.values, weight=weight, edge_size=weight[::-1])
+d3.show()
+
+# Example E: include node-edge color
+d3.set_node_properties(color=adjmat.columns.values, weight=weight, edge_size=weight[::-1], edge_color='#000000')
+d3.show()
+
+# Example F: Change colormap
+d3.set_node_properties(color=adjmat.columns.values, weight=weight, edge_size=weight[::-1], edge_color='#00FFFF', cmap='Set2')
+d3.show()
+
+# Example H: Include directed links. Arrows are set from source -> target
+d3.set_node_properties(color=adjmat.columns.values, weight=weight, edge_size=weight[::-1], edge_color='#00FFFF', cmap='Set2', directed=True)
+d3.show()
+
+
+# %%
+from d3graph import d3graph, vec2adjmat
+d3 = d3graph()
+
+source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
+target = ['node F','node B','node J','node F','node F','node M','node M','node A']
+weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+
+adjmat = vec2adjmat(source, target, weight=weight)
+d3.graph(adjmat)
+d3.set_node_properties(color=adjmat.columns.values)
+d3.show()
+
+
 
 
 # %% Extended example
@@ -56,7 +131,6 @@ adjmat.iloc[5,6]=7
 from tabulate import tabulate
 print(tabulate(adjmat.head(), tablefmt="grid", headers="keys"))
 
-
 df = pd.DataFrame(index=adjmat.index)
 df['degree']=np.array([*G.degree()])[:,1]
 df['other info']=np.array([*G.degree()])[:,1]
@@ -66,53 +140,33 @@ for i in range(0,len(G.nodes)):
     node_color.append(G.nodes[i]['club'])
     node_name=node_color
 
-out = d3graph(adjmat, df=df, node_size=node_size)
-out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
-out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, edge_distance=1000)
-out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, charge=1000)
-out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, cmap='Set1', collision=1, charge=250)
-out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, node_color_edge='#00FFFF', cmap='Set1', collision=1, charge=250)
+d3 = d3graph()
+d3.graph(adjmat)
 
-# %%
-source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
-target = ['node F','node B','node J','node F','node F','node M','node M','node A']
-weight = [5.56, 0.5, 0.64, 0.23, 0.9,3.28,0.5,0.45]
+d3.set_node_properties(adjmat, weight=node_size)
+d3.show()
 
-# Import library
-from d3graph import d3graph, vec2adjmat
-# Convert to adjacency matrix
-adjmat = vec2adjmat(source, target, weight=weight)
-print(adjmat)
-# target  node A  node B  node F  node J  node M  node C  node Z
-# source                                                        
-# node A    0.00     0.0    5.56    0.00    3.28     0.0     0.0
-# node B    0.00     0.0    1.13    0.64    0.00     0.0     0.0
-# node F    0.00     0.5    0.00    0.00    0.00     0.0     0.0
-# node J    0.00     0.0    0.00    0.00    0.00     0.0     0.0
-# node M    0.00     0.0    0.00    0.00    0.00     0.0     0.0
-# node C    0.00     0.0    0.00    0.00    0.50     0.0     0.0
-# node Z    0.45     0.0    0.00    0.00    0.00     0.0     0.0
+d3.set_node_properties(color=node_size, weight=node_size)
+d3.show()
 
-# Example A: simple interactive network
-out = d3graph(adjmat)
+d3.set_edge_properties(edge_distance=100)
+d3.set_node_properties(color=node_size, weight=node_size)
+d3.show()
 
-# Example B: Color nodes
-out = d3graph(adjmat, node_color=adjmat.columns.values)
+d3 = d3graph(charge=1000)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_size, weight=node_size)
+d3.show()
 
-# Example C: include node size
-node_size = [10,20,10,10,15,10,5]
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size)
+d3 = d3graph(collision=1, charge=250)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_name, weight=node_size, edge_size=node_size, cmap='Set1')
+d3.show()
 
-# Example D: include node-edge-size
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], cmap='Set2')
+d3 = d3graph(collision=1, charge=250)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_name, weight=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1')
+d3.show()
 
-# Example E: include node-edge color
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF')
-
-# Example F: Change colormap
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF', cmap='Set2')
-
-# Example H: Include directed links. Arrows are set from source -> target
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF', cmap='Set2', directed=True)
 
 # %%

@@ -32,7 +32,7 @@ Examples
 >>> import numpy as np
 >>> import networkx as nx
 >>> from d3graph import d3graph
->>> 
+>>>
 >>> # Easy Example
 >>> G = nx.karate_club_graph()
 >>> adjmat = nx.adjacency_matrix(G).todense()
