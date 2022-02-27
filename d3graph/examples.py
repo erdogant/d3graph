@@ -16,8 +16,8 @@ d3 = d3graph()
 d3.graph(adjmat)
 d3.show()
 
-d3.set_node_properties(label=['node AA','node BB','node FF','node JJ','node MM','node CC','node ZZ'])
-d3.show()
+d3.set_node_properties(color=adjmat.columns.values, label=['node AA','node BB','node FF','node JJ','node MM','node CC','node ZZ'])
+d3.show(filepath='c://temp/')
 
 
 
@@ -137,8 +137,15 @@ for i in range(0,len(G.nodes)):
     node_color.append(G.nodes[i]['club'])
     node_name=node_color
 
+# Make some graphs
 d3 = d3graph()
+
 d3.graph(adjmat)
+d3.set_node_properties(color=node_color, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(label=node_name, color=node_color, cmap='Set1')
+d3.show()
 
 d3.set_node_properties(adjmat, size=node_size)
 d3.show()

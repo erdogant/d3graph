@@ -8,7 +8,7 @@ from d3graph.d3graph import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '1.0.3'
+__version__ = '2.0.0'
 
 import jinja2
 if version.parse(jinja2.__version__) > version.parse("2.11.3"):
@@ -27,56 +27,48 @@ The ouput is a html file that is interactive and stand alone.
 
 Examples
 --------
->>> # Load some libraries
->>> import pandas as pd
->>> import numpy as np
->>> import networkx as nx
->>> from d3graph import d3graph
+>>> source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
+>>> target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
+>>> weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
 >>>
->>> # Easy Example
->>> G = nx.karate_club_graph()
->>> adjmat = nx.adjacency_matrix(G).todense()
->>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
->>> # Make the interactive graph
->>> results = d3graph(adjmat)
+>>> # Convert to adjacency matrix
+>>> adjmat = vec2adjmat(source, target, weight=weight)
+>>> # print(adjmat)
 >>>
->>> # Example with more parameters
->>> G = nx.karate_club_graph()
->>> adjmat = nx.adjacency_matrix(G).todense()
->>> adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
->>> adjmat.columns=adjmat.columns.astype(str)
->>> adjmat.index=adjmat.index.astype(str)
->>> adjmat.iloc[3,4]=5
->>> adjmat.iloc[4,5]=6
->>> adjmat.iloc[5,6]=7
+>>> # Example A: simple interactive network
+>>> d3 = d3graph()
+>>> d3.graph(adjmat)
+>>> d3.show()
 >>>
->>> # Create dataset
->>> df = pd.DataFrame(index=adjmat.index)
->>> df['degree']=np.array([*G.degree()])[:,1]
->>> df['other info']=np.array([*G.degree()])[:,1]
->>> node_size=df.degree.values*2
->>> node_color=[]
->>> for i in range(0,len(G.nodes)):
->>>     node_color.append(G.nodes[i]['club'])
->>>     node_name=node_color
+>>> # Example B: Color nodes
+>>> # d3 = d3graph()
+>>> d3.graph(adjmat)
+>>> # Set node properties
+>>> d3.set_node_properties(color=adjmat.columns.values)
+>>> d3.show()
 >>>
->>> # Make some graphs
->>> out = d3graph(adjmat, df=df, node_size=node_size)
->>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
->>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, edge_distance=1000)
->>> out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size, charge=1000)
->>> out = d3graph(adjmat, df=df, node_color=node_name, node_size=node_size, node_size_edge=node_size, node_color_edge='#00FFFF', cmap='Set1', collision=1, charge=250)
+>>> size = [10, 20, 10, 10, 15, 10, 5]
 >>>
->>> # Example with conversion to adjacency matrix
->>> G = nx.karate_club_graph()
->>> adjmat = nx.adjacency_matrix(G).todense()
->>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
->>> import d3graph
->>> # Convert adjacency matrix to vector with source and target
->>> vec = d3graph.adjmat2vec(adjmat)
->>> # Convert vector (source and target) to adjacency matrix.
->>> adjmat1 = d3graph.vec2adjmat(vec['source'], vec['target'], vec['weight'])
->>> # Check
->>> np.all(adjmat==adjmat1.astype(int))
+>>> # Example C: include node size
+>>> d3.set_node_properties(color=adjmat.columns.values, size=size)
+>>> d3.show()
+>>>
+>>> # Example D: include node-edge-size
+>>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+>>> d3.show()
+>>>
+>>> # Example E: include node-edge color
+>>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#000000')
+>>> d3.show()
+>>>
+>>> # Example F: Change colormap
+>>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
+>>> d3.show()
+>>>
+>>> # Example H: Include directed links. Arrows are set from source -> target
+>>> d3.set_edge_properties(directed=True)
+>>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
+>>> d3.show()
+>>>
 
 """
