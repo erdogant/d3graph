@@ -9,6 +9,7 @@
 [![DOI](https://zenodo.org/badge/228166657.svg)](https://zenodo.org/badge/latestdoi/228166657)
 [![Downloads](https://pepy.tech/badge/d3graph)](https://pepy.tech/project/d3graph)
 [![Downloads](https://pepy.tech/badge/d3graph/month)](https://pepy.tech/project/d3graph/month)
+[![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/d3graph/)
 [![Medium](https://img.shields.io/badge/Medium-Blog-green)](https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7)
 <!---[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-yellow.svg)](https://www.buymeacoffee.com/erdogant)-->
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
@@ -64,24 +65,6 @@ from d3graph import d3graph
 
 * Create simple example dataset for which the input matrix should look this:
 
-```python
-
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-|    |   0 |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |   9 |   10 |   11 |   12 |   13 |   14 |   15 |   16 |   17 |   18 |   19 |   20 |   21 |   22 |   23 |   24 |   25 |   26 |   27 |   28 |   29 |   30 |   31 |   32 |   33 |
-+====+=====+=====+=====+=====+=====+=====+=====+=====+=====+=====+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+======+
-|  0 |   0 |   1 |   1 |   1 |   1 |   1 |   1 |   1 |   1 |   0 |    1 |    1 |    1 |    1 |    0 |    0 |    0 |    1 |    0 |    1 |    0 |    1 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    1 |    0 |    0 |
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-|  1 |   1 |   0 |   1 |   1 |   0 |   0 |   0 |   1 |   0 |   0 |    0 |    0 |    0 |    1 |    0 |    0 |    0 |    1 |    0 |    1 |    0 |    1 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    1 |    0 |    0 |    0 |
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-...
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-| 32 |   1 |   1 |   1 |   0 |   5 |   0 |   0 |   1 |   0 |   0 |    0 |    0 |    1 |    1 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-| 33 |   1 |   0 |   0 |   0 |   0 |   6 |   1 |   0 |   0 |   0 |    1 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |    0 |
-+----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+------+
-
-
-```
 
 ```python
 G = nx.karate_club_graph()
@@ -89,11 +72,17 @@ adjmat = nx.adjacency_matrix(G).todense()
 adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 adjmat.iloc[3,4]=5
 adjmat.iloc[4,5]=6
-```
 
-* Make d3graph
-```python
-G_d3   = d3graph(adjmat)
+
+# Import library
+from d3graph import d3graph
+# Initialize
+d3 = d3graph()
+# Process adjacency matrix
+d3.graph(adjmat)
+# Show plot
+d3.show()
+
 ```
 
 The output looks as below:
@@ -105,14 +94,12 @@ The output looks as below:
 </p>
 
 
+### Simple example with various settings
+
 ```python
-
-source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
-target = ['node F','node B','node J','node F','node F','node M','node M','node A']
-weight = [5.56, 0.5, 0.64, 0.23, 0.9,3.28,0.5,0.45]
-
-# Import library
-from d3graph import d3graph, vec2adjmat
+source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
+target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
+weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
 
 # Convert to adjacency matrix
 adjmat = vec2adjmat(source, target, weight=weight)
@@ -128,58 +115,109 @@ print(adjmat)
 # node C    0.00     0.0    0.00    0.00    0.50     0.0     0.0
 # node Z    0.45     0.0    0.00    0.00    0.00     0.0     0.0
 
+
 # Example A: simple interactive network
-out = d3graph(adjmat)
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
 
 # Example B: Color nodes
-out = d3graph(adjmat, node_color=adjmat.columns.values)
+# d3 = d3graph()
+d3.graph(adjmat)
+# Set node properties
+d3.set_node_properties(color=adjmat.columns.values)
+d3.show()
+
+size = [10, 20, 10, 10, 15, 10, 5]
 
 # Example C: include node size
-node_size = [10,20,10,10,15,10,5]
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size)
+d3.set_node_properties(color=adjmat.columns.values, size=size)
+d3.show()
 
 # Example D: include node-edge-size
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], cmap='Set2')
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+d3.show()
 
 # Example E: include node-edge color
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF')
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#000000')
+d3.show()
 
 # Example F: Change colormap
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF', cmap='Set2')
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
+d3.show()
 
 # Example H: Include directed links. Arrows are set from source -> target
-out = d3graph(adjmat, node_color=adjmat.columns.values, node_size=node_size, node_size_edge=node_size[::-1], node_color_edge='#00FFFF', cmap='Set2', directed=True)
+d3.set_edge_properties(directed=True)
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
+d3.show()
+
 
 ```
 
-### Example: including Dataframe with additional node information
+### Example with various settings
 
 ```python
+
+import networkx as nx
+import pandas as pd
+from d3graph import d3graph
 
 G = nx.karate_club_graph()
 adjmat = nx.adjacency_matrix(G).todense()
 adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
 adjmat.columns=adjmat.columns.astype(str)
 adjmat.index=adjmat.index.astype(str)
+adjmat.iloc[3,4]=5
+adjmat.iloc[4,5]=6
+adjmat.iloc[5,6]=7
 
-# Make the dataframe
+from tabulate import tabulate
+print(tabulate(adjmat.head(), tablefmt="grid", headers="keys"))
+
 df = pd.DataFrame(index=adjmat.index)
-
-# Add some columns. Note that columns that start with: node_ are removed from the information.
-
 df['degree']=np.array([*G.degree()])[:,1]
 df['other info']=np.array([*G.degree()])[:,1]
-
-node_color = []
+node_size=df.degree.values*2
+node_color=[]
 for i in range(0,len(G.nodes)):
     node_color.append(G.nodes[i]['club'])
     node_name=node_color
-df['name']=node_name
-
-node_size = df.degree.values*2
 
 # Make some graphs
-out = d3graph(adjmat, df=df, node_color=node_size, node_size=node_size)
+d3 = d3graph()
+
+d3.graph(adjmat)
+d3.set_node_properties(color=node_color, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(label=node_name, color=node_color, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(adjmat, size=node_size)
+d3.show()
+
+d3.set_node_properties(color=node_size, size=node_size)
+d3.show()
+
+d3.set_edge_properties(edge_distance=100)
+d3.set_node_properties(color=node_size, size=node_size)
+d3.show()
+
+d3 = d3graph(charge=1000)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_size, size=node_size)
+d3.show()
+
+d3 = d3graph(collision=1, charge=250)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_name, size=node_size, edge_size=node_size, cmap='Set1')
+d3.show()
+
+d3 = d3graph(collision=1, charge=250)
+d3.graph(adjmat)
+d3.set_node_properties(color=node_name, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1')
+d3.show()
+
 ```
 
 
