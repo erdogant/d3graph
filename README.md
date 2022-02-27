@@ -24,7 +24,7 @@ For this package I was inspired by d3 javascript examples but there was no pytho
 
 ### Blog/Documentation
 
-* [**Creating beautiful stand-alone interactive D3 charts with Python**](https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7)
+* [**Medium blog: Creating beautiful stand-alone interactive D3 charts with Python**](https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7)
 * [**d3graph documentation pages (Sphinx)**](https://erdogant.github.io/d3graph/)
 
 <p align="center">
