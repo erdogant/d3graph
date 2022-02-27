@@ -1,3 +1,4 @@
+"""Make interactive network in D3 javascript."""
 # ---------------------------------
 # Name        : d3graph.py
 # Author      : E.Taskesen
@@ -6,12 +7,8 @@
 # ---------------------------------
 
 # Custom packages
-from ismember import ismember
-
-# Popular
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
 import json
@@ -19,26 +16,24 @@ from jinja2 import Environment, PackageLoader
 import unicodedata
 import logging
 import time
-
-# Internal
-# from shutil import copyfile
+import tempfile
 from packaging import version
 import webbrowser
 import os
 from pathlib import Path
-
-import sys
-# sys.stdin.reconfigure(encoding='utf-8')
+from ismember import ismember
+import colourmap as cm
 
 logger = logging.getLogger('')
-for handler in logger.handlers[:]: #get rid of existing old handlers
+for handler in logger.handlers[:]:
     logger.removeHandler(handler)
 console = logging.StreamHandler()
 # formatter = logging.Formatter('[%(asctime)s] [XXX]> %(levelname)s> %(message)s', datefmt='%H:%M:%S')
-formatter = logging.Formatter('[d3graph] >%(levelname)s> %(message)s')
+formatter = logging.Formatter('[d3graph] %(levelname)s> %(message)s')
 console.setFormatter(formatter)
 logger.addHandler(console)
 logger = logging.getLogger()
+
 
 # %%
 class d3graph():
@@ -49,7 +44,9 @@ class d3graph():
 
         Description
         -----------
-        Initialize d3graph network with its behavior properties.
+        d3graph is a python library that is build on d3js and creates interactive and stand-alone networks.
+        The input data is a simple adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
+        The ouput is a html file that is interactive and stand alone.
 
         Parameters
         ----------
@@ -57,10 +54,8 @@ class d3graph():
             Nodes wants to prevent a collision. The higher the number, the more collisions are prevented.
         charge : int, (default: 250)
             Scaling/Response of the network. Towards zero becomes a more nervous network.
-        slider : typle [min: int, max: int]:, (default: [0, 10])
-            set slider in range to break the network on edge-strength.
-        cmap : TYPE, optional
-            DESCRIPTION. The default is 'Paired'.
+        slider : typle [min: int, max: int]:, (default: [None, None])
+            Slider is automatically set to the range of the edge weights.
         verbose : int, (default: 20)
             Print progress to screen.
             60: None, 40: Error, 30: Warn, 20: Info, 10: Debug
@@ -89,22 +84,19 @@ class d3graph():
         """Clean previous results to ensure correct working."""
         if hasattr(self, 'adjmat'): del self.adjmat
         if hasattr(self, 'node_properties'): del self.node_properties
+        if hasattr(self, 'edge_properties'): del self.edge_properties
 
-    def show(self, width=1500, height=800, title='d3graph', filepath=None, savename='index', showfig=True):
+    def show(self, figsize=(1500, 800), title='d3graph', filepath='d3graph.html', showfig=True):
         """Build and show the graph.
 
         Parameters
         ----------
-        width : int, (default: 1500)
-            Width of the window.
-        height : int, (default: 800)
-            height of the window.
+        figsize : tuple, (default: (1500, 800))
+            Size of the figure in the browser, [height, width].
         title : String, (default: None)
             Title of the figure.
         filepath : String, (Default: user temp directory)
-            Directory path to save the output, such as 'c://temp/'
-        savename : string, (default: 'index')
-            Name of the html file.
+            File path to save the output
         showfig : bool, (default: True)
             Open the window to show the network.
 
@@ -114,25 +106,23 @@ class d3graph():
 
         """
         time.sleep(0.5)
-        self.config['network_width'] = width
-        self.config['network_height'] = height
+        self.config['figsize'] = figsize
         self.config['network_title'] = title
-        self.config['path'] = '' if filepath is None else filepath
+        # self.config['path'] = '' if filepath is None else filepath
         self.config['showfig'] = showfig
+        self.config['filepath'] = self.set_path(filepath)
 
         # Create dataframe from co-occurence matrix
         self.G = make_graph(self.node_properties, self.edge_properties)
         # Make slider
         self.setup_slider()
-        # filepath
-        self.config['filepath'] = set_path(filepath, self.config['path'], savename)
         # Create json
         json_data = json_create(self.G)
         # Create html with json file embedded
         self.write_html(json_data)
         # Open the webbrowser
         if self.config['showfig']:
-            webbrowser.open(os.path.abspath(self.config['path'] + 'index.html'), new=2)
+            webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
         # Return
         return self.G
 
@@ -145,14 +135,19 @@ class d3graph():
             Distance of nodes on the edges.
             * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
             * 80: Constant edge distance
-        edge_distance_minmax : tuple(int,int), (default: [None,None].)
-            Min and max Distance of nodes on the edges. e.g., [10, 100] Weights are normalized between minimum and maximum (default)
+        edge_distance_minmax : tuple(int,int), (default: [None,None])
+            Weights are normalized between minimum and maximum
+            * [1, 20]
         directed : Bool, (default: False)
             True: Directed edges (with arrow), False: Undirected edges (without arrow)
 
         Returns
         -------
-        None
+        edge_properties: dict
+            key: (source, target)
+                'weight': weight of the edge
+                'weight_scaled': scaled weight of the edge
+                'color': color of the edge
 
         """
         self.config['directed'] = directed
@@ -163,32 +158,33 @@ class d3graph():
         # edges to graph (G) (also works with lower versions of networkx)
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
 
-        # Create color column
-        # df['color']=None
-        # df.loc[df['weight']>0, 'color']='#FF0000'
-        # df.loc[df['weight']<0, 'color']='#0000FF'
-        # df.loc[df['weight']==0, 'color']='#000000'
-
-
-    def set_node_properties(self, label=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Paired', return_properties=False):
+    def set_node_properties(self, label=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
         """Node properties.
 
         Parameters
         ----------
-        color : list of strings (default : '#000080')
+        label : list of names (default: None)
+            Labels are used from the input adjacency matrix
+            * ['label 1','label 2','label 3', ...]
+        color : list of strings (default: '#000080')
             Color of the node.
             * None: All nodes will be have the same color (auto generated).
             * ['#000000']: All nodes will have the same hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
-        edge_color : list of strings (default : '#000080')
-            See color.
-        size : array of integers (default=5)
-            Size of the node edge., e.g.,  None 10: All nodes will be set on this size, [2,5,1,...]  Specify per node the size
-        edge_size : array of integers (default : 1)
+        size : array of integers (default: 5)
+            Size of the nodes.
+            * 10: all nodes sizes are set to 10
+            * [10, 5, 3, 1, ...]: Specify node sizes
+        edge_color : list of strings (default: '#000080')
+            Edge color of the node.
+            * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
+            * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
+            * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
+        edge_size : array of integers (default: 1)
             Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
-            * 10: All nodes will be set on this size,
+            * 1: All nodes will be set on this size,
             * [2,5,1,...]  Specify per node the edge size.
         cmap : String, (default: 'Set1')
             All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
@@ -196,7 +192,13 @@ class d3graph():
 
         Returns
         -------
-        None.
+        node_properties: dict
+            key: node_name
+                'label': Label of the node
+                'color': color of the node
+                'size': size of the node
+                'edge_size': edge_size of the node
+                'edge_color': edge_color of the node
 
         """
         self.config['cmap'] = 'Paired' if cmap is None else cmap
@@ -285,19 +287,6 @@ class d3graph():
                 'edge_size': edge_size[i],
                 'edge_color': edge_color[i]}
 
-        # Store in dataframe
-        # if not hasattr(self, 'node_properties') or (self.node_properties is None): self.node_properties=pd.DataFrame()
-        # self.node_properties['node_name'] = label
-        # self.node_properties['node_color'] = color.astype(str)
-        # self.node_properties['node_size'] = size.astype(str)
-        # self.node_properties['node_size_edge'] = edge_size.astype(str)
-        # self.node_properties['node_color_edge'] = edge_color
-        # Make strings of the identifiers
-        # self.node_properties.index = self.node_properties.index.astype(str)
-        # Return properties
-        if return_properties:
-            return self.node_properties
-
     def setup_slider(self):
         """Mininum maximum range of the slider.
 
@@ -323,7 +312,7 @@ class d3graph():
         logger.info('Slider range is set to [%g, %g]' %(min_slider, max_slider))
         self.config['slider'] = [min_slider, max_slider]
 
-    def graph(self, adjmat, df=None):
+    def graph(self, adjmat):
         """Make interactive network in d3js.
 
         Description
@@ -336,67 +325,33 @@ class d3graph():
         ----------
         adjmat : pd.DataFrame()
             Adjacency matrix (symmetric). Values > 0 are edges.
-        df : pd.DataFrame, (default: None)
-            index: Samples in the same order as the adjmat. column: columns represents an additional feature of the node
 
         Examples
         --------
-        >>> # Load some libraries
-        >>> import pandas as pd
-        >>> import numpy as np
-        >>> import networkx as nx
-        >>> from d3graph import d3graph
+        >>> from d3graph import d3graph, vec2adjmat
         >>>
-        >>> # Easy Example
-        >>> G = nx.karate_club_graph()
-        >>> adjmat = nx.adjacency_matrix(G).todense()
-        >>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
-        >>> # Make the interactive graph
-        >>> results = d3graph(adjmat)
+        >>> source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
+        >>> target = ['node F','node B','node J','node F','node F','node M','node M','node A']
+        >>> weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
         >>>
-        >>> # Example with more parameters
-        >>> G = nx.karate_club_graph()
-        >>> adjmat = nx.adjacency_matrix(G).todense()
-        >>> adjmat=pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
-        >>> adjmat.columns=adjmat.columns.astype(str)
-        >>> adjmat.index=adjmat.index.astype(str)
-        >>> adjmat.iloc[3,4]=5
-        >>> adjmat.iloc[4,5]=6
-        >>> adjmat.iloc[5,6]=7
+        >>> # Convert vector to adjacency matrix
+        >>> adjmat = vec2adjmat(source, target, weight=weight)
         >>>
-        >>> # Create dataset
-        >>> df = pd.DataFrame(index=adjmat.index)
-        >>> df['degree']=np.array([*G.degree()])[:,1]
-        >>> df['other info']=np.array([*G.degree()])[:,1]
-        >>> weight=df.degree.values*2
-        >>> node_color=[]
-        >>> for i in range(0,len(G.nodes)):
-        >>>     node_color.append(G.nodes[i]['club'])
-        >>>     label=node_color
+        >>> Initialize the d3graph library
+        >>> d3 = d3graph()
+        >>> # Proces adjacency matrix
+        >>> d3.graph(adjmat)
+        >>> # Make the plot
+        >>> d3.show()
         >>>
-        >>> # Make some graphs
-        >>> out = d3graph(adjmat, df=df, weight=weight)
-        >>> out = d3graph(adjmat, df=df, node_color=weight, weight=weight)
-        >>> out = d3graph(adjmat, df=df, node_color=weight, weight=weight, edge_distance=1000)
-        >>> out = d3graph(adjmat, df=df, node_color=weight, weight=weight, charge=1000)
-        >>> out = d3graph(adjmat, df=df, node_color=label, weight=weight, edge_size=weight, edge_color='#00FFFF', cmap='Set1', collision=1, charge=250)
-        >>>
-        >>> # Example with conversion to adjacency matrix
-        >>> G = nx.karate_club_graph()
-        >>> adjmat = nx.adjacency_matrix(G).todense()
-        >>> adjmat = pd.DataFrame(index=range(0,adjmat.shape[0]), data=adjmat, columns=range(0,adjmat.shape[0]))
-        >>> # Import library
-        >>> import d3graph
-        >>> # Convert adjacency matrix to vector with source and target
-        >>> vec = d3graph.adjmat2vec(adjmat)
-        >>> # Convert vector (source and target) to adjacency matrix.
-        >>> adjmat1 = d3graph.vec2adjmat(vec['source'], vec['target'], vec['weight'])
-        >>> # Check
-        >>> np.all(adjmat==adjmat1.astype(int))
+        >>> # Make changed in the node properties
+        >>> d3.set_node_properties(label=['node 1','node 2','node 3','node 4','node 5','node 6','node 7'], size=[10, 20, 10, 10, 15, 10, 5], color=adjmat.columns.values)
+        >>> # Make the plot
+        >>> d3.show()
 
         Returns
         -------
-        dict with graph and filepath.
+        None
 
         """
         # Clean readily fitted models to ensure correct results
@@ -423,8 +378,8 @@ class d3graph():
         content = {
             'json_data': json_data,
             'title': self.config['network_title'],
-            'width': self.config['network_width'],
-            'height': self.config['network_height'],
+            'width': self.config['figsize'][0],
+            'height': self.config['figsize'][1],
             'charge': self.config['network_charge'],
             'edge_distance': self.config['edge_distance'],
             'min_slider': self.config['slider'][0],
@@ -441,20 +396,38 @@ class d3graph():
         with open(index_file, "w", encoding="utf-8") as f:
             f.write(index_template.render(content))
 
+    def set_path(self, filepath='d3graph.html'):
+        """Set the file path.
 
-# %%
-def set_path(filepath, path, savename):
-    if filepath is None:
-        filepath = savename + '.html'
-    else:
-        filepath = filepath + savename + '.html'
+        Parameters
+        ----------
+        filepath : str
+            filename and or full pathname.
+            * 'd3graph.html'
+            * 'c://temp/'
+            * 'c://temp/d3graph.html'
 
-    if (path is not None) and (not os.path.isdir(path)) and (path != ''):
-        logger.info('Create directory: [%s]' %(path))
-        os.mkdir(path)
+        Returns
+        -------
+        filepath : str
+            Path to graph.
 
-    logger.info("filepath is set to [%s]" %(filepath))
-    return filepath
+        """
+        dirname, filename = os.path.split(filepath)
+
+        if (filename is None) or (filename==''):
+            filename = 'd3graph.html'
+
+        if (dirname is None) or (dirname==''):
+            dirname = tempfile.TemporaryDirectory().name
+
+        if not os.path.isdir(dirname):
+            logger.info('Create directory: [%s]' %(dirname))
+            os.mkdir(dirname)
+
+        filepath = os.path.abspath(os.path.join(dirname, filename))
+        logger.debug("filepath is set to [%s]" %(filepath))
+        return filepath
 
 
 # %%
@@ -465,6 +438,18 @@ def set_logger(verbose=20):
 
 # %% Write network in json file
 def json_create(G):
+    """Create json from Graph.
+
+    Parameters
+    ----------
+    G : Networkx object
+        Graph G
+
+    Returns
+    -------
+    json dump
+
+    """
     # Make sure indexing of nodes is correct with the edges
     node_ui = np.array([*G.nodes()])
     node_id = np.arange(0, len(node_ui)).astype(str)
@@ -479,7 +464,6 @@ def json_create(G):
     links = pd.DataFrame([*G.edges.values()]).T.to_dict()
     links_new = []
     for i in range(0, len(links)):
-    # for i in node_id:
         links[i]['edge_width'] = links[i].pop('weight_scaled')
         links[i]['edge_weight'] = links[i]['weight']
         links[i]['source'] = int(source[i])
@@ -490,10 +474,8 @@ def json_create(G):
     data['links']=links_new
 
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
-    # nodeid = [*G.nodes]
     nodes_new = [None] * len(nodes)
     for i in range(0, len(nodes)):
-    # for i in node_id:
         nodes[i]['node_name'] = nodes[i].pop('label')
         nodes[i]['node_color'] = nodes[i].pop('color')
         nodes[i]['node_size'] = nodes[i].pop('size')
@@ -513,18 +495,19 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 20]):
     ----------
     adjmat : pd.DataFrame()
         Adjacency matrix.
-
     min_weight : float
         edges are returned with a minimum weight.
+    edge_distance_minmax : tuple(int,int), (default: [None,None])
+        Weights are normalized between minimum and maximum
+        * [1, 20]
 
     Returns
     -------
-    pd.DataFrame()
-        nodes that are connected based on source and target
-
-    Examples
-    --------
-    >>> import bnlearn as bn
+    edge_properties: dict
+        key: (source, target)
+            'weight': weight of the edge
+            'weight_scaled': scaled weight of the edge
+            'color': color of the edge
 
     """
     # Convert adjacency matrix into vector
@@ -559,6 +542,20 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 20]):
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
 def edges2G(edge_properties, G=None):
+    """Convert edges to Graph.
+
+    Parameters
+    ----------
+    edge_properties : dictionary
+        Dictionary containing edge properties
+    G : Networkx object
+        Graph G.
+
+    Returns
+    -------
+    Graph G
+
+    """
     # Create new graph G
     if G is None:
         G = nx.Graph()
@@ -568,6 +565,41 @@ def edges2G(edge_properties, G=None):
         G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
     # Return
     return(G)
+
+
+# %% Convert dict with nodes to graph (G)
+def nodes2G(node_properties, G=None):
+    """Convert nodes to Graph.
+
+    Parameters
+    ----------
+    node_properties : dictionary
+        Dictionary containing node properties
+    G : Networkx object
+        Graph G.
+
+    Returns
+    -------
+    Graph G
+
+    """
+    # Create new graph G
+    if G is None:
+        G = nx.Graph()
+    # Get node properties
+    node_properties = pd.DataFrame(node_properties).T
+    # Store node properties in Graph
+    if not node_properties.empty:
+        getnodes = np.array([*G.nodes])
+        for col in node_properties.columns:
+            for i in range(0, node_properties.shape[0]):
+                idx = node_properties.index.values[i]
+                if np.any(np.isin(getnodes, node_properties.index.values[i])):
+                    G.nodes[idx][col] = str(node_properties[col][idx])
+                else:
+                    logger.warning("Node [%s] not found" %(node_properties.index.values[i]))
+    return G
+
 
 # %% Convert adjacency matrix to graph
 def make_graph(node_properties, edge_properties):
@@ -579,90 +611,19 @@ def make_graph(node_properties, edge_properties):
         Dictionary containing node properties
     edge_properties : dictionary
         Dictionary containing edge properties
-    edge_distance_min : int, (default: None)
-        Scale the weights with a minimum value.
-    edge_distance_max : int, (default: None)
-        Scale the weights with a maximum value.
 
     Returns
     -------
     dict containing Graph G and dataframe.
 
     """
-    # Convert adjmat
-    # node_names = adjmat.index.values
-    # adjmat.reset_index(drop=True, inplace=True)
-    # adjmat.index = adjmat.index.values.astype(str)
-    # adjmat.columns = np.arange(0, adjmat.shape[1]).astype(str)
-    # adjmat = adjmat.stack().reset_index()
-    # adjmat.columns = ['source', 'target', 'weight']
-    adjmat = pd.DataFrame(edge_properties).T.reset_index(level=[0, 1])
-    adjmat.rename(columns={"level_0": "source", "level_1": "target"}, inplace=True)
-    node_names = [*node_properties.keys()]
-
-    # Width of edge, scale between [1-10] if there is are more then 2 diferent weights
-
-    adjmat['edge_weight'] = adjmat['weight_scaled']
-
-    # Keep only edges with weight
-    # edge_weight_original = adjmat['weight'].values.reshape(-1, 1).flatten()
-    # adjmat = adjmat.loc[edge_weight_original > 0, :].reset_index(drop=True)
-
-    # Remove self-loops
-    # Iloc = adjmat['source'] != adjmat['target']
-    # adjmat = adjmat.loc[Iloc, :].reset_index(drop=True)
-
-    # Include source-target label
-    source_label = np.repeat('', adjmat.shape[0]).astype('O')
-    target_label = np.repeat('', adjmat.shape[0]).astype('O')
-    for i in range(0, len(node_names)):
-        source_label[adjmat['source']==node_names[i]] = node_names[i]
-    for i in range(0, len(node_names)):
-        target_label[adjmat['target']==node_names[i]] = node_names[i]
-    adjmat['source_label'] = source_label
-    adjmat['target_label'] = target_label
-
-    # Make sure indexing of nodes is correct with the edges
-    uilabels = np.unique(np.append(adjmat['source'], adjmat['target']))
-    tmplabels=adjmat[['source', 'target']]
-    adjmat['source']=None
-    adjmat['target']=None
-    for i in range(0, len(uilabels)):
-        I1 = tmplabels['source']==uilabels[i]
-        I2 = tmplabels['target']==uilabels[i]
-        adjmat.loc[I1, 'source'] = str(i)
-        adjmat.loc[I2, 'target'] = str(i)
-    
     # Create new Graph
     G = nx.Graph()
     # Add edges to graph
     G = edges2G(edge_properties, G=G)
-    
-    # try:
-    #     G = nx.from_pandas_edgelist(adjmat, 'source', 'target', ['weight', 'edge_weight', 'weight_scaled', 'source_label', 'target_label', 'source', 'target'])
-    # except:
-    #     G = nx.from_pandas_dataframe(adjmat, 'source', 'target', edge_attr=['weight', 'edge_weight', 'weight_scaled', 'source_label', 'target_label', 'source', 'target'])
-
-    # Add node information
-    # A = pd.concat([pd.DataFrame(adjmat[['target', 'target_label']].values), pd.DataFrame(adjmat[['source', 'source_label']].values)], axis=0)
-    # A = A.groupby([0, 1]).size().reset_index(name='Freq')
-    # IA, IB = ismember(node_properties['node_names'], A[1])
-    # node_properties = node_properties.loc[IA, :]
-    # node_properties.index = A[0].loc[IB].values.astype(str)
-    
-    node_properties = pd.DataFrame(node_properties).T
-    # node_properties.rename(columns={"index": "node_name"}, inplace=True)
-
-    if not node_properties.empty:
-        getnodes = np.array([*G.nodes])
-        for col in node_properties.columns:
-            for i in range(0, node_properties.shape[0]):
-                idx = node_properties.index.values[i]
-                if np.any(np.isin(getnodes, node_properties.index.values[i])):
-                    G.nodes[idx][col] = str(node_properties[col][idx])
-                else:
-                    logger.warning("Node not found")
-
+    # Add nodes to graph
+    G = nodes2G(node_properties, G=G)
+    # Return
     return G
 
 
@@ -679,7 +640,7 @@ def _get_hexcolor(label, cmap='Paired'):
     if label[0][0]!='#':
         label = label.astype(dtype='U7')
         uinode = np.unique(label)
-        tmpcolors = np.array(sns.color_palette(cmap, len(uinode)).as_hex())
+        tmpcolors = cm.rgb2hex(cm.fromlist(uinode, cmap=cmap, method='seaborn')[0])
         IA, IB = ismember(label, uinode)
         label[IA] = tmpcolors[IB]
 
@@ -806,7 +767,7 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
 
         # Sort to make ordering of columns and rows similar
         logger.debug('Order columns and rows.')
-        IA, IB = ismember(adjmat.columns.values, adjmat.index.values)
+        _, IB = ismember(adjmat.columns.values, adjmat.index.values)
         adjmat = adjmat.iloc[IB, :]
         adjmat.index.name='source'
         adjmat.columns.name='target'
@@ -835,7 +796,7 @@ def adjmat2vec(adjmat, min_weight=1):
     --------
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
-    >>> adjmat = vec2adjmat(source, target)
+    >>> adjmat = vec2adjmat(source, target, weight=[1,2,1,3])
     >>> vector = adjmat2vec(adjmat)
 
     """
@@ -848,10 +809,6 @@ def adjmat2vec(adjmat, min_weight=1):
     Iloc2 = adjmat['weight']>=min_weight
     Iloc = Iloc1 & Iloc2
     # Take only connected nodes
-    adjmat = adjmat.loc[Iloc,:]
+    adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
     return(adjmat)
-
-# %% Main
-if __name__ == '__main__':
-    d3graph(sys.argv[1:])
