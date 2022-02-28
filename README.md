@@ -14,7 +14,6 @@
 <!---[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-yellow.svg)](https://www.buymeacoffee.com/erdogant)-->
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
 
-### I am working on an improved version of d3graph with lower code complexity,  removal of redundant features and documenation pages. It will also be much much easier to change any of the edge and node properties. Be patient. Its coming soon. For those that can not wait. A working version is readily present in github.
 
 ``d3graph`` is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript** using **python**.
 For this package I was inspired by d3 javascript examples but there was no python package that could create such interactive networks. Therefore I decided to create a package that automatically creates d3js javascript and html code based on a input adjacency matrix in python! This library does not require you any additional installation, downloads or setting paths to your systems environments. You just need python and this library. All other is taken care off. Huray!
