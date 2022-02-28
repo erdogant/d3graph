@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Node properties &mdash; d3graph d3graph documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="Examples.html" />
+    <link rel="prev" title="D3 Motivation" href="D3.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> d3graph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abstract.html">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Abstract.html#schematic-overview">Schematic overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Methods</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Node properties</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-example-network">Create example network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customize-the-properties-of-one-specific-node">Customize the properties of one specific node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customize-all-nodes">Customize all nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#edge-properties">Edge properties</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Create example network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customize-the-properties-of-one-specific-edge">Customize the properties of one specific edge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customize-all-edges">Customize all edges</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">d3graph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Node properties</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Network properties.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <hr class="docutils" id="code-directive" />
+<section id="node-properties">
+<h1>Node properties<a class="headerlink" href="#node-properties" title="Permalink to this headline"></a></h1>
+<p>There are various possabilities to customize the node properties. After creating the <code class="docutils literal notranslate"><span class="pre">d3.graph</span></code>, it will generate default node properties which can be customized.</p>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="arabic simple">
+<li><p>label</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>color</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>size</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p>edge_color</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="5">
+<li><p>edge_size</p></li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+<section id="create-example-network">
+<h2>Create example network<a class="headerlink" href="#create-example-network" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+
+<span class="c1"># Create example network</span>
+<span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node A&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node A&#39;</span><span class="p">,</span> <span class="s1">&#39;node C&#39;</span><span class="p">,</span> <span class="s1">&#39;node Z&#39;</span><span class="p">]</span>
+<span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node J&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node M&#39;</span><span class="p">,</span> <span class="s1">&#39;node M&#39;</span><span class="p">,</span> <span class="s1">&#39;node A&#39;</span><span class="p">]</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.56</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.64</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">3.28</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]</span>
+
+<span class="c1"># Convert to adjacency matrix</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+
+<span class="c1"># Create network with all default node properties</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="customize-the-properties-of-one-specific-node">
+<h2>Customize the properties of one specific node<a class="headerlink" href="#customize-the-properties-of-one-specific-node" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Examine the node properties</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">)</span>
+
+<span class="c1"># Customize the properties of one specific node</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;CUSTOMIZED NODE&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#FF00FF&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">][</span><span class="s1">&#39;edge_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">][</span><span class="s1">&#39;edge_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;node_A&#39;</span><span class="p">])</span>
+<span class="c1"># {&#39;label&#39;: &#39;CUSTOMIZED NODE&#39;, &#39;color&#39;: &#39;#FF00FF&#39;, &#39;size&#39;: 20, &#39;edge_size&#39;: 5, &#39;edge_color&#39;: &#39;#000000&#39;}</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/example_1.html" height="1000px" width="2000px", frameBorder="0"></iframe></section>
+<section id="customize-all-nodes">
+<h2>Customize all nodes<a class="headerlink" href="#customize-all-nodes" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The order of the node names is as following:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">)</span>
+<span class="c1"># dict_keys([&#39;node_A&#39;, &#39;node_B&#39;, &#39;node_F&#39;, &#39;node_J&#39;, &#39;node_M&#39;, &#39;node_C&#39;, &#39;node_Z&#39;])</span>
+
+<span class="c1"># Customize node colors based on node names</span>
+<span class="c1"># Size is set</span>
+<span class="c1"># edge size is same as the size</span>
+<span class="c1"># edge color is the same for all nodes: &#39;#000FFF&#39;</span>
+<span class="c1"># cmap is set to &#39;Set1&#39;</span>
+
+<span class="c1"># Set size for the nodes</span>
+<span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+<span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#000FFF&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/example_2.html" height="1000px" width="2000px", frameBorder="0"></iframe></section>
+</section>
+<section id="edge-properties">
+<h1>Edge properties<a class="headerlink" href="#edge-properties" title="Permalink to this headline"></a></h1>
+<p>There are various possabilities to customize the edge properties. After creating the <code class="docutils literal notranslate"><span class="pre">d3.graph</span></code>, it will generate default node properties which can be customized.</p>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="arabic simple">
+<li><p>weight</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>weight_scaled</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>color</p></li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+<p>Network properties can also be changed for the edges:</p>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="arabic simple">
+<li><p>edge_distance</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>edge_distance_minmax</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>directed</p></li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+<section id="id1">
+<h2>Create example network<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+
+<span class="c1"># Create example network</span>
+<span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node A&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node A&#39;</span><span class="p">,</span> <span class="s1">&#39;node C&#39;</span><span class="p">,</span> <span class="s1">&#39;node Z&#39;</span><span class="p">]</span>
+<span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node B&#39;</span><span class="p">,</span> <span class="s1">&#39;node J&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node F&#39;</span><span class="p">,</span> <span class="s1">&#39;node M&#39;</span><span class="p">,</span> <span class="s1">&#39;node M&#39;</span><span class="p">,</span> <span class="s1">&#39;node A&#39;</span><span class="p">]</span>
+<span class="n">weight</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.56</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.64</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">3.28</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]</span>
+
+<span class="c1"># Convert to adjacency matrix</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+
+<span class="c1"># Create network with all default node properties</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="customize-the-properties-of-one-specific-edge">
+<h2>Customize the properties of one specific edge<a class="headerlink" href="#customize-the-properties-of-one-specific-edge" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Examine the node properties</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">)</span>
+
+<span class="c1"># Customize the properties of one specific node</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;node_A&#39;</span><span class="p">,</span> <span class="s1">&#39;node_F&#39;</span><span class="p">)][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;node_A&#39;</span><span class="p">,</span> <span class="s1">&#39;node_F&#39;</span><span class="p">)][</span><span class="s1">&#39;weight_scaled&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">25</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;node_A&#39;</span><span class="p">,</span> <span class="s1">&#39;node_F&#39;</span><span class="p">)][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;node_A&#39;</span><span class="p">,</span> <span class="s1">&#39;node_F&#39;</span><span class="p">)])</span>
+<span class="c1"># {&#39;weight&#39;: 10, &#39;weight_scaled&#39;: 25, &#39;color&#39;: &#39;#000000&#39;}</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="customize-all-edges">
+<h2>Customize all edges<a class="headerlink" href="#customize-all-edges" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set edge properties with a edge distance</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">edge_distance</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="D3.html" class="btn btn-neutral float-left" title="D3 Motivation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
