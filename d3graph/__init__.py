@@ -27,48 +27,24 @@ The ouput is a html file that is interactive and stand alone.
 
 Examples
 --------
->>> source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
->>> target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
->>> weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+>>> from d3graph import d3graph
 >>>
->>> # Convert to adjacency matrix
->>> adjmat = vec2adjmat(source, target, weight=weight)
->>> # print(adjmat)
->>>
->>> # Example A: simple interactive network
+>>> # Initialize
 >>> d3 = d3graph()
+>>>
+>>> # Load karate example
+>>> adjmat, df = d3.import_example('karate')
+>>>
+>>> # Initialize
 >>> d3.graph(adjmat)
->>> d3.show()
 >>>
->>> # Example B: Color nodes
->>> # d3 = d3graph()
->>> d3.graph(adjmat)
->>> # Set node properties
->>> d3.set_node_properties(color=adjmat.columns.values)
->>> d3.show()
+>>> # Node properties
+>>> d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
 >>>
->>> size = [10, 20, 10, 10, 15, 10, 5]
->>>
->>> # Example C: include node size
->>> d3.set_node_properties(color=adjmat.columns.values, size=size)
->>> d3.show()
->>>
->>> # Example D: include node-edge-size
->>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
->>> d3.show()
->>>
->>> # Example E: include node-edge color
->>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#000000')
->>> d3.show()
->>>
->>> # Example F: Change colormap
->>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
->>> d3.show()
->>>
->>> # Example H: Include directed links. Arrows are set from source -> target
+>>> # Edge properties
 >>> d3.set_edge_properties(directed=True)
->>> d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
->>> d3.show()
 >>>
+>>> # Plot
+>>> d3.show()
 
 """
