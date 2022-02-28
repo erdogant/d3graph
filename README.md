@@ -221,7 +221,6 @@ d3.show()
 
 
 ### Contribute
-* Thanks to Oliver Verver who helped to fix some bugs in d3js (https://github.com/oliver3).
 * All kinds of contributions are welcome!
 
 ### Citation
