@@ -52,6 +52,7 @@ d3.show()
 
 
 # %%
+from d3graph import d3graph, vec2adjmat
 
 source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
 target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
@@ -64,6 +65,11 @@ adjmat = vec2adjmat(source, target, weight=weight)
 # Example A: simple interactive network
 d3 = d3graph()
 d3.graph(adjmat)
+d3.show()
+
+
+d3.node_properties['node_A']['size']=20
+d3.node_properties['node_A']['color']='#FF00FF'
 d3.show()
 
 # Example B: Color nodes
@@ -94,8 +100,8 @@ d3.show()
 
 # Example H: Include directed links. Arrows are set from source -> target
 d3.set_edge_properties(directed=True)
-d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF', cmap='Set2')
-d3.show()
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
+d3.show(filepath='D://REPOS//erdogant.github.io//docs//d3graph//d3graph//example_2.html')
 
 
 # %%
