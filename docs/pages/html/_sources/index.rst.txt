@@ -28,7 +28,7 @@ Content
   :caption: Methods
 
   D3
-  Network properties
+  Core Functionalities
 
 
 .. toctree::

@@ -50,12 +50,14 @@
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network%20properties.html">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Network%20properties.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html">Core Functionalities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html#node-properties">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Big Bang network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#karate-club-network">Karate Club network</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
 <ul class="current">
@@ -160,41 +162,56 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.graph">
 <span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.graph" title="Permalink to this definition"></a></dt>
-<dd><p>Make interactive network in d3js.</p>
-<p>d3graph is a python library that is build on d3js and creates interactive and stand-alone networks.
-The input data is a simple adjacency matrix for which the columns and indexes are the nodes and elements&gt;0 the edges.
-The ouput is a html file that is interactive and stand alone.</p>
+<dd><p>Process the adjacency matrix and set all properties to default.</p>
+<p>This function processes the adjacency matrix. The nodes are the column and index names.
+An connect edge is seen in case vertices has has values larger than 0. The strenght of the edge is based on the vertices values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix (symmetric). Values &gt; 0 are edges.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node A&#39;</span><span class="p">,</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span><span class="s1">&#39;node B&#39;</span><span class="p">,</span><span class="s1">&#39;node B&#39;</span><span class="p">,</span><span class="s1">&#39;node B&#39;</span><span class="p">,</span><span class="s1">&#39;node A&#39;</span><span class="p">,</span><span class="s1">&#39;node C&#39;</span><span class="p">,</span><span class="s1">&#39;node Z&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span><span class="s1">&#39;node B&#39;</span><span class="p">,</span><span class="s1">&#39;node J&#39;</span><span class="p">,</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span><span class="s1">&#39;node F&#39;</span><span class="p">,</span><span class="s1">&#39;node M&#39;</span><span class="p">,</span><span class="s1">&#39;node M&#39;</span><span class="p">,</span><span class="s1">&#39;node A&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weight</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.56</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.64</span><span class="p">,</span> <span class="mf">0.23</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">3.28</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Convert vector to adjacency matrix</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Initialize</span> <span class="n">the</span> <span class="n">d3graph</span> <span class="n">library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Proces adjacency matrix</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the plot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make changed in the node properties</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;node 1&#39;</span><span class="p">,</span><span class="s1">&#39;node 2&#39;</span><span class="p">,</span><span class="s1">&#39;node 3&#39;</span><span class="p">,</span><span class="s1">&#39;node 4&#39;</span><span class="p">,</span><span class="s1">&#39;node 5&#39;</span><span class="p">,</span><span class="s1">&#39;node 6&#39;</span><span class="p">,</span><span class="s1">&#39;node 7&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load karate example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Node properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Edge properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="d3graph.d3graph.d3graph.import_example">
+<span class="sig-name descname"><span class="pre">import_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'small'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.import_example" title="Permalink to this definition"></a></dt>
+<dd><p>Import example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>network</strong> (<em>str</em><em>, </em><em>optional</em>) – Import example adjacency matrix. The default is ‘small’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>adjmat</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -207,7 +224,7 @@ The ouput is a html file that is interactive and stand alone.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>edge_distance</strong> (<em>Int</em><em> (</em><em>default: 30</em><em>)</em>) – Distance of nodes on the edges.
-* 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
+* 0: Weighted approach using edge weights in the adjacancy matrix. Weights are normalized between the edge_distance_minmax
 * 80: Constant edge distance</p></li>
 <li><p><strong>edge_distance_minmax</strong> (<em>tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>None</em><em>,</em><em>None</em><em>]</em><em>)</em>) – Weights are normalized between minimum and maximum
 * [1, 20]</p></li>
