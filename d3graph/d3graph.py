@@ -51,9 +51,9 @@ class d3graph():
         Parameters
         ----------
         collision : float, (default: 0.5)
-            Nodes wants to prevent a collision. The higher the number, the more collisions are prevented.
+            Response of the network. Higher means that more collisions are prevented.
         charge : int, (default: 250)
-            Scaling/Response of the network. Towards zero becomes a more nervous network.
+            Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
         slider : typle [min: int, max: int]:, (default: [None, None])
             Slider is automatically set to the range of the edge weights.
         verbose : int, (default: 20)
@@ -85,6 +85,7 @@ class d3graph():
         if hasattr(self, 'adjmat'): del self.adjmat
         if hasattr(self, 'node_properties'): del self.node_properties
         if hasattr(self, 'edge_properties'): del self.edge_properties
+        if hasattr(self, 'G'): del self.G
 
     def show(self, figsize=(1500, 800), title='d3graph', filepath='d3graph.html', showfig=True):
         """Build and show the graph.
@@ -133,7 +134,7 @@ class d3graph():
         ----------
         edge_distance : Int (default: 30)
             Distance of nodes on the edges.
-            * 0: Weighted approach using edge weights in the adjadancy matrix. Weights are normalized between the edge_distance_minmax
+            * 0: Weighted approach using edge weights in the adjacancy matrix. Weights are normalized between the edge_distance_minmax
             * 80: Constant edge distance
         edge_distance_minmax : tuple(int,int), (default: [None,None])
             Weights are normalized between minimum and maximum
@@ -300,6 +301,7 @@ class d3graph():
 
         if self.config['slider'] == [None, None]:
             max_slider = np.ceil(np.max(edge_weight))
+            # max_slider = np.ceil(np.sort(edge_weight)[-2])
             if len(np.unique(edge_weight))>1:
                 min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
             else:
@@ -313,13 +315,12 @@ class d3graph():
         self.config['slider'] = [min_slider, max_slider]
 
     def graph(self, adjmat):
-        """Make interactive network in d3js.
+        """Process the adjacency matrix and set all properties to default.
 
         Description
         -----------
-        d3graph is a python library that is build on d3js and creates interactive and stand-alone networks.
-        The input data is a simple adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
-        The ouput is a html file that is interactive and stand alone.
+        This function processes the adjacency matrix. The nodes are the column and index names.
+        An connect edge is seen in case vertices has has values larger than 0. The strenght of the edge is based on the vertices values.
 
         Parameters
         ----------
@@ -328,25 +329,24 @@ class d3graph():
 
         Examples
         --------
-        >>> from d3graph import d3graph, vec2adjmat
+        >>> from d3graph import d3graph
         >>>
-        >>> source = ['node A','node F','node B','node B','node B','node A','node C','node Z']
-        >>> target = ['node F','node B','node J','node F','node F','node M','node M','node A']
-        >>> weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
-        >>>
-        >>> # Convert vector to adjacency matrix
-        >>> adjmat = vec2adjmat(source, target, weight=weight)
-        >>>
-        >>> Initialize the d3graph library
+        >>> # Initialize
         >>> d3 = d3graph()
-        >>> # Proces adjacency matrix
-        >>> d3.graph(adjmat)
-        >>> # Make the plot
-        >>> d3.show()
         >>>
-        >>> # Make changed in the node properties
-        >>> d3.set_node_properties(label=['node 1','node 2','node 3','node 4','node 5','node 6','node 7'], size=[10, 20, 10, 10, 15, 10, 5], color=adjmat.columns.values)
-        >>> # Make the plot
+        >>> # Load karate example
+        >>> adjmat, df = d3.import_example('karate')
+        >>>
+        >>> # Initialize
+        >>> d3.graph(adjmat)
+        >>>
+        >>> # Node properties
+        >>> d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
+        >>>
+        >>> # Edge properties
+        >>> d3.set_edge_properties(directed=True)
+        >>>
+        >>> # Plot
         >>> d3.show()
 
         Returns
@@ -428,6 +428,50 @@ class d3graph():
         filepath = os.path.abspath(os.path.join(dirname, filename))
         logger.debug("filepath is set to [%s]" %(filepath))
         return filepath
+
+    def import_example(self, network='small'):
+        """Import example.
+
+        Parameters
+        ----------
+        network : str, optional
+            Import example adjacency matrix. The default is 'small'.
+
+        Returns
+        -------
+        adjmat : pd.DataFrame()
+
+        """
+        if network=='small':
+            source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
+            target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
+            weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+            adjmat = vec2adjmat(source, target, weight=weight)
+            return adjmat
+        elif network=='bigbang':
+            source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+            target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
+            weight = [5, 3, 2, 2, 5, 2, 3, 5, 2]
+            adjmat = vec2adjmat(source, target, weight=weight)
+            return adjmat
+        elif network=='karate':
+            G = nx.karate_club_graph()
+            adjmat = nx.adjacency_matrix(G).todense()
+            adjmat=pd.DataFrame(index=range(0, adjmat.shape[0]), data=adjmat, columns=range(0, adjmat.shape[0]))
+            adjmat.columns=adjmat.columns.astype(str)
+            adjmat.index=adjmat.index.astype(str)
+            adjmat.iloc[3, 4]=5
+            adjmat.iloc[4, 5]=6
+            adjmat.iloc[5, 6]=7
+
+            df = pd.DataFrame(index=adjmat.index)
+            df['degree']=np.array([*G.degree()])[:, 1]
+            label=[]
+            for i in range(0, len(G.nodes)):
+                label.append(G.nodes[i]['club'])
+            df['label'] = label
+
+            return adjmat, df
 
 
 # %%
