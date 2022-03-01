@@ -85,12 +85,6 @@ Citing
 	year = {2019}
 	}
 
-
-.. raw:: html
-
-	<div data-ea-publisher="erdogantgithubio" data-ea-type="text" id="ad"></div>
-	<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-
 Indices and tables
 ==================
 
@@ -98,3 +92,8 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+
+.. raw:: html
+
+	<div data-ea-publisher="erdogantgithubio" data-ea-type="text" id="ad"></div>
+	<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>

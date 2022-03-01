@@ -85,7 +85,6 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 
-## In conf.py
 ## html_sidebars = { '**': [
 ##     'localtoc.html',
 ##     'carbonads.html',  # Put the ad below the navigation but above previous/next
