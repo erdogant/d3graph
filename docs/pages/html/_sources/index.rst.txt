@@ -86,11 +86,6 @@ Citing
 	}
 
 
-
-.. raw:: html
-
-	<div data-ea-publisher="erdogantgithubio" data-ea-type="text" id="ad"></div>
-
 .. raw:: html
 
 	<div data-ea-publisher="erdogantgithubio" data-ea-type="text" id="ad"></div>
