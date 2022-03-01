@@ -88,10 +88,4 @@ html_static_path = ['_static']
 # A list of files that should not be packed into the epub file
 epub_exclude_files = ['search.html']
 
-html_sidebars = { '**': [
-    'localtoc.html',
-    'carbonads.html',  # Put the ad below the navigation but above previous/next
-    'relations.html',
-    'sourcelink.html',
-    'searchbox.html',
-] }
+html_sidebars = {'**': ['localtoc.html', 'carbonads.html', 'relations.html', 'sourcelink.html', 'searchbox.html',],}
