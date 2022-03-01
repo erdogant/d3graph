@@ -98,6 +98,3 @@ html_sidebars = {
    'using/windows': ['windowssidebar.html', 'searchbox.html'],
 }
 
-html_additional_pages = {
-    'download': 'carbonads.html',
-}
