@@ -95,5 +95,4 @@ Indices and tables
 
 .. raw:: html
 
-	<div data-ea-publisher="erdogantgithubio" data-ea-type="text" id="ad"></div>
 	<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
