@@ -89,3 +89,5 @@ html_static_path = ['_static']
 epub_exclude_files = ['search.html']
 
 html_sidebars = {'**': ['localtoc.html', 'carbonads.html', 'relations.html', 'sourcelink.html', 'searchbox.html',],}
+
+html_css_files = ['custom.css']
