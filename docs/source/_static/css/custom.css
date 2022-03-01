@@ -7,7 +7,6 @@ body {
   overflow: hidden;
   padding: 1em;
   max-width: 130px;
-  height: 210px;
   background: hsl(0, 0%, 10%);
   box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
   text-align: center;
