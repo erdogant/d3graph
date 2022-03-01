@@ -85,10 +85,13 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 
-## html_sidebars = { '**': [
-##     'localtoc.html',
-##     'carbonads.html',  # Put the ad below the navigation but above previous/next
-##     'relations.html',
-##     'sourcelink.html',
-##     'searchbox.html',
-## ] }
+# A list of files that should not be packed into the epub file
+epub_exclude_files = ['search.html']
+
+html_sidebars = { '**': [
+    'localtoc.html',
+    'carbonads.html',  # Put the ad below the navigation but above previous/next
+    'relations.html',
+    'sourcelink.html',
+    'searchbox.html',
+] }
