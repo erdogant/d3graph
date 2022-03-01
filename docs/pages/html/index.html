@@ -47,6 +47,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
@@ -61,7 +66,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html">Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
@@ -93,7 +99,10 @@
   <section id="d3graph-s-documentation">
 <h1>d3graph’s documentation!<a class="headerlink" href="#d3graph-s-documentation" title="Permalink to this headline"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library is a Python library that is built on D3 and creates a stand-alone, and interactive force-directed network graph. It allows the creation, manipulation, and study of the structure, dynamics, and functions of complex networks. The input data is an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. The output is a single HTML file that contains the interactive force-directed graph. <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> has several features, among them a slider that can break the edges of the network based on the edge value, a double click on a node will highlight the node and its connected edges and many more options to customize the network based on the edge and node properties.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p><a class="reference external" href="https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7">Medium Blog: Creating beautiful stand-alone interactive D3 charts with Python</a></p>
+</div>
 </section>
 <section id="content">
 <h1>Content<a class="headerlink" href="#content" title="Permalink to this headline"></a></h1>
@@ -110,6 +119,13 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -131,7 +147,8 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html">Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
@@ -142,22 +159,26 @@
 </pre></div>
 </div>
 </section>
-<section id="source-code-and-issue-tracker">
-<h2>Source code and issue tracker<a class="headerlink" href="#source-code-and-issue-tracker" title="Permalink to this headline"></a></h2>
-<p>Available on Github, <a class="reference external" href="https://github.com/erdogant/d3graph/">erdogant/d3graph</a>.
-Please report bugs, issues and feature extensions there.</p>
+<section id="github">
+<h2>Github<a class="headerlink" href="#github" title="Permalink to this headline"></a></h2>
+<p>Please report bugs, issues and feature extensions there.
+Github, <a class="reference external" href="https://github.com/erdogant/d3graph/">erdogant/d3graph</a>.</p>
 </section>
-<section id="citing-d3graph">
-<h2>Citing <em>d3graph</em><a class="headerlink" href="#citing-d3graph" title="Permalink to this headline"></a></h2>
-<p>Here is an example BibTeX entry:</p>
-<dl class="simple">
-<dt>&#64;misc{erdogant2019d3graph,</dt><dd><p>title={d3graph},
-author={Erdogan Taskesen},
-year={2019},
-howpublished={url{<a class="reference external" href="https://github.com/erdogant/d3graph">https://github.com/erdogant/d3graph</a>}}}</p>
-</dd>
-</dl>
-</section>
+<section id="citing">
+<h2>Citing<a class="headerlink" href="#citing" title="Permalink to this headline"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@software</span><span class="p">{</span><span class="n">Taskesen_Interactive_force</span><span class="o">-</span><span class="n">directed_network_2019</span><span class="p">,</span>
+<span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Taskesen</span><span class="p">,</span> <span class="n">Erdogan</span><span class="p">},</span>
+<span class="n">license</span> <span class="o">=</span> <span class="p">{</span><span class="n">Apache</span><span class="o">-</span><span class="mf">2.0</span><span class="p">},</span>
+<span class="n">month</span> <span class="o">=</span> <span class="p">{</span><span class="mi">12</span><span class="p">},</span>
+<span class="n">title</span> <span class="o">=</span> <span class="p">{{</span><span class="n">Interactive</span> <span class="n">force</span><span class="o">-</span><span class="n">directed</span> <span class="n">network</span> <span class="n">creator</span> <span class="p">(</span><span class="n">d3graph</span><span class="p">)}},</span>
+<span class="n">url</span> <span class="o">=</span> <span class="p">{</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">erdogant</span><span class="o">/</span><span class="n">d3graph</span><span class="p">},</span>
+<span class="n">version</span> <span class="o">=</span> <span class="p">{</span><span class="mf">0.1.12</span><span class="p">},</span>
+<span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2019</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div id="carbon-ad-placement"></div>
+<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script></section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>

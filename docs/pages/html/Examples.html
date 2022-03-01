@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Documentation" href="Documentation.html" />
+    <link rel="next" title="Blog" href="Blog.html" />
     <link rel="prev" title="Core Functionalities" href="Core%20Functionalities.html" /> 
 </head>
 
@@ -48,6 +48,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
@@ -59,10 +64,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Big Bang network</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#default">Default</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#color-nodes">Color nodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#edge-size">Edge size</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#edge-color">Edge color</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-colors">Node colors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-sizes">Node sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#edge-sizes">Edge sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#edge-colors">Edge colors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#colormap">Colormap</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#directed-arrows">Directed arrows</a></li>
 </ul>
@@ -71,7 +76,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html">Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
@@ -119,29 +125,29 @@
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html" height="700px" width="850px", frameBorder="0"></iframe></section>
-<section id="color-nodes">
-<h2>Color nodes<a class="headerlink" href="#color-nodes" title="Permalink to this headline"></a></h2>
+<section id="node-colors">
+<h2>Node colors<a class="headerlink" href="#node-colors" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
-<section id="node-size">
-<h2>Node size<a class="headerlink" href="#node-size" title="Permalink to this headline"></a></h2>
+<section id="node-sizes">
+<h2>Node sizes<a class="headerlink" href="#node-sizes" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
-<section id="edge-size">
-<h2>Edge size<a class="headerlink" href="#edge-size" title="Permalink to this headline"></a></h2>
+<section id="edge-sizes">
+<h2>Edge sizes<a class="headerlink" href="#edge-sizes" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge.html" height="700px" width="850px", frameBorder="0"></iframe></section>
-<section id="edge-color">
-<h2>Edge color<a class="headerlink" href="#edge-color" title="Permalink to this headline"></a></h2>
+<section id="edge-colors">
+<h2>Edge colors<a class="headerlink" href="#edge-colors" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#00FFFF&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -215,7 +221,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Core%20Functionalities.html" class="btn btn-neutral float-left" title="Core Functionalities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Documentation.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Blog.html" class="btn btn-neutral float-right" title="Blog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

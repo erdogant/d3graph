@@ -12,6 +12,16 @@
 #
 import os
 import sys
+
+# import configparser
+# from datetime import datetime
+# import sphinx_rtd_theme
+# config = configparser.ConfigParser()
+# current_directory = os.path.dirname(os.path.abspath(__file__))
+# parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
+# config_file_path = os.path.join(parent_directory, 'setup.cfg')
+# config.read(config_file_path)
+
 sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------

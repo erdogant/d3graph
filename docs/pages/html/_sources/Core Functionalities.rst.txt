@@ -3,7 +3,7 @@
 -------------------------------------
 
 Core Functionalities
-''''''''''''''''''''''
+'''''''''''''''''''''' 
 
 In order to create, manipulate, and study the structure, dynamics, and functions of complex networks, it is usefull to understand the various functions of ``d3graph``. Here I will describe the core functionalities that can help to customize your network. In the following examples I will be using the **karate** network.
 
@@ -95,11 +95,11 @@ This network is much wider than the previous ones. This is certainly helpfull if
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_charge.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
-Process adjacency matrix
+Processing
 --------------------------
-The graph function :func:`d3graph.d3graph.d3graph.graph` processes the adjacency matrix to create a network with default *node properties* and *edge properties*. The nodes are the column and index names. An connect edge is seen in case vertices has has values larger than 0. The strenght of edges are based on the vertices values. The only input in this function is the adjacency matrix.
+The graph function :func:`d3graph.d3graph.d3graph.graph` processes the adjacency matrix to create a network with default *node properties* and *edge properties*. The nodes are the column and index names, and a connect edge for vertices with value larger than 0. The strenght of edges are based on the vertices values. The input for ``d3graph`` is the adjacency matrix.
 
-Show graph
+Show
 -------------
 The show function :func:`d3graph.d3graph.d3graph.show` has several tasks.
 	
@@ -270,22 +270,18 @@ Customize the properties of one specific node
 Edge properties
 '''''''''''''''''
 
-There are various possabilities to customize the edge properties. After creating the ``d3.graph()``, the edges are based on the strength of the vertices. If desired, the edge properties which can be customized.
+The **edge properties** can be customized using four options. After creating the ``d3.graph()``, the edges are based on the strength of the vertices.
+
+Edge network properties can also be changed for the edges:
 
 .. note::
 	* 1. weight
-	* 2. weight_scaled
-	* 3. color
-
-Edge Network properties can also be changed for the edges:
-
-.. note::
-	* 1. edge_distance
-	* 2. edge_distance_minmax
-	* 3. directed
+	* 2. edge_distance
+	* 3. edge_distance_minmax
+	* 4. directed
 
 
-Customize the properties of one specific edge
+Customize edge_properties
 -----------------------------------------------
 
 .. code:: python
@@ -306,7 +302,7 @@ Customize the properties of one specific edge
 	# ('Sheldon', 'Leonard'): {'weight': 3.0,'weight_scaled': 7.3333, 'color': '#000000'}}
 	# ...
   
-	# Customize the properties of one specific node
+	# Customize the properties of one specific edge
 	d3.edge_properties[('Sheldon', 'Howard')]['weight']=10
 	
 	# Plot

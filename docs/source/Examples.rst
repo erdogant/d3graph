@@ -27,7 +27,7 @@ Default
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
-Color nodes
+Node colors
 ------------
 
 .. code:: python
@@ -40,7 +40,7 @@ Color nodes
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
-Node size
+Node sizes
 ----------
 
 .. code:: python
@@ -52,7 +52,7 @@ Node size
 
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="700px" width="850px", frameBorder="0"></iframe>
 
-Edge size
+Edge sizes
 ----------
 
 .. code:: python
@@ -64,7 +64,8 @@ Edge size
 
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge.html" height="700px" width="850px", frameBorder="0"></iframe>
 
-Edge color
+
+Edge colors
 -----------
 
 .. code:: python

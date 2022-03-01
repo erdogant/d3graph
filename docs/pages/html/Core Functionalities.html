@@ -48,14 +48,19 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Core Functionalities</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#import">Import</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#initalization">Initalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#process-adjacency-matrix">Process adjacency matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#show-graph">Show graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing">Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#show">Show</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#node-properties">Node properties</a><ul>
@@ -68,7 +73,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#edge-properties">Edge properties</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#customize-the-properties-of-one-specific-edge">Customize the properties of one specific edge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customize-edge-properties">Customize edge_properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#customize-all-edges">Customize all edges</a></li>
 </ul>
 </li>
@@ -80,7 +85,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Code Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html">Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Blog.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
 <li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
@@ -172,12 +178,12 @@
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_charge.html" height="700px" width="850px", frameBorder="0"></iframe></section>
-<section id="process-adjacency-matrix">
-<h2>Process adjacency matrix<a class="headerlink" href="#process-adjacency-matrix" title="Permalink to this headline"></a></h2>
-<p>The graph function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.graph" title="d3graph.d3graph.d3graph.graph"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.graph()</span></code></a> processes the adjacency matrix to create a network with default <em>node properties</em> and <em>edge properties</em>. The nodes are the column and index names. An connect edge is seen in case vertices has has values larger than 0. The strenght of edges are based on the vertices values. The only input in this function is the adjacency matrix.</p>
+<section id="processing">
+<h2>Processing<a class="headerlink" href="#processing" title="Permalink to this headline"></a></h2>
+<p>The graph function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.graph" title="d3graph.d3graph.d3graph.graph"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.graph()</span></code></a> processes the adjacency matrix to create a network with default <em>node properties</em> and <em>edge properties</em>. The nodes are the column and index names, and a connect edge for vertices with value larger than 0. The strenght of edges are based on the vertices values. The input for <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> is the adjacency matrix.</p>
 </section>
-<section id="show-graph">
-<h2>Show graph<a class="headerlink" href="#show-graph" title="Permalink to this headline"></a></h2>
+<section id="show">
+<h2>Show<a class="headerlink" href="#show" title="Permalink to this headline"></a></h2>
 <p>The show function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.show" title="d3graph.d3graph.d3graph.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.show()</span></code></a> has several tasks.</p>
 <blockquote>
 <div><ul class="simple">
@@ -333,7 +339,8 @@
 </section>
 <section id="edge-properties">
 <h1>Edge properties<a class="headerlink" href="#edge-properties" title="Permalink to this headline"></a></h1>
-<p>There are various possabilities to customize the edge properties. After creating the <code class="docutils literal notranslate"><span class="pre">d3.graph()</span></code>, the edges are based on the strength of the vertices. If desired, the edge properties which can be customized.</p>
+<p>The <strong>edge properties</strong> can be customized using four options. After creating the <code class="docutils literal notranslate"><span class="pre">d3.graph()</span></code>, the edges are based on the strength of the vertices.</p>
+<p>Edge network properties can also be changed for the edges:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -342,35 +349,21 @@
 </ol>
 </li>
 <li><ol class="arabic simple" start="2">
-<li><p>weight_scaled</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="3">
-<li><p>color</p></li>
-</ol>
-</li>
-</ul>
-</div>
-<p>Edge Network properties can also be changed for the edges:</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><ol class="arabic simple">
 <li><p>edge_distance</p></li>
 </ol>
 </li>
-<li><ol class="arabic simple" start="2">
+<li><ol class="arabic simple" start="3">
 <li><p>edge_distance_minmax</p></li>
 </ol>
 </li>
-<li><ol class="arabic simple" start="3">
+<li><ol class="arabic simple" start="4">
 <li><p>directed</p></li>
 </ol>
 </li>
 </ul>
 </div>
-<section id="customize-the-properties-of-one-specific-edge">
-<h2>Customize the properties of one specific edge<a class="headerlink" href="#customize-the-properties-of-one-specific-edge" title="Permalink to this headline"></a></h2>
+<section id="customize-edge-properties">
+<h2>Customize edge_properties<a class="headerlink" href="#customize-edge-properties" title="Permalink to this headline"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 <span class="c1"># Initialization</span>
@@ -387,7 +380,7 @@
 <span class="c1"># (&#39;Sheldon&#39;, &#39;Leonard&#39;): {&#39;weight&#39;: 3.0,&#39;weight_scaled&#39;: 7.3333, &#39;color&#39;: &#39;#000000&#39;}}</span>
 <span class="c1"># ...</span>
 
-<span class="c1"># Customize the properties of one specific node</span>
+<span class="c1"># Customize the properties of one specific edge</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;Sheldon&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">)][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
 
 <span class="c1"># Plot</span>

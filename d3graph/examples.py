@@ -2,7 +2,18 @@
 import networkx as nx
 import pandas as pd
 import numpy as np
+from d3graph import d3graph
+
+# %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
+
+source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
+adjmat = vec2adjmat(source, target)
+
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
 
 # %%
 from d3graph import d3graph
