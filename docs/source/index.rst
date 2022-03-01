@@ -88,7 +88,7 @@ Citing
 
 .. raw:: html
 
-	<div id="carbon-ad-placement"></div>
+	<div id="_carbonads_js"></div>
 	<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
 
 Indices and tables
