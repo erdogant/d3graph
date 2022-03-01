@@ -1,5 +1,5 @@
 body {
-  background: #eee;
+  background: #000;
 }
 
 #carbonads {
@@ -7,15 +7,17 @@ body {
   overflow: hidden;
   padding: 1em;
   max-width: 130px;
-  background: #fff;
+  height: 210px;
+  background: hsl(0, 0%, 10%);
+  box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 1.5;
 }
 
 #carbonads a {
-  color: inherit;
+  color: #eee;
   text-decoration: none;
 }
 
@@ -41,8 +43,14 @@ body {
 
 .carbon-poweredby {
   display: block;
+  padding: 6px 8px;
+  background: #1e2021;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 10px;
+  letter-spacing: 0.5px;
+  font-size: 8px;
   line-height: 1;
+  position: absolute;
+  bottom: 235px;
+  left: 73px;
 }
+
