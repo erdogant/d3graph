@@ -92,3 +92,12 @@ html_css_files = ['css/custom.css',]
 epub_exclude_files = ['search.html']
 
 html_sidebars = {'**': ['localtoc.html', 'carbonads.html', 'relations.html', 'sourcelink.html', 'searchbox.html',],}
+
+html_sidebars = {
+   '**': ['globaltoc.html', 'sourcelink.html', 'carbonads.html', 'searchbox.html'],
+   'using/windows': ['windowssidebar.html', 'searchbox.html'],
+}
+
+html_additional_pages = {
+    'download': 'carbonads.html',
+}
