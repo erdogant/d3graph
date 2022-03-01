@@ -1,52 +1,57 @@
+/* Skip this body part */
 body {
-  background: #000;
+  background-color: #f7f7fc;
 }
+
+/* ====================================== */
 
 #carbonads {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  max-width: 300px;
+}
+
+#carbonads>span {
   display: block;
-  overflow: hidden;
-  padding: 1em;
-  max-width: 130px;
-  background: hsl(0, 0%, 10%);
-  box-shadow: 0 0 1px hsla(0, 0%, 0%, 0.5);
-  text-align: center;
+  position: relative;
+  padding: 10px;
+
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow:
+    0 0 1px 1px hsla(0, 0%, 0%, .05),
+    0 0 2px 2px hsla(0, 0%, 0%, .05),
+    0 0 4px 4px hsla(0, 0%, 0%, .05);
+}
+
+#carbonads .carbon-wrap {
+  display: flex;
+}
+
+#carbonads .carbon-img {
+  margin-right: 10px;
+
+  line-height: 1;
+}
+
+#carbonads .carbon-text {
+  margin-bottom: 12px;
+
   font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  line-height: 1.5;
-}
-
-#carbonads a {
-  color: #eee;
+  line-height: 1.45;
   text-decoration: none;
+  color: #637381;
 }
 
-#carbonads a:hover {
-  color: inherit;
-}
+#carbonads .carbon-poweredby {
+  position: absolute;
+  bottom: 10px;
+  left: 152px;
 
-#carbonads span {
-  display: block;
-  overflow: hidden;
-}
-
-.carbon-img {
-  display: block;
-  margin: 0 auto 8px;
+  font-size: 8px;
+  font-weight: 500;
   line-height: 1;
-}
-
-.carbon-text {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.carbon-poweredby {
-  display: block;
-  padding: 6px 10px;
-  background: #1e2021;
+  text-decoration: none;
+  letter-spacing: .5px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 7px;
-  line-height: 1;
+  color: #c5cdd0;
 }
-
