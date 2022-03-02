@@ -47,6 +47,7 @@ extensions = [
 	"sphinx.ext.intersphinx",
 	"sphinx.ext.autosectionlabel",
 	"rst2pdf.pdfbuilder",
+#	"sphinxcontrib.fulltoc",
 ]
 
 napoleon_google_docstring = False
@@ -88,7 +89,6 @@ html_static_path = ['_static']
 # or fully qualified paths (eg. https://...)
 html_css_files = ['css/custom.css',]
 
-# html_sidebars = {
-#    '**': ['globaltoc.html', 'sourcelink.html', 'carbonads.html', 'searchbox.html'],
-#    'using/windows': ['windowssidebar.html', 'carbonads.html', 'searchbox.html'],
-# }
+# html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'carbon_ads.html', 'sourcelink.html', 'searchbox.html'] }
+
+
