@@ -6,4 +6,9 @@
 2. copy paste de css naar:
 	docs\source\_static\css\custom.css
 
-	
+3. Onder index.rst plaats:
+
+	.. raw:: html
+
+		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+

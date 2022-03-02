@@ -88,7 +88,7 @@ html_static_path = ['_static']
 # or fully qualified paths (eg. https://...)
 html_css_files = ['css/custom.css',]
 
-# A list of files that should not be packed into the epub file
-epub_exclude_files = ['search.html']
-
-html_sidebars = {'**': ['localtoc.html', 'carbonads.html', 'relations.html', 'sourcelink.html', 'searchbox.html',],}
+# html_sidebars = {
+#    '**': ['globaltoc.html', 'sourcelink.html', 'carbonads.html', 'searchbox.html'],
+#    'using/windows': ['windowssidebar.html', 'carbonads.html', 'searchbox.html'],
+# }
