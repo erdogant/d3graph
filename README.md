@@ -73,7 +73,7 @@ Click on the following image to load the interactive network that is created wit
 
 <p align="left">
   <a href="https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label">
-     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="600"/>
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="900"/>
   </a>
 </p>
 
