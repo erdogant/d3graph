@@ -58,7 +58,7 @@ from d3graph import d3graph
 
 ### Examples
 
-Click on the following image to load the interactive **Titanic** network that is created with ``d3graph``. Note that the relations are determined using [HNet](https://erdogant.github.io/hnet/pages/html/Examples.html#titanic-dataset)
+Click on the following image to load the interactive **Titanic** network that is created with ``d3graph``. Note that the relations are determined using [HNet. Click here to make the network.](https://erdogant.github.io/hnet/pages/html/Examples.html#titanic-dataset)
 
 <p align="left">
   <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">
