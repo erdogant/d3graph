@@ -60,7 +60,7 @@ from d3graph import d3graph
 
 Click on the following image to load the interactive network that is created with ``d3graph``.
 
-<p align="center">
+<p align="left">
   <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">
      <img src="https://github.com/erdogant/d3graph/blob/master/docs/titanic_example/d3graph.png" width="600"/>
   </a>
@@ -72,7 +72,9 @@ Click on the following image to load the interactive network that is created wit
 * [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
 
 <p align="left">
-  <img src="https://github.com/erdogant/findpeaks/blob/master/docs/figs/d3graph_node_properties.png" width="600" />  
+  <a href="https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label">
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="600"/>
+  </a>
 </p>
 
 #
@@ -84,13 +86,24 @@ Click on the following image to load the interactive network that is created wit
 * [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
 
 
-<p align="center">
-  <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_1.png" width="300" />
-  <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_2.png" width="300" />
-  <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_3.png" width="300" />
-  <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_4.png" width="300" />
-</p>
+<p align="left">
+  <a href="https://erdogant.github.io/d3graph/pages/html/Examples.html">
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_1.png" width="600"/>
+  </a>
 
+    <a href="https://erdogant.github.io/d3graph/pages/html/Examples.html">
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_2.png" width="600"/>
+  </a>
+
+      <a href="https://erdogant.github.io/d3graph/pages/html/Examples.html">
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_3.png" width="600"/>
+  </a>
+
+      <a href="https://erdogant.github.io/d3graph/pages/html/Examples.html">
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_4.png" width="600"/>
+  </a>
+
+</p>
 
 
 ### Contribute
