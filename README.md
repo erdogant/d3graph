@@ -67,9 +67,7 @@ Click on the following image to load the interactive **Titanic** network that is
 </p>
 
 
-#
-
-* [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
+##### [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
 
 <p align="left">
   <a href="https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label">
@@ -79,11 +77,11 @@ Click on the following image to load the interactive **Titanic** network that is
 
 #
 
-* [Example: Convert source-target list to adjacency matrix](https://erdogant.github.io/d3graph/pages/html/Data.html#create-adjacency-matrix)
+##### [Example: Convert source-target list to adjacency matrix](https://erdogant.github.io/d3graph/pages/html/Data.html#create-adjacency-matrix)
 
 #
 
-* [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
+##### [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
 
 
 <p align="left">
