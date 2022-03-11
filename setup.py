@@ -22,7 +22,7 @@ setuptools.setup(
      description="Python package to create interactive network based on d3js.",
      long_description=long_description,
      long_description_content_type="text/markdown",
-     url="https://github.com/erdogant/d3graph",
+     url="https://erdogant.github.io/d3graph",
 	 download_url = 'https://github.com/erdogant/d3graph/archive/'+new_version+'.tar.gz',
      packages=setuptools.find_packages(), # Searches throughout all dirs for files to include
      include_package_data=True, # Must be true to include files depicted in MANIFEST.in

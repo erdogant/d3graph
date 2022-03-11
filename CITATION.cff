@@ -14,7 +14,7 @@ keywords:
   - "d3js"
 license: "Apache-2.0"
 message: "If you use this software, please cite it using these metadata."
-repository-code: "https://github.com/erdogant/d3graph"
+repository-code: "https://erdogant.github.io/d3graph"
 title: "Interactive force-directed network creator (d3graph)"
 version: "0.1.12"
 ...
