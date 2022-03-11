@@ -58,7 +58,7 @@ from d3graph import d3graph
 
 ### Examples
 
-Click on the following image to load the interactive network that is created with ``d3graph``.
+Click on the following image to load the interactive **Titanic** network that is created with ``d3graph``. Note that the relations are determined using [HNet. Click here to go to the page with code to make the network.](https://erdogant.github.io/hnet/pages/html/Use%20Cases.html#titanic-dataset)
 
 <p align="left">
   <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">
@@ -67,23 +67,21 @@ Click on the following image to load the interactive network that is created wit
 </p>
 
 
-#
-
-* [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
+##### [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
 
 <p align="left">
   <a href="https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label">
-     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="600"/>
+     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="900"/>
   </a>
 </p>
 
 #
 
-* [Example: Convert source-target list to adjacency matrix](https://erdogant.github.io/d3graph/pages/html/Data.html#create-adjacency-matrix)
+##### [Example: Convert source-target list to adjacency matrix](https://erdogant.github.io/d3graph/pages/html/Data.html#create-adjacency-matrix)
 
 #
 
-* [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
+##### [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
 
 
 <p align="left">
