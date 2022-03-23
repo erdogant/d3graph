@@ -4,20 +4,6 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph
 
-# %% Convert source-target to adjmat
-from d3graph import d3graph, vec2adjmat
-
-source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
-target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
-adjmat = vec2adjmat(source, target)
-
-adjmat.iloc[0,0]=2
-adjmat.iloc[0,1]=3
-adjmat.iloc[0,2]=4
-adjmat.iloc[0,3]=7
-d3 = d3graph()
-d3.graph(adjmat)
-d3.show()
 
 # %%
 from d3graph import d3graph
@@ -27,10 +13,31 @@ d3 = d3graph()
 adjmat = d3.import_example('small')
 
 d3.graph(adjmat)
+# d3.show()
+
+d3.set_node_properties(color=adjmat.columns.values)
 d3.show()
 
-d3.set_node_properties(color=adjmat.columns.values, label=['node AA','node BB','node FF','node JJ','node MM','node CC','node ZZ'])
+d3.set_node_properties(color=adjmat.columns.values, hover=['This is text for node A','Text for node B','More text can be added\n with the slash n','','','',''])
 d3.show()
+
+# %% Convert source-target to adjmat
+from d3graph import d3graph, vec2adjmat
+
+source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
+adjmat = vec2adjmat(source, target)
+d3 = d3graph()
+print(d3.config)
+
+adjmat.iloc[0,0]=2
+adjmat.iloc[0,1]=3
+adjmat.iloc[0,2]=4
+adjmat.iloc[1,3]=12
+
+d3.graph(adjmat)
+d3.show(showfig=True)
+
 
 
 
@@ -45,7 +52,7 @@ d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values, cmap='Set1')
 d3.show()
 
-d3.set_node_properties(label=df['label'].values, color=df['label'].values, cmap='Set1')
+d3.set_node_properties(label=df['label'].values, hover=adjmat.columns.values, color=df['label'].values, cmap='Set1')
 d3.show()
 
 
@@ -83,7 +90,7 @@ d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::
 d3.show()
 
 # Example H: Include directed links. Arrows are set from source -> target
-d3.set_edge_properties(directed=True)
+d3.set_edge_properties(directed=True, edge_distance_minmax=[5, 30])
 d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
 d3.show()
 
@@ -116,10 +123,13 @@ d3.show()
 d3.set_node_properties(label=label, color=label, cmap='Set1')
 d3.show()
 
-d3.set_node_properties(size=node_size)
+d3.set_node_properties(size=node_size, label=label)
 d3.show()
 
-d3.set_node_properties(color=label, size=node_size)
+d3.set_node_properties(color=label, size=node_size, label=label)
+d3.show()
+
+d3.set_node_properties(color=label, size=node_size, label=label, hover=label+' hover text')
 d3.show()
 
 d3.set_edge_properties(edge_distance=100)
@@ -128,17 +138,17 @@ d3.show()
 
 d3 = d3graph(charge=1000)
 d3.graph(adjmat)
-d3.set_node_properties(color=node_size, size=node_size)
+d3.set_node_properties(color=node_size, size=node_size, label=label)
 d3.show()
 
 d3 = d3graph(collision=1, charge=250)
 d3.graph(adjmat)
-d3.set_node_properties(color=label, size=node_size, edge_size=node_size, cmap='Set1')
+d3.set_node_properties(color=label, size=node_size, edge_size=node_size, cmap='Set1', label=label)
 d3.show()
 
 d3 = d3graph(collision=1, charge=250)
 d3.graph(adjmat)
-d3.set_node_properties(color=label, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1')
+d3.set_node_properties(color=label, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1', label=label)
 d3.show()
 
 
