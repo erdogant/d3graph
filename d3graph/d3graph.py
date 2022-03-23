@@ -167,15 +167,19 @@ class d3graph():
         # edges to graph (G) (also works with lower versions of networkx)
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
 
-
     def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
         """Node properties.
 
         Parameters
         ----------
         label : list of names (default: None)
-            Labels are used from the input adjacency matrix
+            The text that is shown on the Node.
+            If not specified, the label text will be inherited from the adjacency matrix column-names.
             * ['label 1','label 2','label 3', ...]
+        hover : list of names (default: None)
+            The text that is shown when hovering over the Node.
+            If not specified, the text will inherited from the label.
+            * ['hover 1','hover 2','hover 3', ...]
         color : list of strings (default: '#000080')
             Color of the node.
             * None: All nodes will be have the same color (auto generated).
