@@ -225,7 +225,20 @@ class d3graph():
             label = self.adjmat.columns.astype(str)
         else:
             label = np.array([''] * nodecount)
-        if not (len(label)==nodecount): raise Exception(logger.warning("Node label must be of same length as the number of nodes"))
+        if not (len(label)==nodecount): raise Exception(logger.warning("[label] must be of same length as the number of nodes"))
+
+        # Hover text
+        if isinstance(hover, list):
+            hover = np.array(hover).astype(str)
+        elif 'numpy' in str(type(hover)):
+            pass
+        elif isinstance(hover, str):
+            hover = np.array([hover] * nodecount)
+        elif label is not None:
+            hover = label
+        else:
+            hover = np.array([''] * nodecount)
+        if not (len(hover)==nodecount): raise Exception(logger.warning("[Hover text] must be of same length as the number of nodes"))
 
         # Set node color
         if isinstance(color, list):
@@ -239,7 +252,7 @@ class d3graph():
         else:
             assert 'Node color not possible'
         color = _get_hexcolor(color, cmap=self.config['cmap'])
-        if not (len(color)==nodecount): raise Exception(logger.warning("Node color must be of same length as the number of nodes"))
+        if not (len(color)==nodecount): raise Exception(logger.warning("[color] must be of same length as the number of nodes"))
 
         # Set node color edge
         if isinstance(edge_color, list):
@@ -253,7 +266,7 @@ class d3graph():
         else:
             assert 'Node color edge not possible'
         edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
-        if not (len(edge_color)==nodecount): raise Exception(logger.warning("Node color edge must be of same length as the number of nodes"))
+        if not (len(edge_color)==nodecount): raise Exception(logger.warning("[edge_color] must be of same length as the number of nodes"))
 
         # Set node size
         if isinstance(size, list):
@@ -284,14 +297,16 @@ class d3graph():
 
         # Scale the sizes and get hex colors
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.1, 4)
-        if not (len(edge_size)==nodecount): raise Exception(logger.warning("Node size edge must be of same length as the number of nodes"))
+        if not (len(edge_size)==nodecount): raise Exception(logger.warning("[edge_size] must be of same length as the number of nodes"))
 
         # Store in dict
         node_names = self.adjmat.columns.astype(str)
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {
+                'name': node,
                 'label': label[i],
+                'hover': hover[i],
                 'color': color[i].astype(str),
                 'size': size[i],
                 'edge_size': edge_size[i],
@@ -307,6 +322,7 @@ class d3graph():
         """
         tmplist = [*self.G.edges.values()]
         edge_weight = list(map(lambda x: x['weight_scaled'], tmplist))
+        edge_weight = list(map(lambda x: x['weight'], tmplist))
 
         # if self.config['slider'] == [None, None]:
         max_slider = np.ceil(np.max(edge_weight))
@@ -532,12 +548,15 @@ def json_create(G):
 
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodes_new = [None] * len(nodes)
-    for i in range(0, len(nodes)):
+    for i, node in enumerate(nodes):
         nodes[i]['node_name'] = nodes[i].pop('label')
+        # nodes[i]['node_label'] = nodes[i].pop('label')
+        nodes[i]['node_hover'] = nodes[i].pop('hover')
         nodes[i]['node_color'] = nodes[i].pop('color')
         nodes[i]['node_size'] = nodes[i].pop('size')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
+        # Combine all information into new list
         nodes_new[i] = nodes[i]
     data['nodes'] = nodes_new
 
