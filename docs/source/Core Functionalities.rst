@@ -116,6 +116,7 @@ There are various possabilities to customize the network using the node properti
 
 .. note::
 	* 1. Node label
+	* 1. Node hover text
 	* 2. Node color
 	* 3. Node size
 	* 4. Node edge color
@@ -147,6 +148,37 @@ Lets change the **node labels** from the *karate* example into something more me
 .. raw:: html
 
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label.html" height="700px" width="850px", frameBorder="0"></iframe>
+
+
+Hover over text
+-----------------------
+
+Getting more information when hovering over a node can be easily done using the ``hover`` parameter.
+
+.. code:: python
+
+	# Import library
+	from d3graph import d3graph
+	# Initialization
+	d3 = d3graph()
+	# Load karate example
+	adjmat, df = d3.import_example('karate')
+	# Process the adjacency matrix
+	d3.graph(adjmat)
+
+	# Set node properties
+	hover = '\nId: ' + adjmat.columns.astype(str) +'\nDegree: ' + df['degree'].astype(str) + '\nLabel: ' + df['label'].values
+	hover = hover.values
+
+	# Set node properties
+	d3.set_node_properties(label=df['label'].values, hover=hover, color=label)
+
+	# Plot
+	d3.show(filepath=r'D:\REPOS\erdogant.github.io\docs\d3graph\d3graph/karate_label_hover.html')
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_hover.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 Node color

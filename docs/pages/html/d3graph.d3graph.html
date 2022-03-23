@@ -106,7 +106,7 @@
 <p>Make interactive network in D3 javascript.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.adjmat2dict">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_distance_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">20]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_distance_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">10]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -164,12 +164,6 @@
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
 <dd><p>Make interactive network in D3 javascript.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="d3graph.d3graph.d3graph.clean">
-<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.clean" title="Permalink to this definition"></a></dt>
-<dd><p>Clean previous results to ensure correct working.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.graph">
 <span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.graph" title="Permalink to this definition"></a></dt>
@@ -229,7 +223,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.set_edge_properties">
-<span class="sig-name descname"><span class="pre">set_edge_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_distance_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_edge_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_edge_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_distance_minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">20]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_edge_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Edge properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -260,13 +254,17 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.set_node_properties">
-<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000080'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Set1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000080'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Set1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Node properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – Labels are used from the input adjacency matrix
+<li><p><strong>label</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown on the Node.
+If not specified, the label text will be inherited from the adjacency matrix column-names.
 * [‘label 1’,’label 2’,’label 3’, …]</p></li>
+<li><p><strong>hover</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown when hovering over the Node.
+If not specified, the text will inherited from the label.
+* [‘hover 1’,’hover 2’,’hover 3’, …]</p></li>
 <li><p><strong>color</strong> (<em>list of strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Color of the node.
 * None: All nodes will be have the same color (auto generated).
 * [‘#000000’]: All nodes will have the same hex color.
@@ -341,7 +339,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1500,</span> <span class="pre">800)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'d3graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'d3graph.html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.show" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1500,</span> <span class="pre">800)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'d3graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'d3graph.html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.show" title="Permalink to this definition"></a></dt>
 <dd><p>Build and show the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -350,6 +348,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 <li><p><strong>title</strong> (<em>String</em><em>, </em><em>(</em><em>default: None</em><em>)</em>) – Title of the figure.</p></li>
 <li><p><strong>filepath</strong> (<em>String</em><em>, </em><em>(</em><em>Default: user temp directory</em><em>)</em>) – File path to save the output</p></li>
 <li><p><strong>showfig</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – Open the window to show the network.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – Overwrite the existing html file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -360,7 +359,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.write_html">
-<span class="sig-name descname"><span class="pre">write_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.write_html" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">write_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.write_html" title="Permalink to this definition"></a></dt>
 <dd><p>Write html.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

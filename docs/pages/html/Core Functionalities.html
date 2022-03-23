@@ -67,6 +67,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#node-properties">Node properties</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#node-label">Node label</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hover-over-text">Hover over text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color">Node color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-size">Node edge size</a></li>
@@ -222,6 +223,10 @@
 <li><p>Node label</p></li>
 </ol>
 </li>
+<li><ol class="arabic simple">
+<li><p>Node hover text</p></li>
+</ol>
+</li>
 <li><ol class="arabic simple" start="2">
 <li><p>Node color</p></li>
 </ol>
@@ -260,6 +265,30 @@
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label.html" height="700px" width="850px", frameBorder="0"></iframe></section>
+<section id="hover-over-text">
+<h2>Hover over text<a class="headerlink" href="#hover-over-text" title="Permalink to this headline"></a></h2>
+<p>Getting more information when hovering over a node can be easily done using the <code class="docutils literal notranslate"><span class="pre">hover</span></code> parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+<span class="c1"># Initialization</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="c1"># Load karate example</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="c1"># Process the adjacency matrix</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Set node properties</span>
+<span class="n">hover</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Id: &#39;</span> <span class="o">+</span> <span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Degree: &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Label: &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">hover</span> <span class="o">=</span> <span class="n">hover</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">hover</span><span class="o">=</span><span class="n">hover</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\REPOS\erdogant.github.io\docs\d3graph\d3graph/karate_label_hover.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_hover.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-color">
 <h2>Node color<a class="headerlink" href="#node-color" title="Permalink to this headline"></a></h2>
 <p>Lets change the <strong>node colors</strong> from the <em>karate</em> example using the label information. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
