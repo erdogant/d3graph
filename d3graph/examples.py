@@ -11,6 +11,10 @@ source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheld
 target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
 adjmat = vec2adjmat(source, target)
 
+adjmat.iloc[0,0]=2
+adjmat.iloc[0,1]=3
+adjmat.iloc[0,2]=4
+adjmat.iloc[0,3]=7
 d3 = d3graph()
 d3.graph(adjmat)
 d3.show()

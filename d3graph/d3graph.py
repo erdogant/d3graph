@@ -154,7 +154,7 @@ class d3graph():
         self.config['directed'] = directed
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
         if edge_distance_minmax[0] is None: edge_distance_minmax[0]=1
-        if edge_distance_minmax[1] is None: edge_distance_minmax[1]=20
+        if edge_distance_minmax[1] is None: edge_distance_minmax[1]=np.max(self.adjmat).max()
         self.config['edge_distance_minmax'] = edge_distance_minmax
         # edges to graph (G) (also works with lower versions of networkx)
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
@@ -363,7 +363,7 @@ class d3graph():
         # Set node properties
         self.set_node_properties()
 
-    def write_html(self, json_data):
+    def write_html(self, json_data, overwrite=True):
         """Write html.
 
         Parameters
@@ -393,6 +393,10 @@ class d3graph():
         index_file = Path(self.config['filepath'])
         logger.info('Write to path: [%s]' % index_file.absolute())
         # index_file.write_text(index_template.render(content))
+        if os.path.isfile(index_file):
+            if overwrite:
+                logger.info('File already exists and will be overwritten: [%s]' %(index_file))
+                os.remove(index_file)
         with open(index_file, "w", encoding="utf-8") as f:
             f.write(index_template.render(content))
 
