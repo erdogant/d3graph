@@ -9,6 +9,15 @@ from d3graph import d3graph
 from d3graph import d3graph
 
 d3 = d3graph()
+adjmat = d3.import_example('bigbang')
+d3.graph(adjmat)
+d3.set_node_properties(label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.show()
+
+# %%
+from d3graph import d3graph
+
+d3 = d3graph()
 # Load example
 adjmat = d3.import_example('small')
 
