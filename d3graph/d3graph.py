@@ -133,7 +133,7 @@ class d3graph():
         # Return
         return self.G
 
-    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[0, 20], directed=False):
+    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[1, 20], directed=False):
         """Edge properties.
 
         Parameters
@@ -160,7 +160,7 @@ class d3graph():
         self.config['directed'] = directed
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
         # if edge_distance_minmax[0] is None: edge_distance_minmax[0]=0
-        # if edge_distance_minmax[1] is None: edge_distance_minmax[1]=10
+        # if edge_distance_minmax[1] is None: edge_distance_minmax[1]=20
         # self.config['slider'][0] = int(edge_distance_minmax[0])
         # self.config['slider'][1] = int(edge_distance_minmax[1])
         self.config['edge_distance_minmax'] = edge_distance_minmax
@@ -168,7 +168,7 @@ class d3graph():
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
 
 
-    def set_node_properties(self, label=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
+    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
         """Node properties.
 
         Parameters
