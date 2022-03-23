@@ -65,6 +65,8 @@ class d3graph():
         None.
 
         """
+        # Cleaning
+        self._clean()
         # Some library compatibily checks
         library_compatibility_checks()
         # Set the logger
@@ -80,14 +82,15 @@ class d3graph():
         self.config['d3_script'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3graphscript.js'))
         self.config['css'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/style.css'))
 
-    def clean(self):
+    def _clean(self, clean_config=True):
         """Clean previous results to ensure correct working."""
         if hasattr(self, 'adjmat'): del self.adjmat
         if hasattr(self, 'node_properties'): del self.node_properties
         if hasattr(self, 'edge_properties'): del self.edge_properties
         if hasattr(self, 'G'): del self.G
+        if clean_config and hasattr(self, 'config'): del self.config
 
-    def show(self, figsize=(1500, 800), title='d3graph', filepath='d3graph.html', showfig=True):
+    def show(self, figsize=(1500, 800), title='d3graph', filepath='d3graph.html', showfig=True, overwrite=True):
         """Build and show the graph.
 
         Parameters
@@ -100,13 +103,14 @@ class d3graph():
             File path to save the output
         showfig : bool, (default: True)
             Open the window to show the network.
+        overwrite : bool, (default: True)
+            Overwrite the existing html file.
 
         Returns
         -------
         None.
 
         """
-        time.sleep(0.5)
         self.config['figsize'] = figsize
         self.config['network_title'] = title
         # self.config['path'] = '' if filepath is None else filepath
@@ -120,14 +124,16 @@ class d3graph():
         # Create json
         json_data = json_create(self.G)
         # Create html with json file embedded
-        self.write_html(json_data)
+        self.write_html(json_data, overwrite=overwrite)
         # Open the webbrowser
         if self.config['showfig']:
+            # Sleeping is required to pevent overlapping windows
+            time.sleep(0.5)
             webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
         # Return
         return self.G
 
-    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[None, None], directed=False):
+    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[0, 20], directed=False):
         """Edge properties.
 
         Parameters
@@ -153,11 +159,14 @@ class d3graph():
         """
         self.config['directed'] = directed
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
-        if edge_distance_minmax[0] is None: edge_distance_minmax[0]=1
-        if edge_distance_minmax[1] is None: edge_distance_minmax[1]=np.max(self.adjmat).max()
+        # if edge_distance_minmax[0] is None: edge_distance_minmax[0]=0
+        # if edge_distance_minmax[1] is None: edge_distance_minmax[1]=10
+        # self.config['slider'][0] = int(edge_distance_minmax[0])
+        # self.config['slider'][1] = int(edge_distance_minmax[1])
         self.config['edge_distance_minmax'] = edge_distance_minmax
         # edges to graph (G) (also works with lower versions of networkx)
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
+
 
     def set_node_properties(self, label=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
         """Node properties.
@@ -299,20 +308,20 @@ class d3graph():
         tmplist = [*self.G.edges.values()]
         edge_weight = list(map(lambda x: x['weight_scaled'], tmplist))
 
-        if self.config['slider'] == [None, None]:
-            max_slider = np.ceil(np.max(edge_weight))
-            # max_slider = np.ceil(np.sort(edge_weight)[-2])
-            if len(np.unique(edge_weight))>1:
-                min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
-            else:
-                min_slider = 0
+        # if self.config['slider'] == [None, None]:
+        max_slider = np.ceil(np.max(edge_weight))
+        # max_slider = np.ceil(np.sort(edge_weight)[-2])
+        if len(np.unique(edge_weight))>1:
+            min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
         else:
-            assert len(self.config['slider'])==2, 'Slider must be of type [int, int]'
-            min_slider = self.config['slider'][0]
-            max_slider = self.config['slider'][1]
+            min_slider = 0
+        # else:
+            # assert len(self.config['slider'])==2, 'Slider must be of type [int, int]'
+            # min_slider = self.config['slider'][0]
+            # max_slider = self.config['slider'][1]
         # Store the slider range
-        logger.info('Slider range is set to [%g, %g]' %(min_slider, max_slider))
-        self.config['slider'] = [min_slider, max_slider]
+        self.config['slider'] = [int(min_slider), int(max_slider)]
+        logger.info('Slider range is set to [%g, %g]' %(self.config['slider'][0], self.config['slider'][1]))
 
     def graph(self, adjmat):
         """Process the adjacency matrix and set all properties to default.
@@ -355,7 +364,7 @@ class d3graph():
 
         """
         # Clean readily fitted models to ensure correct results
-        self.clean()
+        self._clean(clean_config=False)
         # Checks
         self.adjmat = data_checks(adjmat.copy())
         # Set edge properties
@@ -536,7 +545,7 @@ def json_create(G):
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 20]):
+def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
