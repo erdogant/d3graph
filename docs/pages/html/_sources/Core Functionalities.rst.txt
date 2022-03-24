@@ -169,9 +169,10 @@ Getting more information when hovering over a node can be easily done using the 
 	# Set node properties
 	hover = '\nId: ' + adjmat.columns.astype(str) +'\nDegree: ' + df['degree'].astype(str) + '\nLabel: ' + df['label'].values
 	hover = hover.values
+	label = df['label'].values
 
 	# Set node properties
-	d3.set_node_properties(label=df['label'].values, hover=hover, color=label)
+	d3.set_node_properties(label=label, hover=hover, color=label)
 
 	# Plot
 	d3.show(filepath=r'D:\REPOS\erdogant.github.io\docs\d3graph\d3graph/karate_label_hover.html')
