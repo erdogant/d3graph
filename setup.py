@@ -15,7 +15,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
      install_requires=['pandas','numpy','colourmap','networkx>2','ismember','jinja2==2.11.3', 'sklearn', 'packaging', 'markupsafe==2.0.1'],
      python_requires='>=3',
-     name='d3graph',  
+     name='d3graph',
      version=new_version,
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",

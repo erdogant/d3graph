@@ -64,7 +64,6 @@ d3.show(showfig=True)
 
 # %%
 
-
 # Make some graphs
 d3 = d3graph()
 # Load example
