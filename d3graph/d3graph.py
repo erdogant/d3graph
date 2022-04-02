@@ -643,7 +643,8 @@ def edges2G(edge_properties, G=None):
     """
     # Create new graph G
     if G is None:
-        G = nx.Graph()
+        # G = nx.Graph()
+        G = nx.DiGraph()
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
@@ -670,7 +671,8 @@ def nodes2G(node_properties, G=None):
     """
     # Create new graph G
     if G is None:
-        G = nx.Graph()
+        # G = nx.Graph()
+        G = nx.DiGraph()
     # Get node properties
     node_properties = pd.DataFrame(node_properties).T
     # Store node properties in Graph
@@ -703,7 +705,8 @@ def make_graph(node_properties, edge_properties):
 
     """
     # Create new Graph
-    G = nx.Graph()
+    # G = nx.Graph()
+    G = nx.DiGraph()
     # Add edges to graph
     G = edges2G(edge_properties, G=G)
     # Add nodes to graph

@@ -5,6 +5,21 @@ import numpy as np
 from d3graph import d3graph
 
 
+# %% Convert source-target to adjmat
+from d3graph import d3graph, vec2adjmat
+source = ['Penny', 'Penny', 'Amy',        'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh',     'Howard',     'Howard',  'Leonard', 'Amy',     'Penny']
+adjmat = vec2adjmat(source, target)
+d3 = d3graph()
+print(d3.config)
+
+d3.graph(adjmat)
+# d3.show(showfig=True)
+
+d3.set_edge_properties(directed=False, edge_distance_minmax=[5, 30])
+d3.show(showfig=True)
+
+
 # %%
 from d3graph import d3graph
 d3 = d3graph()
@@ -45,20 +60,22 @@ d3.show()
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
 
-source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
-target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
+source = ['Penny', 'Penny', 'Amy',        'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh',     'Howard',     'Howard',  'Leonard', 'Amy',     'Penny']
 adjmat = vec2adjmat(source, target)
 d3 = d3graph()
 print(d3.config)
 
-adjmat.iloc[0,0]=2
-adjmat.iloc[0,1]=3
-adjmat.iloc[0,2]=4
-adjmat.iloc[1,3]=12
+# adjmat.iloc[0,0]=2
+# adjmat.iloc[0,1]=3
+# adjmat.iloc[0,2]=4
+# adjmat.iloc[1,3]=12
 
 d3.graph(adjmat)
-d3.show(showfig=True)
+# d3.show(showfig=True)
 
+d3.set_edge_properties(directed=True, edge_distance_minmax=[5, 30])
+d3.show(showfig=True)
 
 
 
