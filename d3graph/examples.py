@@ -16,7 +16,7 @@ print(d3.config)
 d3.graph(adjmat)
 # d3.show(showfig=True)
 
-d3.set_edge_properties(directed=False, edge_distance_minmax=[5, 30])
+d3.set_edge_properties(directed=True)
 d3.show(showfig=True)
 
 
