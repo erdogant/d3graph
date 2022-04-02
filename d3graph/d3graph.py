@@ -215,8 +215,13 @@ class d3graph():
                 'edge_color': edge_color of the node
 
         """
-        self.config['cmap'] = 'Paired' if cmap is None else cmap
         nodecount = self.adjmat.shape[0]
+        if isinstance(color, str) and len(color)!=7: raise Exception('Input parameter [color] has wrong format. Must be like color="#000000"')
+        if isinstance(color, list) and len(color)==0: raise Exception('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
+        if isinstance(color, list) and (not np.all(list(map(lambda x: len(x)==7, color)))): raise Exception('[color] contains incorrect length of hex-color! Hex must be of lengt 7: ["#000000", "#000000", etc]')
+        if isinstance(color, list) and len(color)!=nodecount: raise Exception('Input parameter [color] has wrong length. Must be of length: %s' %(str(nodecount)))
+
+        self.config['cmap'] = 'Paired' if cmap is None else cmap
 
         # Set node label
         if isinstance(label, list):
@@ -229,7 +234,7 @@ class d3graph():
             label = self.adjmat.columns.astype(str)
         else:
             label = np.array([''] * nodecount)
-        if not (len(label)==nodecount): raise Exception(logger.warning("[label] must be of same length as the number of nodes"))
+        if not (len(label)==nodecount): raise Exception("[label] must be of same length as the number of nodes")
 
         # Hover text
         if isinstance(hover, list):
@@ -242,10 +247,10 @@ class d3graph():
             hover = label
         else:
             hover = np.array([''] * nodecount)
-        if not (len(hover)==nodecount): raise Exception(logger.warning("[Hover text] must be of same length as the number of nodes"))
+        if not (len(hover)==nodecount): raise Exception("[Hover text] must be of same length as the number of nodes")
 
         # Set node color
-        if isinstance(color, list):
+        if isinstance(color, list) and len(color)==nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
             pass
@@ -256,7 +261,7 @@ class d3graph():
         else:
             assert 'Node color not possible'
         color = _get_hexcolor(color, cmap=self.config['cmap'])
-        if not (len(color)==nodecount): raise Exception(logger.warning("[color] must be of same length as the number of nodes"))
+        if not (len(color)==nodecount): raise Exception("[color] must be of same length as the number of nodes")
 
         # Set node color edge
         if isinstance(edge_color, list):
@@ -270,7 +275,7 @@ class d3graph():
         else:
             assert 'Node color edge not possible'
         edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
-        if not (len(edge_color)==nodecount): raise Exception(logger.warning("[edge_color] must be of same length as the number of nodes"))
+        if not (len(edge_color)==nodecount): raise Exception("[edge_color] must be of same length as the number of nodes")
 
         # Set node size
         if isinstance(size, list):
@@ -284,7 +289,7 @@ class d3graph():
             size = np.ones(nodecount, dtype=int) * size
         else:
             raise Exception(logger.error("Node size not possible"))
-        if not (len(size)==nodecount): raise Exception(logger.warning("Node size must be of same length as the number of nodes"))
+        if not (len(size)==nodecount): raise Exception("Node size must be of same length as the number of nodes")
 
         # Set node edge size
         if isinstance(edge_size, list):
@@ -301,7 +306,7 @@ class d3graph():
 
         # Scale the sizes and get hex colors
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.1, 4)
-        if not (len(edge_size)==nodecount): raise Exception(logger.warning("[edge_size] must be of same length as the number of nodes"))
+        if not (len(edge_size)==nodecount): raise Exception("[edge_size] must be of same length as the number of nodes")
 
         # Store in dict
         node_names = self.adjmat.columns.astype(str)
