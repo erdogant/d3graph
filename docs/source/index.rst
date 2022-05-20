@@ -47,9 +47,9 @@ Content
 
 .. toctree::
   :maxdepth: 1
-  :caption: Code Documentation
+  :caption: Documentation
   
-  Blog
+  Documentation
   Coding quality
   d3graph.d3graph
 
