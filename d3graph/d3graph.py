@@ -493,6 +493,10 @@ class d3graph():
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat
         elif network=='karate':
+            import scipy
+            if version.parse(scipy.__version__) < version.parse("1.8.0"):
+                raise ImportError('[d3graph] >Error: This release requires scipy version >= 1.8.0. Try: pip install -U scipy>=1.8.0')
+
             G = nx.karate_club_graph()
             adjmat = nx.adjacency_matrix(G).todense()
             adjmat=pd.DataFrame(index=range(0, adjmat.shape[0]), data=adjmat, columns=range(0, adjmat.shape[0]))
