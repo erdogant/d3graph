@@ -69,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#node-label">Node label</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#hover-over-text">Hover over text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color">Node color</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-color-on-clustering">Node color on clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-size">Node edge size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-color">Node edge color</a></li>
@@ -301,6 +302,17 @@
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
+<section id="node-color-on-clustering">
+<h2>Node color on clustering<a class="headerlink" href="#node-color-on-clustering" title="Permalink to this headline"></a></h2>
+<p>We can also change the node color on the clustering.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
 <section id="node-size">
 <h2>Node size<a class="headerlink" href="#node-size" title="Permalink to this headline"></a></h2>
 <p>Lets change the <strong>node size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>

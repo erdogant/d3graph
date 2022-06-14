@@ -162,8 +162,24 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">350</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">None]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
 <dd><p>Make interactive network in D3 javascript.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="d3graph.d3graph.d3graph.get_cluster_color">
+<span class="sig-name descname"><span class="pre">get_cluster_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.get_cluster_color" title="Permalink to this definition"></a></dt>
+<dd><p>Clustering of graph labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Pandas DataFrame with columns</em>) – ‘source’
+‘target’
+‘weight’</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict cluster_label.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.graph">
 <span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.graph" title="Permalink to this definition"></a></dt>
@@ -198,11 +214,8 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -269,6 +282,7 @@ If not specified, the label text will be inherited from the adjacency matrix col
 If not specified, the text will inherited from the label.
 * [‘hover 1’,’hover 2’,’hover 3’, …]</p></li>
 <li><p><strong>color</strong> (<em>list of strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Color of the node.
+* ‘cluster’ : Colours are based on the community distance clusters.
 * None: All nodes will be have the same color (auto generated).
 * [‘#000000’]: All nodes will have the same hex color.
 * [‘#377eb8’,’#ffffff’,’#000000’,…]: Hex colors are directly used.
@@ -335,7 +349,7 @@ If not specified, the text will inherited from the label.
 <dd class="field-odd"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[min, max]</p>
+<dd class="field-even"><p>[min, max].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,11 +368,8 @@ If not specified, the text will inherited from the label.
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – Overwrite the existing html file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -371,11 +382,8 @@ If not specified, the text will inherited from the label.
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_data</strong> (<em>json file</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -410,11 +418,8 @@ If not specified, the text will inherited from the label.
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Graph G</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>
@@ -427,11 +432,8 @@ If not specified, the text will inherited from the label.
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>G</strong> (<em>Networkx object</em>) – Graph G</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>json dump</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>json dump</p>
 </dd>
 </dl>
 </dd></dl>
@@ -441,11 +443,8 @@ If not specified, the text will inherited from the label.
 <span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">library_compatibility_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.library_compatibility_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Library compatibiliy checks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -461,11 +460,8 @@ If not specified, the text will inherited from the label.
 <li><p><strong>edge_properties</strong> (<em>dictionary</em>) – Dictionary containing edge properties</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict containing Graph G and dataframe.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict containing Graph G and dataframe.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -481,11 +477,8 @@ If not specified, the text will inherited from the label.
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Graph G</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>

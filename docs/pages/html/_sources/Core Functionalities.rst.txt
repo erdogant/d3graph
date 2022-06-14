@@ -199,6 +199,19 @@ Lets change the **node colors** from the *karate* example using the label inform
 
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color.html" height="700px" width="850px", frameBorder="0"></iframe>
 
+Node color on clustering
+--------------------------
+
+We can also change the node color on the clustering.
+
+.. code:: python
+
+	# Set node properties
+	d3.set_node_properties(label=df['label'].values, color='cluster')
+
+	# Plot
+	d3.show()
+
 
 Node size
 -----------------------

@@ -212,10 +212,6 @@ We can also change the node color on the clustering.
 	# Plot
 	d3.show()
 
-.. raw:: html
-
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color.html" height="700px" width="850px", frameBorder="0"></iframe>
-
 
 Node size
 -----------------------
