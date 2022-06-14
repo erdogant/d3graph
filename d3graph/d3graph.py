@@ -669,7 +669,7 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
     if len(np.unique(df['weight'].values.reshape(-1, 1)))>2:
         df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), edge_distance_minmax[0], edge_distance_minmax[1])
     else:
-        df['weight_scaled'] = np.ones(df.shape[0]) * 5
+        df['weight_scaled'] = np.ones(df.shape[0]) * 1
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
