@@ -6,6 +6,15 @@
 # Licence     : See licences
 # ---------------------------------
 
+import os
+from sys import platform
+import time
+import tempfile
+from packaging import version
+import webbrowser
+import unicodedata
+import logging
+
 # Custom packages
 import pandas as pd
 import numpy as np
@@ -13,13 +22,6 @@ import networkx as nx
 from sklearn.preprocessing import MinMaxScaler
 import json
 from jinja2 import Environment, PackageLoader
-import unicodedata
-import logging
-import time
-import tempfile
-from packaging import version
-import webbrowser
-import os
 from pathlib import Path
 from ismember import ismember
 import colourmap as cm
@@ -39,7 +41,7 @@ logger = logging.getLogger()
 class d3graph():
     """Make interactive network in D3 javascript."""
 
-    def __init__(self, collision=0.5, charge=250, slider=[None, None], verbose=20):
+    def __init__(self, collision=0.5, charge=350, slider=[None, None], verbose=20):
         """Initialize d3graph.
 
         Description
@@ -127,11 +129,19 @@ class d3graph():
         self.write_html(json_data, overwrite=overwrite)
         # Open the webbrowser
         if self.config['showfig']:
-            # Sleeping is required to pevent overlapping windows
-            time.sleep(0.5)
-            webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
+            self._showfig(self.config['filepath'])
+            # webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
         # Return
         return self.G
+
+    @staticmethod
+    def _showfig(filepath: str, sleep=0.5):
+        # Sleeping is required to pevent overlapping windows
+        time.sleep(sleep)
+        file_location = os.path.abspath(filepath)
+        if platform == "darwin":  # check if on OSX
+            file_location = "file:///" + file_location
+        webbrowser.open(file_location, new=2)
 
     def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[1, 20], directed=False):
         """Edge properties.
