@@ -80,6 +80,7 @@ d3.show(showfig=True)
 
 
 # %%
+from d3graph import d3graph
 
 # Make some graphs
 d3 = d3graph()
@@ -87,6 +88,9 @@ d3 = d3graph()
 adjmat, df = d3.import_example('karate')
 d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(color='cluster', cmap='Set1')
 d3.show()
 
 d3.set_node_properties(label=df['label'].values, hover=adjmat.columns.values, color=df['label'].values, cmap='Set1')

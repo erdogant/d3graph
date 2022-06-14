@@ -182,6 +182,7 @@ class d3graph():
             * ['hover 1','hover 2','hover 3', ...]
         color : list of strings (default: '#000080')
             Color of the node.
+            * 'cluster' : Colours are based on the community distance clusters.
             * None: All nodes will be have the same color (auto generated).
             * ['#000000']: All nodes will have the same hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
@@ -215,7 +216,9 @@ class d3graph():
                 'edge_color': edge_color of the node
 
         """
+        node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
+        cluster_label = np.zeros_like(node_names).astype(int)
         if isinstance(color, str) and len(color)!=7: raise Exception('Input parameter [color] has wrong format. Must be like color="#000000"')
         if isinstance(color, list) and len(color)==0: raise Exception('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
         if isinstance(color, list) and (not np.all(list(map(lambda x: len(x)==7, color)))): raise Exception('[color] contains incorrect length of hex-color! Hex must be of lengt 7: ["#000000", "#000000", etc]')
@@ -253,14 +256,16 @@ class d3graph():
         if isinstance(color, list) and len(color)==nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
-            pass
+            color = _get_hexcolor(color, cmap=self.config['cmap'])
+        elif isinstance(color, str) and color=='cluster':
+            print('Color on community clustering cluster.')
+            color, cluster_label = self.get_cluster_color(node_names)
         elif isinstance(color, str):
             color = np.array([color] * nodecount)
         elif color is None:
             color = np.array(['#000080'] * nodecount)
         else:
             assert 'Node color not possible'
-        color = _get_hexcolor(color, cmap=self.config['cmap'])
         if not (len(color)==nodecount): raise Exception("[color] must be of same length as the number of nodes")
 
         # Set node color edge
@@ -309,7 +314,6 @@ class d3graph():
         if not (len(edge_size)==nodecount): raise Exception("[edge_size] must be of same length as the number of nodes")
 
         # Store in dict
-        node_names = self.adjmat.columns.astype(str)
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {
@@ -319,7 +323,48 @@ class d3graph():
                 'color': color[i].astype(str),
                 'size': size[i],
                 'edge_size': edge_size[i],
-                'edge_color': edge_color[i]}
+                'edge_color': edge_color[i],
+                'cluster_label': cluster_label[i]}
+
+    # compute clusters
+    def get_cluster_color(self, node_names):
+        """Clustering of graph labels.
+
+        Parameters
+        ----------
+        df : Pandas DataFrame with columns
+            'source'
+            'target'
+            'weight'
+
+        Returns
+        -------
+        dict cluster_label.
+
+        """
+        import networkx as nx
+        from community import community_louvain
+
+        df = adjmat2vec(self.adjmat.copy())
+        G = nx.from_pandas_edgelist(df, edge_attr=True, create_using=nx.MultiGraph)
+        # Partition
+        G = G.to_undirected()
+        cluster_labels = community_louvain.best_partition(G)
+        # Extract clusterlabels
+        y = list(map(lambda x: cluster_labels.get(x), cluster_labels.keys()))
+        hex_colors, _ = cm.fromlist(y, cmap=self.config['cmap'], scheme='hex')
+        labx = {}
+        # Use the order of node_names
+        for i, key in enumerate(cluster_labels.keys()):
+            labx[key] = {}
+            labx[key]['name'] = key
+            labx[key]['color'] = hex_colors[i]
+            labx[key]['cluster_label'] = cluster_labels.get(key)
+        
+        # return
+        color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
+        cluster_label = np.array(list(map(lambda x: labx.get(x)['cluster_label'], node_names)))
+        return color, cluster_label
 
     def setup_slider(self):
         """Mininum maximum range of the slider.
@@ -330,7 +375,7 @@ class d3graph():
 
         """
         tmplist = [*self.G.edges.values()]
-        edge_weight = list(map(lambda x: x['weight_scaled'], tmplist))
+        # edge_weight = list(map(lambda x: x['weight_scaled'], tmplist))
         edge_weight = list(map(lambda x: x['weight'], tmplist))
 
         # if self.config['slider'] == [None, None]:
@@ -340,10 +385,7 @@ class d3graph():
             min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
         else:
             min_slider = 0
-        # else:
-            # assert len(self.config['slider'])==2, 'Slider must be of type [int, int]'
-            # min_slider = self.config['slider'][0]
-            # max_slider = self.config['slider'][1]
+
         # Store the slider range
         self.config['slider'] = [int(min_slider), int(max_slider)]
         logger.info('Slider range is set to [%g, %g]' %(self.config['slider'][0], self.config['slider'][1]))

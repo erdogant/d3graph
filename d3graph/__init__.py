@@ -12,7 +12,7 @@ __version__ = '2.0.5'
 
 import jinja2
 if version.parse(jinja2.__version__) > version.parse("2.11.3"):
-    raise Exception('[d3graph] >Error: jinja2 versions > 2.11.3 gives an error! It is advised to create a new environment install d3graph or: pip install -U jinja2==2.11.3')
+    print('[d3graph] >Error: jinja2 versions > 2.11.3 gives an error! It is advised to create a new environment install d3graph or: pip install -U jinja2==2.11.3')
 
 # module level doc-string
 __doc__ = """
