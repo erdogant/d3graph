@@ -42,7 +42,8 @@ function d3graphscript(config = {
     .attr("class", "link")
     .style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
     .style("stroke-width", function(d) {return d.edge_width;}) // LINK-WIDTH
-    ;
+    .style("stroke", function(d) {return d.color;})  
+  ;
   //  .style("stroke-width", 1); // WIDTH OF THE LINKS
 
   //Do the same with the circles for the nodes
