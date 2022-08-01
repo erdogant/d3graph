@@ -5,6 +5,114 @@ import numpy as np
 from d3graph import d3graph
 
 
+# %% default example
+from d3graph import d3graph
+
+# Initialize
+d3 = d3graph()
+
+# Load karate example
+adjmat, df = d3.import_example('karate')
+
+# Initialize
+d3.graph(adjmat)
+
+# Node properties
+d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster')
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1', edge_color='#000000', scaler='zscore', minmax=[10, 50])
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values, cmap='Set1', edge_color='#000000', scaler=None, minmax=[10, 50])
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=4, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(label=df['label'].values, color='#000000', edge_size=4, cmap='Set1', edge_color='cluster')
+
+
+d3.set_edge_properties(scaler='zscore')
+# d3.set_edge_properties(scaler=None)
+
+# Plot
+d3.show()
+
+# %% Extended example
+from d3graph import d3graph
+
+# Initialize
+d3 = d3graph()
+# Load karate example
+adjmat, df = d3.import_example('karate')
+
+label = df['label'].values
+node_size = df['degree'].values
+
+d3.graph(adjmat)
+d3.set_node_properties(color=df['label'].values)
+d3.show()
+
+# %% Issue edge colors
+from d3graph import d3graph
+size = [10, 20, 10, 10, 15, 10, 5]
+
+# Initialize
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('bigbang')
+# Process adjmat
+d3.graph(adjmat)
+# Show
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values)
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size)
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
+# d3.show()
+
+# d3.set_edge_properties(directed=True)
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
+# d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='#000FFF', cmap='Set2')
+d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
+# d3.show()
+
+d3.edge_properties['Penny', 'Leonard']['color']='#ff0000'
+d3.edge_properties['Bernadette', 'Howard']['color']='#0000ff'
+d3.show()
+
+color, cluster_label, node_names = d3.get_cluster_color()
+
+# %%
+from d3graph import d3graph
+
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('small')
+
+d3.graph(adjmat)
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values)
+# d3.show()
+
+d3.set_node_properties(color=adjmat.columns.values, hover=['This is text for node A','Text for node B','\nMore text can be added on a new line\n with the slash n','','','',''])
+d3.show()
+
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
 source = ['Penny', 'Penny', 'Amy',        'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
@@ -20,7 +128,7 @@ d3.set_edge_properties(directed=True)
 d3.show(showfig=True)
 
 
-# %%
+# %% TEST EXCEPTIONS FOR WRONG COLOR
 from d3graph import d3graph
 d3 = d3graph()
 adjmat = d3.import_example('bigbang')
@@ -41,21 +149,6 @@ d3.graph(adjmat)
 d3.set_node_properties(label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
 d3.show()
 
-# %%
-from d3graph import d3graph
-
-d3 = d3graph()
-# Load example
-adjmat = d3.import_example('small')
-
-d3.graph(adjmat)
-# d3.show()
-
-d3.set_node_properties(color=adjmat.columns.values)
-d3.show()
-
-d3.set_node_properties(color=adjmat.columns.values, hover=['This is text for node A','Text for node B','More text can be added\n with the slash n','','','',''])
-d3.show()
 
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
@@ -206,7 +299,9 @@ adjmat, df = d3.import_example('karate')
 d3.graph(adjmat)
 
 # Node properties
-d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
+# d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster', )
+# d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
 
 # Plot
 d3.show()
