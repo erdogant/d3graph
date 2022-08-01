@@ -143,20 +143,24 @@ class d3graph():
             file_location = "file:///" + file_location
         webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance=None, edge_distance_minmax=[1, 20], directed=False):
+    def set_edge_properties(self, edge_distance=None, minmax=[0.5, 15], directed=False, scaler='zscore'):
         """Edge properties.
 
         Parameters
         ----------
         edge_distance : Int (default: 30)
             Distance of nodes on the edges.
-            * 0: Weighted approach using edge weights in the adjacancy matrix. Weights are normalized between the edge_distance_minmax
+            * 0: Weighted approach using edge weights in the adjacancy matrix. Weights are normalized between the minmax
             * 80: Constant edge distance
-        edge_distance_minmax : tuple(int,int), (default: [None,None])
+        minmax : tuple(int,int), (default: [0.5, 15])
             Weights are normalized between minimum and maximum
-            * [1, 20]
+            * [0.5, 15]
         directed : Bool, (default: False)
             True: Directed edges (with arrow), False: Undirected edges (without arrow)
+        scaler : str, (default: 'zscore')
+            Scale the the edge-width in the the range of a minimum and maximum [0.5, 15] using the following scaler:
+            'zscore' : Scale values to Z-scores.
+            'minmax' : The sklearn scaler will shrink the distribution.
 
         Returns
         -------
@@ -169,15 +173,12 @@ class d3graph():
         """
         self.config['directed'] = directed
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
-        # if edge_distance_minmax[0] is None: edge_distance_minmax[0]=0
-        # if edge_distance_minmax[1] is None: edge_distance_minmax[1]=20
-        # self.config['slider'][0] = int(edge_distance_minmax[0])
-        # self.config['slider'][1] = int(edge_distance_minmax[1])
-        self.config['edge_distance_minmax'] = edge_distance_minmax
-        # edges to graph (G) (also works with lower versions of networkx)
-        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, edge_distance_minmax=self.config['edge_distance_minmax'])
+        self.config['minmax'] = minmax
+        self.config['edge_scaler'] = scaler
+        # Set the edge properties
+        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'])
 
-    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1'):
+    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
         """Node properties.
 
         Parameters
@@ -204,6 +205,7 @@ class d3graph():
             * [10, 5, 3, 1, ...]: Specify node sizes
         edge_color : list of strings (default: '#000080')
             Edge color of the node.
+            * 'cluster' : Colours are based on the community distance clusters.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
@@ -214,6 +216,16 @@ class d3graph():
         cmap : String, (default: 'Set1')
             All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
             'Set1',  'Set2', 'rainbow', 'bwr', 'binary', 'seismic', 'Blues', 'Reds', 'Pastel1', 'Paired'
+        scaler : str, (default: 'zscore')
+            Scale the the node size in the the range of a minimum and maximum [0.5, 15] using the following scaler:
+            'zscore' : Scale values to Z-scores.
+            'minmax' : The sklearn scaler will shrink the distribution.
+            None : No scaler is used.
+        minmax : tuple, (default: [10, 50])
+            Scale the the node size in the the range of a minimum and maximum [5, 50] using the following scaler:
+            'zscore' : Scale values to Z-scores.
+            'minmax' : The sklearn scaler will shrink the distribution.
+            None : No scaler is used.
 
         Returns
         -------
@@ -235,6 +247,7 @@ class d3graph():
         if isinstance(color, list) and len(color)!=nodecount: raise Exception('Input parameter [color] has wrong length. Must be of length: %s' %(str(nodecount)))
 
         self.config['cmap'] = 'Paired' if cmap is None else cmap
+        self.config['node_scaler'] = scaler
 
         # Set node label
         if isinstance(label, list):
@@ -268,8 +281,8 @@ class d3graph():
         elif 'numpy' in str(type(color)):
             color = _get_hexcolor(color, cmap=self.config['cmap'])
         elif isinstance(color, str) and color=='cluster':
-            print('Color on community clustering cluster.')
-            color, cluster_label = self.get_cluster_color(node_names)
+            # print('Color on community clustering.')
+            color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
         elif isinstance(color, str):
             color = np.array([color] * nodecount)
         elif color is None:
@@ -313,6 +326,8 @@ class d3graph():
             size = np.ones(nodecount, dtype=int) * size
         else:
             raise Exception(logger.error("Node size not possible"))
+        # Scale the sizes
+        size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler=self.config['node_scaler'])
         if not (len(size)==nodecount): raise Exception("Node size must be of same length as the number of nodes")
 
         # Set node edge size
@@ -328,8 +343,8 @@ class d3graph():
         else:
             raise Exception(logger.error("Node edge size not possible"))
 
-        # Scale the sizes and get hex colors
-        edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.1, 4)
+        # Scale the edge-sizes
+        edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.5, 4, scaler=self.config['node_scaler'])
         if not (len(edge_size)==nodecount): raise Exception("[edge_size] must be of same length as the number of nodes")
 
         # Store in dict
@@ -346,7 +361,7 @@ class d3graph():
                 'cluster_label': cluster_label[i]}
 
     # compute clusters
-    def get_cluster_color(self, node_names):
+    def get_cluster_color(self, node_names=None):
         """Clustering of graph labels.
 
         Parameters
@@ -363,6 +378,7 @@ class d3graph():
         """
         import networkx as nx
         from community import community_louvain
+        if node_names is None: node_names = [*self.node_properties.keys()]
 
         df = adjmat2vec(self.adjmat.copy())
         G = nx.from_pandas_edgelist(df, edge_attr=True, create_using=nx.MultiGraph)
@@ -383,7 +399,7 @@ class d3graph():
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
         cluster_label = np.array(list(map(lambda x: labx.get(x)['cluster_label'], node_names)))
-        return color, cluster_label
+        return color, cluster_label, node_names
 
     def setup_slider(self):
         """Mininum maximum range of the slider.
@@ -453,9 +469,9 @@ class d3graph():
         self._clean(clean_config=False)
         # Checks
         self.adjmat = data_checks(adjmat.copy())
-        # Set edge properties
+        # Set default edge properties
         self.set_edge_properties()
-        # Set node properties
+        # Set default node properties
         self.set_node_properties()
 
     def write_html(self, json_data, overwrite=True):
@@ -638,7 +654,7 @@ def json_create(G):
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
+def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -647,9 +663,9 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
         Adjacency matrix.
     min_weight : float
         edges are returned with a minimum weight.
-    edge_distance_minmax : tuple(int,int), (default: [None,None])
+    minmax : tuple(int,int), (default: [None,None])
         Weights are normalized between minimum and maximum
-        * [1, 20]
+        * [0.5, 15]
 
     Returns
     -------
@@ -676,7 +692,7 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
 
     # Scale the weights for visualization purposes
     if len(np.unique(df['weight'].values.reshape(-1, 1)))>2:
-        df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), edge_distance_minmax[0], edge_distance_minmax[1])
+        df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
     else:
         df['weight_scaled'] = np.ones(df.shape[0]) * 1
 
@@ -684,7 +700,7 @@ def adjmat2dict(adjmat, min_weight=0, edge_distance_minmax=[1, 10]):
     source_target = list(zip(df['source'], df['target']))
     dict_edges = {}
     for i, edge in enumerate(source_target):
-        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#000000'}
+        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080'}
 
     # Return
     return(dict_edges)
@@ -781,9 +797,19 @@ def make_graph(node_properties, edge_properties):
 
 
 # %% Normalize in good d3 range
-def _normalize_size(getsizes, minscale=0.1, maxscale=4):
-    getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
+def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler='zscore'):
+    # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, it is better to scale the variables to Z-scores.
+    # Min-Max Scaling is too sensitive to outlier observations and generates problems unseen, out-of-scale datapoints.
+    if scaler=='zscore' and len(np.unique(getsizes))>3:
+        getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
+        getsizes = getsizes + (minscale-np.min(getsizes))
+    elif scaler=='minmax':
+        getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
+    else:
+        getsizes = getsizes.ravel()
+    # Max digits is 4
     getsizes = np.array(list(map(lambda x: round(x, 4), getsizes)))
+    # Return
     return(getsizes)
 
 
