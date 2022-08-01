@@ -10,9 +10,9 @@ __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
 __version__ = '2.1.1'
 
-import jinja2
-if version.parse(jinja2.__version__) > version.parse("2.11.3"):
-    print('[d3graph] >Error: jinja2 versions > 2.11.3 gives an error! It is advised to create a new environment install d3graph or: pip install -U jinja2==2.11.3')
+# import jinja2
+# if version.parse(jinja2.__version__) > version.parse("2.11.3"):
+    # print('[d3graph] >Error: jinja2 versions > 2.11.3 gives an error! It is advised to create a new environment install d3graph or: pip install -U jinja2==2.11.3')
 
 # module level doc-string
 __doc__ = """
