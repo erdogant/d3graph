@@ -167,7 +167,7 @@ print(d3.config)
 d3.graph(adjmat)
 # d3.show(showfig=True)
 
-d3.set_edge_properties(directed=True, edge_distance_minmax=[5, 30])
+d3.set_edge_properties(directed=True, minmax=[5, 30])
 d3.show(showfig=True)
 
 
@@ -266,6 +266,9 @@ d3.show()
 d3.set_node_properties(color=label, size=node_size, label=label, hover=label+' hover text')
 d3.show()
 
+d3.set_node_properties(color=label, size=node_size, label=label, edge_color='cluster', edge_size=5, hover=label+' hover text')
+d3.show()
+
 d3.set_edge_properties(edge_distance=100)
 d3.set_node_properties(color=node_size, size=node_size)
 d3.show()
@@ -300,8 +303,9 @@ d3.graph(adjmat)
 
 # Node properties
 # d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
-d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster', )
+# d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster')
 # d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='#000000')
 
 # Plot
 d3.show()

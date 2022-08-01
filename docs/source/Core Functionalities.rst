@@ -173,8 +173,10 @@ Getting more information when hovering over a node can be easily done using the 
 
 	# Set node properties
 	d3.set_node_properties(label=label, hover=hover, color=label)
+	d3.show()
 
-	# Plot
+	# If you want thinner lines
+	d3.set_node_properties(label=label, hover=hover, color=label, minmax=[0.1, 25])
 	d3.show()
 
 .. raw:: html
@@ -198,6 +200,7 @@ Lets change the **node colors** from the *karate* example using the label inform
 .. raw:: html
 
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color.html" height="700px" width="850px", frameBorder="0"></iframe>
+
 
 Node color on clustering
 --------------------------
@@ -309,10 +312,13 @@ Customize the properties of one specific node
 
 	# Customize the properties of one specific node
 	d3.node_properties['Penny']['label']='Penny Hofstadter'
-	d3.node_properties['Penny']['color']='#ffc0cb'
+	d3.node_properties['Penny']['color']='#ffc0cb' # Pink
 	d3.node_properties['Penny']['size']=20
 	d3.node_properties['Penny']['edge_size']=5
-	d3.node_properties['Penny']['edge_color']='#000000'
+	d3.node_properties['Penny']['edge_color']='#0000ff' # Blue
+
+	# Customize a specific edge property
+	d3.edge_properties['Penny', 'Leonard']['color']='#FF0000' # red
 	
 	# Print
 	print(d3.node_properties['Penny'])
@@ -372,6 +378,33 @@ Customize edge_properties
 	d3.edge_properties[('Penny', 'Leonard')]['color']='#ff0000'
 	
 	# Plot
+	d3.show()
+
+
+Customize edge_properties
+-----------------------------------------------
+
+.. code:: python
+
+	# Import library
+	from d3graph import d3graph
+	# Initialization
+	d3 = d3graph()
+	# Load karate example
+	adjmat = d3.import_example('bigbang')
+	# Process the adjacency matrix
+	d3.graph(adjmat)
+  
+	# Set to minmax scaler
+	d3.set_edge_properties(directed=True, minmax=[1, 20], scaler='minmax')
+	d3.show()
+
+	# Set to zscore scaler (default)
+	d3.set_edge_properties(directed=True, minmax=[1, 20], scaler='zscore')
+	d3.show()
+
+	# Set to no scaler (default)
+	d3.set_edge_properties(directed=True, minmax=[1, 20], scaler=None)
 	d3.show()
 
 
