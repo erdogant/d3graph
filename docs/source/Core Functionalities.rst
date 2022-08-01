@@ -213,6 +213,21 @@ We can also change the node color on the clustering.
 	d3.show()
 
 
+Node edge color on clustering
+-----------------------------
+
+We can also change the node color on the clustering.
+
+.. code:: python
+
+	# Set node properties
+	d3.set_node_properties(label=df['label'].values, edge_color='cluster')
+
+	# Plot
+	d3.show()
+
+
+
 Node size
 -----------------------
 
