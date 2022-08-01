@@ -4,6 +4,6 @@ networkx>2
 ismember
 packaging
 sklearn
-jinja2==2.11.3
+jinja2
 markupsafe==2.0.1
 colourmap
