@@ -339,7 +339,8 @@ Edge network properties can also be changed for the edges:
 	* 1. weight
 	* 2. edge_distance
 	* 3. edge_distance_minmax
-	* 4. directed
+	* 4. color
+	* 5. directed
 
 
 Customize edge_properties
@@ -363,8 +364,12 @@ Customize edge_properties
 	# ('Sheldon', 'Leonard'): {'weight': 3.0,'weight_scaled': 7.3333, 'color': '#000000'}}
 	# ...
   
+	# Set to directed edges
+	d3.set_edge_properties(directed=True)
+
 	# Customize the properties of one specific edge
 	d3.edge_properties[('Sheldon', 'Howard')]['weight']=10
+	d3.edge_properties[('Penny', 'Leonard')]['color']='#ff0000'
 	
 	# Plot
 	d3.show()
