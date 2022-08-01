@@ -71,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#hover-over-text">Hover over text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color">Node color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color-on-clustering">Node color on clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-edge-color-on-clustering">Node edge color on clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-size">Node edge size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-color">Node edge color</a></li>
@@ -79,6 +80,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#edge-properties">Edge properties</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#customize-edge-properties">Customize edge_properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Customize edge_properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#customize-all-edges">Customize all edges</a></li>
 </ul>
 </li>
@@ -286,8 +288,10 @@
 
 <span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">hover</span><span class="o">=</span><span class="n">hover</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="c1"># Plot</span>
+<span class="c1"># If you want thinner lines</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">hover</span><span class="o">=</span><span class="n">hover</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -308,6 +312,17 @@
 <p>We can also change the node color on the clustering.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="node-edge-color-on-clustering">
+<h2>Node edge color on clustering<a class="headerlink" href="#node-edge-color-on-clustering" title="Permalink to this heading"></a></h2>
+<p>We can also change the node color on the clustering.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -370,10 +385,13 @@
 
 <span class="c1"># Customize the properties of one specific node</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;Penny Hofstadter&#39;</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#ffc0cb&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#ffc0cb&#39;</span> <span class="c1"># Pink</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;edge_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;edge_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;edge_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#0000ff&#39;</span> <span class="c1"># Blue</span>
+
+<span class="c1"># Customize a specific edge property</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">,</span> <span class="s1">&#39;Leonard&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#FF0000&#39;</span> <span class="c1"># red</span>
 
 <span class="c1"># Print</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">])</span>
@@ -405,6 +423,10 @@
 </ol>
 </li>
 <li><ol class="arabic simple" start="4">
+<li><p>color</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="5">
 <li><p>directed</p></li>
 </ol>
 </li>
@@ -428,10 +450,39 @@
 <span class="c1"># (&#39;Sheldon&#39;, &#39;Leonard&#39;): {&#39;weight&#39;: 3.0,&#39;weight_scaled&#39;: 7.3333, &#39;color&#39;: &#39;#000000&#39;}}</span>
 <span class="c1"># ...</span>
 
+<span class="c1"># Set to directed edges</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 <span class="c1"># Customize the properties of one specific edge</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;Sheldon&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">)][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;Penny&#39;</span><span class="p">,</span> <span class="s1">&#39;Leonard&#39;</span><span class="p">)][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#ff0000&#39;</span>
 
 <span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h2>Customize edge_properties<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+<span class="c1"># Initialization</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="c1"># Load karate example</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+<span class="c1"># Process the adjacency matrix</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Set to minmax scaler</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="s1">&#39;minmax&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Set to zscore scaler (default)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Set to no scaler (default)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
