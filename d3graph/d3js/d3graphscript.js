@@ -41,8 +41,8 @@ function d3graphscript(config = {
     .enter().append("line")
     .attr("class", "link")
     .style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
-    .style("stroke-width", function(d) {return d.edge_width;}) // LINK-WIDTH
-    .style("stroke", function(d) {return d.color;})  
+    .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
+    .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
   ;
   //  .style("stroke-width", 1); // WIDTH OF THE LINKS
 
@@ -52,7 +52,7 @@ function d3graphscript(config = {
     .enter().append("g")
     .attr("class", "node")
     .call(force.drag)
-    .on('dblclick', connectedNodes); //Highliht ON/OFF
+    .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
 
   node.append("circle")
     .attr("r", function(d) { return d.node_size; })					// NODE SIZE
@@ -224,8 +224,10 @@ function d3graphscript(config = {
     link = link.data(graph.links);
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
-    link.style("stroke-width", function(d) {return d.edge_width;}); // WIDTH OF THE LINKS AFTER BREAKING WITH SLIDER
-    link.style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
+    link.style("stroke-width", function(d) {return d.edge_width;});          // LINK-WIDTH AFTER BREAKING WITH SLIDER
+    link.style("marker-end", () => config.directed ? "url(#suit)" : "none"); // ARROWS IN EDGES AFTER BREAKING WITH SLIDER
+    link.style("stroke", function(d) {return d.color;});                     // EDGE-COLOR AFTER BREAKING WITH SLIDER
+
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     force.start();

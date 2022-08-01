@@ -283,13 +283,22 @@ class d3graph():
             edge_color = np.array(edge_color)
         elif 'numpy' in str(type(edge_color)):
             pass
+        elif isinstance(edge_color, str) and edge_color=='cluster':
+            # Only cluster if this is not done previously. Otherwise the random generator can create slightly different clustering results, and thus colors.
+            if len(np.unique(cluster_label))==1:
+                edge_color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
+            else:
+                edge_color = color
         elif isinstance(edge_color, str):
             edge_color = np.array([edge_color] * nodecount)
         elif isinstance(edge_color, type(None)):
             edge_color = np.array(['#000000'] * nodecount)
         else:
             assert 'Node color edge not possible'
+        
+        # Check correctness of hex colors
         edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
+        # Check length edge color with node count. This should match.
         if not (len(edge_color)==nodecount): raise Exception("[edge_color] must be of same length as the number of nodes")
 
         # Set node size
