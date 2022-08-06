@@ -1,5 +1,6 @@
-from d3graph import d3graph
 from copy import deepcopy
+
+from d3graph import d3graph
 
 
 def test_instantiate_d3graph_no_args() -> None:
@@ -10,10 +11,10 @@ def test_instantiate_d3graph_no_args() -> None:
 
 def test_clean(d3, helpers) -> None:
     """Test _clean method deletes the attributes in clean_fields"""
-    clean_fields: tuple = ('adjmat', 'edge_properties', 'G', 'node_properties', 'config')
+    clean_fields: tuple = ('adjmat', 'config', 'edge_properties', 'G', 'node_properties')
 
-    # Set attrs and assert they exist in the object
-    original_attrs = {'adjmat': 0, 'edge_properties': 0, 'G': 0, 'node_properties': 0, 'config': 0}
+    # Set attrs to dummy value (i.e., 0) and assert they exist in the object
+    original_attrs = {field: 0 for field in clean_fields}
     d3_og = helpers.setattrs(obj=d3, **original_attrs)
 
     # Make a copy of the object and apply _clean()
