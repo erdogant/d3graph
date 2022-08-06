@@ -6,25 +6,24 @@
 # Licence     : See licences
 # ---------------------------------
 
-import os
-from sys import platform
-import time
-import tempfile
-from packaging import version
-import webbrowser
-import unicodedata
-import logging
-
-# Custom packages
-import pandas as pd
-import numpy as np
-import networkx as nx
-from sklearn.preprocessing import MinMaxScaler
 import json
-from jinja2 import Environment, PackageLoader
+import logging
+import os
+import tempfile
+import time
+import unicodedata
+import webbrowser
 from pathlib import Path
-from ismember import ismember
+from sys import platform
+
 import colourmap as cm
+import networkx as nx
+import numpy as np
+import pandas as pd
+from ismember import ismember
+from jinja2 import Environment, PackageLoader
+from packaging import version
+from sklearn.preprocessing import MinMaxScaler
 
 logger = logging.getLogger('')
 for handler in logger.handlers[:]:
@@ -38,7 +37,7 @@ logger = logging.getLogger()
 
 
 # %%
-class d3graph():
+class d3graph:
     """Make interactive network in D3 javascript."""
 
     def __init__(self, collision=0.5, charge=350, slider=[None, None], verbose=20):
@@ -48,7 +47,7 @@ class d3graph():
         -----------
         d3graph is a python library that is build on d3js and creates interactive and stand-alone networks.
         The input data is a simple adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
-        The ouput is a html file that is interactive and stand alone.
+        The output is a html file that is interactive and stand alone.
 
         Parameters
         ----------
@@ -56,7 +55,7 @@ class d3graph():
             Response of the network. Higher means that more collisions are prevented.
         charge : int, (default: 250)
             Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
-        slider : typle [min: int, max: int]:, (default: [None, None])
+        slider : tuple [min: int, max: int]:, (default: [None, None])
             Slider is automatically set to the range of the edge weights.
         verbose : int, (default: 20)
             Print progress to screen.
@@ -69,7 +68,7 @@ class d3graph():
         """
         # Cleaning
         self._clean()
-        # Some library compatibily checks
+        # Some library compatibility checks
         library_compatibility_checks()
         # Set the logger
         set_logger(verbose=verbose)
@@ -119,7 +118,7 @@ class d3graph():
         self.config['showfig'] = showfig
         self.config['filepath'] = self.set_path(filepath)
 
-        # Create dataframe from co-occurence matrix
+        # Create dataframe from co-occurrence matrix
         self.G = make_graph(self.node_properties, self.edge_properties)
         # Make slider
         self.setup_slider()
@@ -136,7 +135,7 @@ class d3graph():
 
     @staticmethod
     def _showfig(filepath: str, sleep=0.5):
-        # Sleeping is required to pevent overlapping windows
+        # Sleeping is required to prevent overlapping windows
         time.sleep(sleep)
         file_location = os.path.abspath(filepath)
         if platform == "darwin":  # check if on OSX
@@ -150,7 +149,7 @@ class d3graph():
         ----------
         edge_distance : Int (default: 30)
             Distance of nodes on the edges.
-            * 0: Weighted approach using edge weights in the adjacancy matrix. Weights are normalized between the minmax
+            * 0: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
             * 80: Constant edge distance
         minmax : tuple(int,int), (default: [0.5, 15])
             Weights are normalized between minimum and maximum
@@ -158,7 +157,7 @@ class d3graph():
         directed : Bool, (default: False)
             True: Directed edges (with arrow), False: Undirected edges (without arrow)
         scaler : str, (default: 'zscore')
-            Scale the the edge-width in the the range of a minimum and maximum [0.5, 15] using the following scaler:
+            Scale the edge-width in the range of a minimum and maximum [0.5, 15] using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution.
 
@@ -176,9 +175,11 @@ class d3graph():
         self.config['minmax'] = minmax
         self.config['edge_scaler'] = scaler
         # Set the edge properties
-        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'])
+        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'],
+                                           scaler=self.config['edge_scaler'])
 
-    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
+    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1,
+                            cmap='Set1', scaler='zscore', minmax=[10, 50]):
         """Node properties.
 
         Parameters
@@ -189,16 +190,16 @@ class d3graph():
             * ['label 1','label 2','label 3', ...]
         hover : list of names (default: None)
             The text that is shown when hovering over the Node.
-            If not specified, the text will inherited from the label.
+            If not specified, the text will inherit from the label.
             * ['hover 1','hover 2','hover 3', ...]
         color : list of strings (default: '#000080')
             Color of the node.
             * 'cluster' : Colours are based on the community distance clusters.
-            * None: All nodes will be have the same color (auto generated).
+            * None: All nodes will have the same color (auto generated).
             * ['#000000']: All nodes will have the same hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
-            * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
+            * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
         size : array of integers (default: 5)
             Size of the nodes.
             * 10: all nodes sizes are set to 10
@@ -217,12 +218,12 @@ class d3graph():
             All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
             'Set1',  'Set2', 'rainbow', 'bwr', 'binary', 'seismic', 'Blues', 'Reds', 'Pastel1', 'Paired'
         scaler : str, (default: 'zscore')
-            Scale the the node size in the the range of a minimum and maximum [0.5, 15] using the following scaler:
+            Scale the node size in the range of a minimum and maximum [0.5, 15] using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution.
             None : No scaler is used.
         minmax : tuple, (default: [10, 50])
-            Scale the the node size in the the range of a minimum and maximum [5, 50] using the following scaler:
+            Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution.
             None : No scaler is used.
@@ -241,10 +242,14 @@ class d3graph():
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
         cluster_label = np.zeros_like(node_names).astype(int)
-        if isinstance(color, str) and len(color)!=7: raise Exception('Input parameter [color] has wrong format. Must be like color="#000000"')
-        if isinstance(color, list) and len(color)==0: raise Exception('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
-        if isinstance(color, list) and (not np.all(list(map(lambda x: len(x)==7, color)))): raise Exception('[color] contains incorrect length of hex-color! Hex must be of lengt 7: ["#000000", "#000000", etc]')
-        if isinstance(color, list) and len(color)!=nodecount: raise Exception('Input parameter [color] has wrong length. Must be of length: %s' %(str(nodecount)))
+        if isinstance(color, str) and len(color) != 7: raise Exception(
+            'Input parameter [color] has wrong format. Must be like color="#000000"')
+        if isinstance(color, list) and len(color) == 0: raise Exception(
+            'Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
+        if isinstance(color, list) and (not np.all(list(map(lambda x: len(x) == 7, color)))): raise Exception(
+            '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
+        if isinstance(color, list) and len(color) != nodecount:
+            raise Exception(f'Input parameter [color] has wrong length. Must be of length: {str(nodecount)}')
 
         self.config['cmap'] = 'Paired' if cmap is None else cmap
         self.config['node_scaler'] = scaler
@@ -260,7 +265,7 @@ class d3graph():
             label = self.adjmat.columns.astype(str)
         else:
             label = np.array([''] * nodecount)
-        if not (len(label)==nodecount): raise Exception("[label] must be of same length as the number of nodes")
+        if len(label) != nodecount: raise Exception("[label] must be of same length as the number of nodes")
 
         # Hover text
         if isinstance(hover, list):
@@ -273,14 +278,14 @@ class d3graph():
             hover = label
         else:
             hover = np.array([''] * nodecount)
-        if not (len(hover)==nodecount): raise Exception("[Hover text] must be of same length as the number of nodes")
+        if len(hover) != nodecount: raise Exception("[Hover text] must be of same length as the number of nodes")
 
         # Set node color
-        if isinstance(color, list) and len(color)==nodecount:
+        if isinstance(color, list) and len(color) == nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
             color = _get_hexcolor(color, cmap=self.config['cmap'])
-        elif isinstance(color, str) and color=='cluster':
+        elif isinstance(color, str) and color == 'cluster':
             # print('Color on community clustering.')
             color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
         elif isinstance(color, str):
@@ -289,16 +294,16 @@ class d3graph():
             color = np.array(['#000080'] * nodecount)
         else:
             assert 'Node color not possible'
-        if not (len(color)==nodecount): raise Exception("[color] must be of same length as the number of nodes")
+        if len(color) != nodecount: raise Exception("[color] must be of same length as the number of nodes")
 
         # Set node color edge
         if isinstance(edge_color, list):
             edge_color = np.array(edge_color)
         elif 'numpy' in str(type(edge_color)):
             pass
-        elif isinstance(edge_color, str) and edge_color=='cluster':
-            # Only cluster if this is not done previously. Otherwise the random generator can create slightly different clustering results, and thus colors.
-            if len(np.unique(cluster_label))==1:
+        elif isinstance(edge_color, str) and edge_color == 'cluster':
+            # Only cluster if this is not done previously. Otherwise, the random generator can create slightly different clustering results, and thus colors.
+            if len(np.unique(cluster_label)) == 1:
                 edge_color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
             else:
                 edge_color = color
@@ -308,11 +313,11 @@ class d3graph():
             edge_color = np.array(['#000000'] * nodecount)
         else:
             assert 'Node color edge not possible'
-        
+
         # Check correctness of hex colors
         edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
         # Check length edge color with node count. This should match.
-        if not (len(edge_color)==nodecount): raise Exception("[edge_color] must be of same length as the number of nodes")
+        if len(edge_color) != nodecount: raise Exception("[edge_color] must be of same length as the number of nodes")
 
         # Set node size
         if isinstance(size, list):
@@ -322,13 +327,13 @@ class d3graph():
         elif isinstance(size, type(None)):
             # Set all nodes same default size
             size = np.ones(nodecount, dtype=int) * 5
-        elif isinstance(size, int) or isinstance(size, float):
+        elif isinstance(size, (int, float)):
             size = np.ones(nodecount, dtype=int) * size
         else:
             raise Exception(logger.error("Node size not possible"))
         # Scale the sizes
         size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler=self.config['node_scaler'])
-        if not (len(size)==nodecount): raise Exception("Node size must be of same length as the number of nodes")
+        if len(size) != nodecount: raise Exception("Node size must be of same length as the number of nodes")
 
         # Set node edge size
         if isinstance(edge_size, list):
@@ -338,26 +343,26 @@ class d3graph():
         elif isinstance(edge_size, type(None)):
             # Set all nodes same default size
             edge_size = np.ones(nodecount, dtype=int) * 1
-        elif isinstance(edge_size, int) or isinstance(edge_size, float):
+        elif isinstance(edge_size, (int, float)):
             edge_size = np.ones(nodecount, dtype=int) * edge_size
         else:
             raise Exception(logger.error("Node edge size not possible"))
 
         # Scale the edge-sizes
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.5, 4, scaler=self.config['node_scaler'])
-        if not (len(edge_size)==nodecount): raise Exception("[edge_size] must be of same length as the number of nodes")
+        if len(edge_size) != nodecount: raise Exception("[edge_size] must be of same length as the number of nodes")
 
         # Store in dict
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {
-                'name': node,
-                'label': label[i],
-                'hover': hover[i],
-                'color': color[i].astype(str),
-                'size': size[i],
-                'edge_size': edge_size[i],
-                'edge_color': edge_color[i],
+                'name'         : node,
+                'label'        : label[i],
+                'hover'        : hover[i],
+                'color'        : color[i].astype(str),
+                'size'         : size[i],
+                'edge_size'    : edge_size[i],
+                'edge_color'   : edge_color[i],
                 'cluster_label': cluster_label[i]}
 
     # compute clusters
@@ -388,21 +393,16 @@ class d3graph():
         # Extract clusterlabels
         y = list(map(lambda x: cluster_labels.get(x), cluster_labels.keys()))
         hex_colors, _ = cm.fromlist(y, cmap=self.config['cmap'], scheme='hex')
-        labx = {}
-        # Use the order of node_names
-        for i, key in enumerate(cluster_labels.keys()):
-            labx[key] = {}
-            labx[key]['name'] = key
-            labx[key]['color'] = hex_colors[i]
-            labx[key]['cluster_label'] = cluster_labels.get(key)
-        
+        labx = {key: {'name': key, 'color': hex_colors[i], 'cluster_label': cluster_labels.get(key)} for i, key in
+                enumerate(cluster_labels.keys())}
+
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
         cluster_label = np.array(list(map(lambda x: labx.get(x)['cluster_label'], node_names)))
         return color, cluster_label, node_names
 
     def setup_slider(self):
-        """Mininum maximum range of the slider.
+        """Minimum maximum range of the slider.
 
         Returns
         -------
@@ -416,14 +416,14 @@ class d3graph():
         # if self.config['slider'] == [None, None]:
         max_slider = np.ceil(np.max(edge_weight))
         # max_slider = np.ceil(np.sort(edge_weight)[-2])
-        if len(np.unique(edge_weight))>1:
+        if len(np.unique(edge_weight)) > 1:
             min_slider = np.maximum(np.floor(np.min(edge_weight)) - 1, 0)
         else:
             min_slider = 0
 
         # Store the slider range
         self.config['slider'] = [int(min_slider), int(max_slider)]
-        logger.info('Slider range is set to [%g, %g]' %(self.config['slider'][0], self.config['slider'][1]))
+        logger.info('Slider range is set to [%g, %g]' % (self.config['slider'][0], self.config['slider'][1]))
 
     def graph(self, adjmat):
         """Process the adjacency matrix and set all properties to default.
@@ -431,7 +431,7 @@ class d3graph():
         Description
         -----------
         This function processes the adjacency matrix. The nodes are the column and index names.
-        An connect edge is seen in case vertices has has values larger than 0. The strenght of the edge is based on the vertices values.
+        A connect edge is seen in case vertices have values larger than 0. The strenght of the edge is based on the vertices values.
 
         Parameters
         ----------
@@ -487,27 +487,26 @@ class d3graph():
 
         """
         content = {
-            'json_data': json_data,
-            'title': self.config['network_title'],
-            'width': self.config['figsize'][0],
-            'height': self.config['figsize'][1],
-            'charge': self.config['network_charge'],
+            'json_data'    : json_data,
+            'title'        : self.config['network_title'],
+            'width'        : self.config['figsize'][0],
+            'height'       : self.config['figsize'][1],
+            'charge'       : self.config['network_charge'],
             'edge_distance': self.config['edge_distance'],
-            'min_slider': self.config['slider'][0],
-            'max_slider': self.config['slider'][1],
-            'directed': self.config['directed'],
-            'collision': self.config['network_collision']
+            'min_slider'   : self.config['slider'][0],
+            'max_slider'   : self.config['slider'][1],
+            'directed'     : self.config['directed'],
+            'collision'    : self.config['network_collision']
         }
 
         jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
         index_template = jinja_env.get_template('index.html.j2')
         index_file = Path(self.config['filepath'])
-        logger.info('Write to path: [%s]' % index_file.absolute())
+        logger.info(f'Write to path: [{index_file.absolute()}]')
         # index_file.write_text(index_template.render(content))
-        if os.path.isfile(index_file):
-            if overwrite:
-                logger.info('File already exists and will be overwritten: [%s]' %(index_file))
-                os.remove(index_file)
+        if os.path.isfile(index_file) and overwrite:
+            logger.info(f'File already exists and will be overwritten: [{index_file}]')
+            os.remove(index_file)
         with open(index_file, "w", encoding="utf-8") as f:
             f.write(index_template.render(content))
 
@@ -530,18 +529,18 @@ class d3graph():
         """
         dirname, filename = os.path.split(filepath)
 
-        if (filename is None) or (filename==''):
+        if (filename is None) or (filename == ''):
             filename = 'd3graph.html'
 
-        if (dirname is None) or (dirname==''):
+        if (dirname is None) or (dirname == ''):
             dirname = tempfile.TemporaryDirectory().name
 
         if not os.path.isdir(dirname):
-            logger.info('Create directory: [%s]' %(dirname))
+            logger.info(f'Create directory: [{dirname}]')
             os.mkdir(dirname)
 
         filepath = os.path.abspath(os.path.join(dirname, filename))
-        logger.debug("filepath is set to [%s]" %(filepath))
+        logger.debug(f"filepath is set to [{filepath}]")
         return filepath
 
     def import_example(self, network='small'):
@@ -557,35 +556,36 @@ class d3graph():
         adjmat : pd.DataFrame()
 
         """
-        if network=='small':
+        if network == 'small':
             source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
             target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
             weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat
-        elif network=='bigbang':
+        elif network == 'bigbang':
             source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
             target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
             weight = [5, 3, 2, 2, 5, 2, 3, 5, 2]
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat
-        elif network=='karate':
+        elif network == 'karate':
             import scipy
             if version.parse(scipy.__version__) < version.parse("1.8.0"):
-                raise ImportError('[d3graph] >Error: This release requires scipy version >= 1.8.0. Try: pip install -U scipy>=1.8.0')
+                raise ImportError(
+                    '[d3graph] >Error: This release requires scipy version >= 1.8.0. Try: pip install -U scipy>=1.8.0')
 
             G = nx.karate_club_graph()
             adjmat = nx.adjacency_matrix(G).todense()
-            adjmat=pd.DataFrame(index=range(0, adjmat.shape[0]), data=adjmat, columns=range(0, adjmat.shape[0]))
-            adjmat.columns=adjmat.columns.astype(str)
-            adjmat.index=adjmat.index.astype(str)
-            adjmat.iloc[3, 4]=5
-            adjmat.iloc[4, 5]=6
-            adjmat.iloc[5, 6]=7
+            adjmat = pd.DataFrame(index=range(0, adjmat.shape[0]), data=adjmat, columns=range(0, adjmat.shape[0]))
+            adjmat.columns = adjmat.columns.astype(str)
+            adjmat.index = adjmat.index.astype(str)
+            adjmat.iloc[3, 4] = 5
+            adjmat.iloc[4, 5] = 6
+            adjmat.iloc[5, 6] = 7
 
             df = pd.DataFrame(index=adjmat.index)
-            df['degree']=np.array([*G.degree()])[:, 1]
-            label=[]
+            df['degree'] = np.array([*G.degree()])[:, 1]
+            label = []
             for i in range(0, len(G.nodes)):
                 label.append(G.nodes[i]['club'])
             df['label'] = label
@@ -620,13 +620,12 @@ def json_create(G):
     source = []
     target = []
     for edge in edges:
-        source.append(node_id[edge[0]==node_ui][0])
-        target.append(node_id[edge[1]==node_ui][0])
+        source.append(node_id[edge[0] == node_ui][0])
+        target.append(node_id[edge[1] == node_ui][0])
 
-    data = {}
     links = pd.DataFrame([*G.edges.values()]).T.to_dict()
     links_new = []
-    for i in range(0, len(links)):
+    for i in range(len(links)):
         links[i]['edge_width'] = links[i].pop('weight_scaled')
         links[i]['edge_weight'] = links[i]['weight']
         links[i]['source'] = int(source[i])
@@ -634,8 +633,6 @@ def json_create(G):
         links[i]['source_label'] = edges[i][0]
         links[i]['target_label'] = edges[i][1]
         links_new.append(links[i])
-    data['links']=links_new
-
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodes_new = [None] * len(nodes)
     for i, node in enumerate(nodes):
@@ -648,8 +645,7 @@ def json_create(G):
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
         # Combine all information into new list
         nodes_new[i] = nodes[i]
-    data['nodes'] = nodes_new
-
+    data = {'links': links_new, 'nodes': nodes_new}
     return json.dumps(data, separators=(',', ':'))
 
 
@@ -681,29 +677,26 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
     # Set columns
     df.columns = ['source', 'target', 'weight']
     # Remove self loops and no-connected edges
-    Iloc = df['source']!=df['target']
+    Iloc = df['source'] != df['target']
     # Keep only edges with a minimum edge strength
     if min_weight is not None:
-        logger.info("Keep only edges with weight>%g" %(min_weight))
-        Iloc2 = df['weight']>min_weight
+        logger.info("Keep only edges with weight>%g" % min_weight)
+        Iloc2 = df['weight'] > min_weight
         Iloc = Iloc & Iloc2
     df = df.loc[Iloc, :]
     df.reset_index(drop=True, inplace=True)
 
     # Scale the weights for visualization purposes
-    if len(np.unique(df['weight'].values.reshape(-1, 1)))>2:
+    if len(np.unique(df['weight'].values.reshape(-1, 1))) > 2:
         df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
     else:
         df['weight_scaled'] = np.ones(df.shape[0]) * 1
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
-    dict_edges = {}
-    for i, edge in enumerate(source_target):
-        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080'}
-
     # Return
-    return(dict_edges)
+    return {edge: {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080'} for
+            i, edge in enumerate(source_target)}
 
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
@@ -729,9 +722,10 @@ def edges2G(edge_properties, G=None):
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+        G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
+                   weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
     # Return
-    return(G)
+    return (G)
 
 
 # %% Convert dict with nodes to graph (G)
@@ -760,12 +754,12 @@ def nodes2G(node_properties, G=None):
     if not node_properties.empty:
         getnodes = np.array([*G.nodes])
         for col in node_properties.columns:
-            for i in range(0, node_properties.shape[0]):
+            for i in range(node_properties.shape[0]):
                 idx = node_properties.index.values[i]
                 if np.any(np.isin(getnodes, node_properties.index.values[i])):
                     G.nodes[idx][col] = str(node_properties[col][idx])
                 else:
-                    logger.warning("Node [%s] not found" %(node_properties.index.values[i]))
+                    logger.warning(f"Node [{node_properties.index.values[i]}] not found")
     return G
 
 
@@ -800,30 +794,30 @@ def make_graph(node_properties, edge_properties):
 def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler='zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, it is better to scale the variables to Z-scores.
     # Min-Max Scaling is too sensitive to outlier observations and generates problems unseen, out-of-scale datapoints.
-    if scaler=='zscore' and len(np.unique(getsizes))>3:
+    if scaler == 'zscore' and len(np.unique(getsizes)) > 3:
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
-        getsizes = getsizes + (minscale-np.min(getsizes))
-    elif scaler=='minmax':
+        getsizes = getsizes + (minscale - np.min(getsizes))
+    elif scaler == 'minmax':
         getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
     else:
         getsizes = getsizes.ravel()
     # Max digits is 4
     getsizes = np.array(list(map(lambda x: round(x, 4), getsizes)))
     # Return
-    return(getsizes)
+    return getsizes
 
 
 # %% Convert to hex color
 def _get_hexcolor(label, cmap='Paired'):
     label = label.astype(str)
-    if label[0][0]!='#':
+    if label[0][0] != '#':
         label = label.astype(dtype='U7')
         uinode = np.unique(label)
         tmpcolors = cm.rgb2hex(cm.fromlist(uinode, cmap=cmap, method='seaborn')[0])
         IA, IB = ismember(label, uinode)
         label[IA] = tmpcolors[IB]
 
-    return(label)
+    return label
 
 
 # %% Do checks
@@ -856,12 +850,13 @@ def data_checks(adjmat):
     """
     if 'numpy' in str(type(adjmat)):
         logger.info('Converting numpy matrix into Pandas DataFrame')
-        adjmat = pd.DataFrame(index=range(0, adjmat.shape[0]), data=adjmat, columns=range(0, adjmat.shape[0]))
+        adjmat = pd.DataFrame(index=range(adjmat.shape[0]), data=adjmat, columns=range(adjmat.shape[0]))
+
     # Set the column and index names as str type
-    adjmat.index=adjmat.index.astype(str)
-    adjmat.columns=adjmat.columns.astype(str)
+    adjmat.index = adjmat.index.astype(str)
+    adjmat.columns = adjmat.columns.astype(str)
     # Column names and index should have the same order.
-    if not np.all(adjmat.columns==adjmat.index.values):
+    if not np.all(adjmat.columns == adjmat.index.values):
         raise Exception(logger.error('adjmat columns and index must have the same identifiers'))
     # Remove special characters from column names
     adjmat = remove_special_chars(adjmat)
@@ -885,8 +880,12 @@ def remove_special_chars(adjmat):
 
     """
     logger.debug('Removing special chars and replacing with "_"')
-    adjmat.columns = list(map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), adjmat.columns.values.astype(str)))
-    adjmat.index = list(map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), adjmat.index.values.astype(str)))
+    adjmat.columns = list(
+        map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'),
+            adjmat.columns.values.astype(str)))
+    adjmat.index = list(
+        map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'),
+            adjmat.index.values.astype(str)))
     return adjmat
 
 
@@ -920,7 +919,7 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
     >>> vec2adjmat(source, target, weight=weight)
 
     """
-    if len(source)!=len(target): raise Exception('[d3graph] >Source and Target should have equal elements.')
+    if len(source) != len(target): raise Exception('[d3graph] >Source and Target should have equal elements.')
     if weight is None: weight = [1] * len(source)
 
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
@@ -935,23 +934,23 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
         # Add missing columns
         node_columns = np.setdiff1d(nodes, adjmat.columns.values)
         for node in node_columns:
-            adjmat[node]=0
+            adjmat[node] = 0
 
         # Add missing rows
         node_rows = np.setdiff1d(nodes, adjmat.index.values)
-        adjmat=adjmat.T
+        adjmat = adjmat.T
         for node in node_rows:
-            adjmat[node]=0
-        adjmat=adjmat.T
+            adjmat[node] = 0
+        adjmat = adjmat.T
 
         # Sort to make ordering of columns and rows similar
         logger.debug('Order columns and rows.')
         _, IB = ismember(adjmat.columns.values, adjmat.index.values)
         adjmat = adjmat.iloc[IB, :]
-        adjmat.index.name='source'
-        adjmat.columns.name='target'
+        adjmat.index.name = 'source'
+        adjmat.columns.name = 'target'
 
-    return(adjmat)
+    return adjmat
 
 
 # %%  Convert adjacency matrix to vector
@@ -984,10 +983,10 @@ def adjmat2vec(adjmat, min_weight=1):
     # Set columns
     adjmat.columns = ['source', 'target', 'weight']
     # Remove self loops and no-connected edges
-    Iloc1 = adjmat['source']!=adjmat['target']
-    Iloc2 = adjmat['weight']>=min_weight
+    Iloc1 = adjmat['source'] != adjmat['target']
+    Iloc2 = adjmat['weight'] >= min_weight
     Iloc = Iloc1 & Iloc2
     # Take only connected nodes
     adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
-    return(adjmat)
+    return (adjmat)
