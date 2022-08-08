@@ -891,7 +891,7 @@ def remove_special_chars(adjmat):
 
 
 # %%  Convert adjacency matrix to vector
-def vec2adjmat(source, target, weight=None, symmetric=True):
+def vec2adjmat(source, target, weight=None, symmetric=True, aggfunc='sum'):
     """Convert source and target into adjacency matrix.
 
     Parameters
@@ -904,6 +904,9 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
         The Weights between the source-target values
     symmetric : bool, optional
         Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.
+    aggfunc : str, optional
+        Aggregate function in case multiple values exists for the same relationship.
+        'sum' (default)
 
     Returns
     -------
@@ -925,7 +928,7 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
 
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     # Make adjacency matrix
-    adjmat = pd.crosstab(df['source'], df['target'], values=weight, aggfunc='sum').fillna(0)
+    adjmat = pd.crosstab(df['source'], df['target'], values=weight, aggfunc=aggfunc).fillna(0)
     # Get all unique nodes
     nodes = np.unique(list(adjmat.columns.values) + list(adjmat.index.values))
     # nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
@@ -951,6 +954,8 @@ def vec2adjmat(source, target, weight=None, symmetric=True):
         adjmat.index.name='source'
         adjmat.columns.name='target'
 
+    # Force columns to be string type
+    adjmat.columns = adjmat.columns.astype(str)
     return(adjmat)
 
 
