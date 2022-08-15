@@ -2,8 +2,16 @@
 import networkx as nx
 import pandas as pd
 import numpy as np
-from d3graph import d3graph
+from d3graph import d3graph, adjmat2vec
 
+# %%
+from d3graph import d3graph, adjmat2vec
+size=(100, 100)
+adjmat = pd.DataFrame(np.random.randint(0, 10, size=size))
+# Initialize
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
 
 # %% default example
 from d3graph import d3graph
