@@ -113,6 +113,11 @@ class d3graph():
         None.
 
         """
+        # Some checks
+        if not hasattr(self, 'edge_properties') or not hasattr(self, 'node_properties'):
+            logger.warning('No graph detected. <return> Hint: "d3.graph(df)"')
+            return None
+
         self.config['figsize'] = figsize
         self.config['network_title'] = title
         # self.config['path'] = '' if filepath is None else filepath
