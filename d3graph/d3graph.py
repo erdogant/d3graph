@@ -182,6 +182,7 @@ class d3graph():
         self.config['edge_scaler'] = scaler
         # Set the edge properties
         self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'])
+        logger.info('Number of edges: %.0d', len(self.edge_properties.keys()))
 
     def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
         """Node properties.
@@ -313,7 +314,7 @@ class d3graph():
             edge_color = np.array(['#000000'] * nodecount)
         else:
             assert 'Node color edge not possible'
-        
+
         # Check correctness of hex colors
         edge_color = _get_hexcolor(edge_color, cmap=self.config['cmap'])
         # Check length edge color with node count. This should match.
@@ -364,6 +365,8 @@ class d3graph():
                 'edge_size': edge_size[i],
                 'edge_color': edge_color[i],
                 'cluster_label': cluster_label[i]}
+
+        logger.info('Number of unique nodes: %.0d', len(self.node_properties.keys()))
 
     # compute clusters
     def get_cluster_color(self, node_names=None):
@@ -889,7 +892,7 @@ def remove_special_chars(adjmat):
     adjmat : pd.DataFrame()
 
     """
-    logger.debug('Removing special chars and replacing with "_"')
+    logger.info('Remove special characters and spaces from node names. Replace with "_".')
     adjmat.columns = list(map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), adjmat.columns.values.astype(str)))
     adjmat.index = list(map(lambda x: unicodedata.normalize('NFD', x).encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), adjmat.index.values.astype(str)))
     return adjmat
