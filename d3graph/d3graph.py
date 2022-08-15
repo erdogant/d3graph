@@ -641,6 +641,8 @@ def json_create(G):
         links[i]['target'] = int(target[i])
         links[i]['source_label'] = edges[i][0]
         links[i]['target_label'] = edges[i][1]
+        links[i]['marker_start'] = links[i]['marker_start']
+        links[i]['marker_end'] = links[i]['marker_end']
         links_new.append(links[i])
     data['links']=links_new
 
@@ -679,9 +681,11 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
     -------
     edge_properties: dict
         key: (source, target)
-            'weight': weight of the edge
-            'weight_scaled': scaled weight of the edge
-            'color': color of the edge
+            'weight': weight of the edge.
+            'weight_scaled': scaled weight of the edge.
+            'color': color of the edge.
+            'marker_start': None, 'circle', 'square', 'arrow' or 'stub'
+            'marker_end': None, 'circle', 'square', 'arrow' or 'stub'
 
     """
     # Convert adjacency matrix into vector
@@ -708,7 +712,7 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
     source_target = list(zip(df['source'], df['target']))
     dict_edges = {}
     for i, edge in enumerate(source_target):
-        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080'}
+        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': 'circle', 'marker_end': 'square'}
 
     # Return
     return(dict_edges)
@@ -737,7 +741,7 @@ def edges2G(edge_properties, G=None):
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+        G.add_edge(edge[0], edge[1], marker_start=edge_properties[edge]['marker_end'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
     # Return
     return(G)
 

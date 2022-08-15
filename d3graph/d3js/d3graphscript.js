@@ -40,7 +40,8 @@ function d3graphscript(config = {
     .data(graph.links)
     .enter().append("line")
     .attr("class", "link")
-    .style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
+    //.style("marker-end", () => config.directed ? "url(#suit)" : "none") // ARROWS IN EDGES
+    .style("marker-end", () => config.directed ? "url(#arrow)" : "none") // ARROWS IN EDGES
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
     .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
   ;
@@ -109,7 +110,7 @@ function d3graphscript(config = {
 
   // --------- Directed lines -----------
   svg.append("defs").selectAll("marker")
-      .data(["suit", "licensing", "resolved"])
+      .data(["arrow", "licensing", "resolved"])
     .enter().append("marker")
       .attr("id", function(d) { return d; })
       .attr("viewBox", "0 -5 10 10")
@@ -225,7 +226,7 @@ function d3graphscript(config = {
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
     link.style("stroke-width", function(d) {return d.edge_width;});          // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    link.style("marker-end", () => config.directed ? "url(#suit)" : "none"); // ARROWS IN EDGES AFTER BREAKING WITH SLIDER
+    link.style("marker-end", () => config.directed ? "url(#arrow)" : "none"); // ARROWS IN EDGES AFTER BREAKING WITH SLIDER
     link.style("stroke", function(d) {return d.color;});                     // EDGE-COLOR AFTER BREAKING WITH SLIDER
 
     node = node.data(graph.nodes);
