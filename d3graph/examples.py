@@ -4,6 +4,23 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% small example
+from d3graph import d3graph
+
+# Initialize
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('bigbang')
+# Process adjmat
+d3.graph(adjmat)
+d3.set_edge_properties(directed=False, marker_end='square', marker_color='#000000')
+d3.edge_properties['Penny', 'Leonard']['marker_end']='arrow'
+d3.edge_properties['Penny', 'Leonard']['marker_color']='#ff0000'
+
+d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10, 5])
+d3.show(filepath='c:\\temp\\network1.html')
+
+
 # %% Issue marker edges
 # http://bl.ocks.org/dustinlarimer/5888271
 
