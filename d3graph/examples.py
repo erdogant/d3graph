@@ -4,14 +4,55 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% Issue marker edges
+# http://bl.ocks.org/dustinlarimer/5888271
+
+from d3graph import d3graph
+size = [10, 20, 10, 10, 15, 10, 5]
+
+# Initialize
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('bigbang')
+# Process adjmat
+d3.graph(adjmat)
+d3.set_edge_properties(directed=True)
+# Show
+# d3.show(filepath='c:\\temp\\network.html')
+
+d3.set_node_properties(color=adjmat.columns.values)
+d3.show(filepath='c:\\temp\\network.html')
+
+d3.set_node_properties(color=adjmat.columns.values, size=size)
+d3.show()
+
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+d3.show()
+
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
+d3.show()
+
+d3.set_edge_properties(directed=True)
+d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
+d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='#000FFF', cmap='Set2')
+d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
+d3.show()
+
+d3.edge_properties['Penny', 'Leonard']['color']='#ff0000'
+d3.edge_properties['Bernadette', 'Howard']['color']='#ff0000'
+d3.show(filepath='c:\\temp\\network.html')
+
+color, cluster_label, node_names = d3.get_cluster_color()
+
 # %%
 from d3graph import d3graph, adjmat2vec
 size=(100, 100)
 adjmat = pd.DataFrame(np.random.randint(0, 10, size=size))
 # Initialize
-d3 = d3graph()
+d3 = d3graph(collision=0.5, charge=10350)
 d3.graph(adjmat)
-d3.show()
+d3.set_node_properties(color='cluster')
+d3.show(figsize=(1500, 1500))
 
 # %% default example
 from d3graph import d3graph
@@ -68,42 +109,6 @@ d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values)
 d3.show()
 
-# %% Issue edge colors
-from d3graph import d3graph
-size = [10, 20, 10, 10, 15, 10, 5]
-
-# Initialize
-d3 = d3graph()
-# Load example
-adjmat = d3.import_example('bigbang')
-# Process adjmat
-d3.graph(adjmat)
-# Show
-# d3.show()
-
-# d3.set_node_properties(color=adjmat.columns.values)
-# d3.show()
-
-# d3.set_node_properties(color=adjmat.columns.values, size=size)
-# d3.show()
-
-# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
-# d3.show()
-
-# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
-# d3.show()
-
-# d3.set_edge_properties(directed=True)
-# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
-# d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='#000FFF', cmap='Set2')
-d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
-# d3.show()
-
-d3.edge_properties['Penny', 'Leonard']['color']='#ff0000'
-d3.edge_properties['Bernadette', 'Howard']['color']='#0000ff'
-d3.show()
-
-color, cluster_label, node_names = d3.get_cluster_color()
 
 # %%
 from d3graph import d3graph
