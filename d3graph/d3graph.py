@@ -148,7 +148,7 @@ class d3graph():
             file_location = "file:///" + file_location
         webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance=None, minmax=[0.5, 15], directed=False, scaler='zscore'):
+    def set_edge_properties(self, edge_distance=None, minmax=[0.5, 15], scaler='zscore', directed=False, marker_start=None, marker_end='arrow', marker_color='#808080'):
         """Edge properties.
 
         Parameters
@@ -180,8 +180,15 @@ class d3graph():
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
         self.config['minmax'] = minmax
         self.config['edge_scaler'] = scaler
+        self.config['marker_start']=marker_start
+        self.config['marker_end'] = marker_end
+        self.config['marker_color'] = marker_color
         # Set the edge properties
-        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'])
+        if not self.config['directed']:
+            self.config['marker_start']=''
+            self.config['marker_end'] = ''
+
+        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'], marker_start=self.config['marker_start'], marker_end=self.config['marker_end'], marker_color=self.config['marker_color'])
         logger.info('Number of edges: %.0d', len(self.edge_properties.keys()))
 
     def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
@@ -643,6 +650,7 @@ def json_create(G):
         links[i]['target_label'] = edges[i][1]
         links[i]['marker_start'] = links[i]['marker_start']
         links[i]['marker_end'] = links[i]['marker_end']
+        links[i]['marker_color'] = links[i]['marker_color']
         links_new.append(links[i])
     data['links']=links_new
 
@@ -664,7 +672,7 @@ def json_create(G):
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
+def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore', marker_start=None, marker_end='arrow', marker_color='#808080'):
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -684,10 +692,14 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
             'weight': weight of the edge.
             'weight_scaled': scaled weight of the edge.
             'color': color of the edge.
-            'marker_start': None, 'circle', 'square', 'arrow' or 'stub'
-            'marker_end': None, 'circle', 'square', 'arrow' or 'stub'
+            'marker_start': '', 'circle', 'square', 'arrow', 'stub'
+            'marker_end': '', 'circle', 'square', 'arrow', 'stub'
+            'marker_color': color of the marker.
 
     """
+    if marker_start is None: marker_start=''
+    if marker_end is None: marker_end=''
+
     # Convert adjacency matrix into vector
     df = adjmat.stack().reset_index()
     # Set columns
@@ -702,17 +714,22 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore'):
     df = df.loc[Iloc, :]
     df.reset_index(drop=True, inplace=True)
 
-    # Scale the weights for visualization purposes
+    # Scale the weights for visualization purposesdf
     if len(np.unique(df['weight'].values.reshape(-1, 1)))>2:
         df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
     else:
         df['weight_scaled'] = np.ones(df.shape[0]) * 1
 
+    # Set marker start-end
+    df['marker_start']=marker_start
+    df['marker_end']=marker_end
+    df['marker_color']=marker_color
+
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
     dict_edges = {}
     for i, edge in enumerate(source_target):
-        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': 'circle', 'marker_end': 'square'}
+        dict_edges[edge] = {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': df['marker_start'].iloc[i], 'marker_end': df['marker_end'].iloc[i], 'marker_color': df['marker_color'].iloc[i]}
 
     # Return
     return(dict_edges)
@@ -741,7 +758,7 @@ def edges2G(edge_properties, G=None):
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        G.add_edge(edge[0], edge[1], marker_start=edge_properties[edge]['marker_end'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+        G.add_edge(edge[0], edge[1], marker_color=edge_properties[edge]['marker_color'], marker_start=edge_properties[edge]['marker_end'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
     # Return
     return(G)
 
