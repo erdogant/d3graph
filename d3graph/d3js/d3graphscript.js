@@ -37,24 +37,14 @@ function d3graphscript(config = {
     .links(graph.links)
     .start();
 
-  //Create all the line svgs but without locations yet
-//  var link = svg.selectAll(".link")
-//    .data(graph.links)
-//    .enter().append("line")
-//    .attr("class", "link")
-//    .style("marker-end", () => config.directed ? "url(#arrow)" : "none") // ARROWS IN EDGES
-//    .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-//    .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
-//  ;
-
   // Create all the line svgs but without locations yet
   var link = svg.selectAll(".link")
     .data(graph.links)
     .enter().append("line")
     .attr("class", "link")
-//  .style("marker-end", () => config.directed ? "url(#arrow)" : "none") // ARROWS IN EDGES
-//    .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
-    .attr('marker-end', function(d){ return 'url(#marker_' + d.marker_end + ')' })
+    .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
+	.attr("marker-end", function(d) {
+		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
     .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
 //  .style("stroke-width", 1); // WIDTH OF THE LINKS
@@ -107,54 +97,39 @@ function d3graphscript(config = {
 
   // --------- MARKER -----------
 
-  var edge_data = [
+  var data_marker = [
     { id: 0, name: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0', viewbox: '-6 -6 12 12' }
   , { id: 1, name: 'square', path: 'M 0,0 m -5,-5 L 5,-5 L 5,5 L -5,5 Z', viewbox: '-5 -5 10 10' }
   , { id: 2, name: 'arrow', path: 'M 0,0 m -5,-5 L 5,0 L -5,5 Z', viewbox: '-5 -5 10 10' }
-  , { id: 2, name: 'stub', path: 'M 0,0 m -1,-5 L 1,-5 L 1,5 L -1,5 Z', viewbox: '-1 -5 2 10' }
+  , { id: 3, name: 'stub', path: 'M 0,0 m -1,-5 L 1,-5 L 1,5 L -1,5 Z', viewbox: '-1 -5 2 10' }
   ]
 
+  //console.log(JSON.stringify(link))
+
   svg.append("defs").selectAll("marker")
-    .data(edge_data)
+    .data(data_marker)
     .enter()
     .append('svg:marker')
       .attr('id', function(d){ return 'marker_' + d.name})
       .attr('markerHeight', 10)
       .attr('markerWidth', 10)
       //.attr('markerUnits', 'strokeWidth')
-      .attr("markerUnits", "userSpaceOnUse")           // Fix marker width
+      .attr("markerUnits", "userSpaceOnUse")                   // Fix marker width
       .attr('orient', 'auto')
-      .attr('refX', 15)
+      //.attr('refX', -15)                                     // Offset marker-start
+      .attr('refX', 15)                                        // Offset marker-end
       .attr('refY', 0)
       .attr('viewBox', function(d){ return d.viewbox })
       .append('svg:path')
+	    //.attr("transform", "rotate(180)")                    // Marker-start mirrored
         .attr('d', function(d){ return d.path })               // Marker type
         //.style("fill", function(d) {return d.marker_color;}) // Marker color
         .style("fill", '#808080')                              // Marker color
         .style("stroke", '#808080')                            // Marker edge-color
-        .style("opacity", "0.8")                               // Marker opacity
+        .style("opacity", "1")                                 // Marker opacity
         .style("stroke-width", '1');                           // Marker edge thickness
 
-//  svg.append("defs").selectAll("marker")
-//      .data(["arrow", "licensing", "resolved"])
-//    .enter().append("marker")
-//      .attr("id", function(d) { return d; })
-//      .attr("viewBox", "0 -5 10 10")
-//      .attr("refX", 25)
-//      .attr("refY", 0)
-//      .attr("markerWidth", 10)
-//      .attr("markerHeight", 10)
-//      .attr("orient", "auto")
-//      .attr("markerUnits", "userSpaceOnUse") // MAKE FIXED ARROW WIDTH
-//    .append("path")
-//      .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
-//      .style("stroke", "grey") // ARROWHEAD GREY
-//      .style("opacity", "0.6")
-//      .style("stroke-width", '1.5'); // THICKNESS OF ARROWHEAD
-
   // --------- END MARKER -----------
-
-  //---Insert-------
 
 
   // collision detection
@@ -252,9 +227,9 @@ function d3graphscript(config = {
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
     link.style("stroke-width", function(d) {return d.edge_width;});           // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    //link.style("marker-end", () => config.directed ? "url(#arrow)" : "none"); // ARROWS IN EDGES AFTER BREAKING WITH SLIDER
     //link.style('marker-start', function(d){ return 'url(#marker_' + d.marker_start  + ')' })
-    link.style('marker-end', function(d){ return 'url(#marker_' + d.marker_end  + ')' })
+	link.style("marker-end", function(d) {                                    // Include the markers.
+		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     link.style("stroke", function(d) {return d.color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
 
     node = node.data(graph.nodes);

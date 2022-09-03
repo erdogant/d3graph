@@ -183,15 +183,19 @@ class d3graph():
         self.config['marker_start']=marker_start
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
-        # Set the edge properties
-        if not self.config['directed']:
-            self.config['marker_start']=''
-            self.config['marker_end'] = ''
 
-        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'], scaler=self.config['edge_scaler'], marker_start=self.config['marker_start'], marker_end=self.config['marker_end'], marker_color=self.config['marker_color'])
+        # Set the edge properties
+        self.edge_properties = adjmat2dict(self.adjmat,
+                                           min_weight=0,
+                                           minmax=self.config['minmax'],
+                                           scaler=self.config['edge_scaler'],
+                                           marker_start=self.config['marker_start'],
+                                           marker_end=self.config['marker_end'],
+                                           marker_color=self.config['marker_color'])
+
         logger.info('Number of edges: %.0d', len(self.edge_properties.keys()))
 
-    def set_node_properties(self, label=None, hover=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
+    def set_node_properties(self, label=None, tooltip=None, color='#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax=[10, 50]):
         """Node properties.
 
         Parameters
@@ -200,10 +204,10 @@ class d3graph():
             The text that is shown on the Node.
             If not specified, the label text will be inherited from the adjacency matrix column-names.
             * ['label 1','label 2','label 3', ...]
-        hover : list of names (default: None)
+        tooltip : list of names (default: None)
             The text that is shown when hovering over the Node.
             If not specified, the text will inherited from the label.
-            * ['hover 1','hover 2','hover 3', ...]
+            * ['tooltip 1','tooltip 2','tooltip 3', ...]
         color : list of strings (default: '#000080')
             Color of the node.
             * 'cluster' : Colours are based on the community distance clusters.
@@ -758,7 +762,7 @@ def edges2G(edge_properties, G=None):
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        G.add_edge(edge[0], edge[1], marker_color=edge_properties[edge]['marker_color'], marker_start=edge_properties[edge]['marker_end'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+        G.add_edge(edge[0], edge[1], marker_color=edge_properties[edge]['marker_color'], marker_start=edge_properties[edge]['marker_start'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
     # Return
     return(G)
 
