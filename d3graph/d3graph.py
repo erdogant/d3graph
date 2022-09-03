@@ -279,18 +279,18 @@ class d3graph():
             label = np.array([''] * nodecount)
         if not (len(label)==nodecount): raise Exception("[label] must be of same length as the number of nodes")
 
-        # Hover text
-        if isinstance(hover, list):
-            hover = np.array(hover).astype(str)
-        elif 'numpy' in str(type(hover)):
+        # tooltip text
+        if isinstance(tooltip, list):
+            tooltip = np.array(tooltip).astype(str)
+        elif 'numpy' in str(type(tooltip)):
             pass
-        elif isinstance(hover, str):
-            hover = np.array([hover] * nodecount)
+        elif isinstance(tooltip, str):
+            tooltip = np.array([tooltip] * nodecount)
         elif label is not None:
-            hover = label
+            tooltip = label
         else:
-            hover = np.array([''] * nodecount)
-        if not (len(hover)==nodecount): raise Exception("[Hover text] must be of same length as the number of nodes")
+            tooltip = np.array([''] * nodecount)
+        if not (len(tooltip)==nodecount): raise Exception("[Tooltip text] must be of same length as the number of nodes")
 
         # Set node color
         if isinstance(color, list) and len(color)==nodecount:
@@ -370,7 +370,7 @@ class d3graph():
             self.node_properties[node] = {
                 'name': node,
                 'label': label[i],
-                'hover': hover[i],
+                'tooltip': tooltip[i],
                 'color': color[i].astype(str),
                 'size': size[i],
                 'edge_size': edge_size[i],
@@ -414,7 +414,7 @@ class d3graph():
             labx[key]['name'] = key
             labx[key]['color'] = hex_colors[i]
             labx[key]['cluster_label'] = cluster_labels.get(key)
-        
+
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
         cluster_label = np.array(list(map(lambda x: labx.get(x)['cluster_label'], node_names)))
@@ -663,7 +663,7 @@ def json_create(G):
     for i, node in enumerate(nodes):
         nodes[i]['node_name'] = nodes[i].pop('label')
         # nodes[i]['node_label'] = nodes[i].pop('label')
-        nodes[i]['node_hover'] = nodes[i].pop('hover')
+        nodes[i]['node_tooltip'] = nodes[i].pop('tooltip')
         nodes[i]['node_color'] = nodes[i].pop('color')
         nodes[i]['node_size'] = nodes[i].pop('size')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')

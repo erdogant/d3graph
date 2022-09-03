@@ -72,11 +72,11 @@ function d3graphscript(config = {
     .text(function(d) {return d.node_name}) // NODE-TEXT
   //  .style("stroke", "gray");
 
-  let showInHover = ["node_hover"]; // HOVER OVER TEXT
+  let showInHover = ["node_tooltip"]; // Tooltip
   node.append("title")
       .text((d) => Object.keys(d)
           .filter((key) => showInHover.indexOf(key) !== -1)
-          .map((key) => `${key}: ${d[key]}`)
+          .map((key) => `${d[key]}`)
           .join('\n')
       )
 

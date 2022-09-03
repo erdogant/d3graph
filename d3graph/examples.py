@@ -140,7 +140,7 @@ d3.graph(adjmat)
 # d3.set_node_properties(color=adjmat.columns.values)
 # d3.show()
 
-d3.set_node_properties(color=adjmat.columns.values, hover=['This is text for node A','Text for node B','\nMore text can be added on a new line\n with the slash n','','','',''])
+d3.set_node_properties(color=adjmat.columns.values, tooltip=['This is text for node A','Text for node B','\nMore text can be added on a new line\n with the slash n','','','',''])
 d3.show()
 
 # %% Convert source-target to adjmat
@@ -163,11 +163,11 @@ from d3graph import d3graph
 d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
-d3.set_node_properties(color='', label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=[], label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color='', label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=[], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
 d3.show()
 
 # %%
@@ -176,7 +176,7 @@ from d3graph import d3graph
 d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
-d3.set_node_properties(label=adjmat.columns.values+' are the names', hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
 d3.show()
 
 
@@ -216,7 +216,7 @@ d3.show()
 d3.set_node_properties(color='cluster', cmap='Set1')
 d3.show()
 
-d3.set_node_properties(label=df['label'].values, hover=adjmat.columns.values, color=df['label'].values, cmap='Set1')
+d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
 d3.show()
 
 
@@ -293,10 +293,10 @@ d3.show()
 d3.set_node_properties(color=label, size=node_size, label=label)
 d3.show()
 
-d3.set_node_properties(color=label, size=node_size, label=label, hover=label+' hover text')
+d3.set_node_properties(color=label, size=node_size, label=label, tooltip=label+' hover text')
 d3.show()
 
-d3.set_node_properties(color=label, size=node_size, label=label, edge_color='cluster', edge_size=5, hover=label+' hover text')
+d3.set_node_properties(color=label, size=node_size, label=label, edge_color='cluster', edge_size=5, tooltip=label+' hover text')
 d3.show()
 
 d3.set_edge_properties(edge_distance=100)
