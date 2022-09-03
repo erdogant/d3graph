@@ -160,12 +160,19 @@ class d3graph():
         minmax : tuple(int,int), (default: [0.5, 15])
             Weights are normalized between minimum and maximum
             * [0.5, 15]
-        directed : Bool, (default: False)
-            True: Directed edges (with arrow), False: Undirected edges (without arrow)
         scaler : str, (default: 'zscore')
             Scale the the edge-width in the the range of a minimum and maximum [0.5, 15] using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution.
+        directed : Bool, (default: False)
+            True: Edges are shown with an marker (e.g. arrow)
+            False: Edges do not show markers.
+        marker_start : (list of) str, (default: 'arrow')
+            The start of the edge can be one of the following markers:
+            'arrow','square','circle','stub',None or ''
+        marker_end : (list of) str, (default: 'arrow')
+            The end of the edge can be one of the following markers:
+            'arrow','square','circle','stub',None or ''
 
         Returns
         -------

@@ -58,7 +58,7 @@ Content
   :caption: Methods
 
   D3
-  Core Functionalities
+  Core_Functionalities
 
 
 .. toctree::

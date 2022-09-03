@@ -13,9 +13,21 @@ d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
+d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10, 5])
+
+
+d3.set_edge_properties(directed=True, marker_end='square', marker_color='#000000')
+d3.show(filepath='c:\\temp\\network1.html')
+
+
+
 d3.set_edge_properties(directed=True, marker_end='', marker_color='#000000')
-d3.edge_properties['Penny', 'Leonard']['marker_end']='square'
+d3.edge_properties['Penny', 'Leonard']['marker_end']='arrow'
+d3.edge_properties['Sheldon', 'Howard']['marker_end']='stub'
+d3.edge_properties['Sheldon', 'Leonard']['marker_end']='circle'
+d3.edge_properties['Rajesh', 'Penny']['marker_end']='square'
 d3.edge_properties['Penny', 'Leonard']['marker_color']='#ff0000'
+d3.show(filepath='c:\\temp\\network1.html')
 
 d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10, 5])
 

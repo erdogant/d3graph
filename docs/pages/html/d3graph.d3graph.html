@@ -15,7 +15,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -58,9 +57,9 @@
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html">Core Functionalities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html#node-properties">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Core%20Functionalities.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html">Core Functionalities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html#node-properties">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -103,11 +102,11 @@
            <div itemprop="articleBody">
              
   <section id="module-d3graph.d3graph">
-<span id="api-references"></span><h1>API References<a class="headerlink" href="#module-d3graph.d3graph" title="Permalink to this heading"></a></h1>
+<span id="api-references"></span><h1>API References<a class="headerlink" href="#module-d3graph.d3graph" title="Permalink to this headline"></a></h1>
 <p>Make interactive network in D3 javascript.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.adjmat2dict">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">15]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">15]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arrow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#808080'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -121,9 +120,12 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p><strong>edge_properties</strong> –</p>
 <dl class="simple">
-<dt>key: (source, target)</dt><dd><p>’weight’: weight of the edge
-‘weight_scaled’: scaled weight of the edge
-‘color’: color of the edge</p>
+<dt>key: (source, target)</dt><dd><p>’weight’: weight of the edge.
+‘weight_scaled’: scaled weight of the edge.
+‘color’: color of the edge.
+‘marker_start’: ‘’, ‘circle’, ‘square’, ‘arrow’, ‘stub’
+‘marker_end’: ‘’, ‘circle’, ‘square’, ‘arrow’, ‘stub’
+‘marker_color’: hex color of the marker.</p>
 </dd>
 </dl>
 </p>
@@ -240,7 +242,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.set_edge_properties">
-<span class="sig-name descname"><span class="pre">set_edge_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">15]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_edge_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_edge_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.5,</span> <span class="pre">15]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arrow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#808080'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_edge_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Edge properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,10 +252,15 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 * 80: Constant edge distance</p></li>
 <li><p><strong>minmax</strong> (<em>tuple</em><em>(</em><em>int</em><em>,</em><em>int</em><em>)</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>0.5</em><em>, </em><em>15</em><em>]</em><em>)</em>) – Weights are normalized between minimum and maximum
 * [0.5, 15]</p></li>
-<li><p><strong>directed</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: False</em><em>)</em>) – True: Directed edges (with arrow), False: Undirected edges (without arrow)</p></li>
 <li><p><strong>scaler</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'zscore'</em><em>)</em>) – Scale the the edge-width in the the range of a minimum and maximum [0.5, 15] using the following scaler:
 ‘zscore’ : Scale values to Z-scores.
 ‘minmax’ : The sklearn scaler will shrink the distribution.</p></li>
+<li><p><strong>directed</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: False</em><em>)</em>) – True: Edges are shown with an marker (e.g. arrow)
+False: Edges do not show markers.</p></li>
+<li><p><strong>marker_start</strong> (<em>(</em><em>list of</em><em>) </em><em>str</em><em>, </em><em>(</em><em>default: 'arrow'</em><em>)</em>) – The start of the edge can be one of the following markers:
+‘arrow’,’square’,’circle’,’stub’,None or ‘’</p></li>
+<li><p><strong>marker_end</strong> (<em>(</em><em>list of</em><em>) </em><em>str</em><em>, </em><em>(</em><em>default: 'arrow'</em><em>)</em>) – The end of the edge can be one of the following markers:
+‘arrow’,’square’,’circle’,’stub’,None or ‘’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -274,7 +281,7 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.set_node_properties">
-<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000080'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">50]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tooltip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000080'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">50]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Node properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -282,9 +289,9 @@ An connect edge is seen in case vertices has has values larger than 0. The stren
 <li><p><strong>label</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown on the Node.
 If not specified, the label text will be inherited from the adjacency matrix column-names.
 * [‘label 1’,’label 2’,’label 3’, …]</p></li>
-<li><p><strong>hover</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown when hovering over the Node.
+<li><p><strong>tooltip</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown when hovering over the Node.
 If not specified, the text will inherited from the label.
-* [‘hover 1’,’hover 2’,’hover 3’, …]</p></li>
+* [‘tooltip 1’,’tooltip 2’,’tooltip 3’, …]</p></li>
 <li><p><strong>color</strong> (<em>list of strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Color of the node.
 * ‘cluster’ : Colours are based on the community distance clusters.
 * None: All nodes will be have the same color (auto generated).
@@ -521,7 +528,7 @@ None : No scaler is used.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.vec2adjmat">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">vec2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.vec2adjmat" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">vec2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggfunc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.vec2adjmat" title="Permalink to this definition"></a></dt>
 <dd><p>Convert source and target into adjacency matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -530,6 +537,8 @@ None : No scaler is used.</p></li>
 <li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
 <li><p><strong>weight</strong> (<em>list of int</em>) – The Weights between the source-target values</p></li>
 <li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
+<li><p><strong>aggfunc</strong> (<em>str</em><em>, </em><em>optional</em>) – Aggregate function in case multiple values exists for the same relationship.
+‘sum’ (default)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
