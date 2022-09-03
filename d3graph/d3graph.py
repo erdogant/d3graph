@@ -698,12 +698,9 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore', marker_
             'color': color of the edge.
             'marker_start': '', 'circle', 'square', 'arrow', 'stub'
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
-            'marker_color': color of the marker.
+            'marker_color': hex color of the marker.
 
     """
-    if marker_start is None: marker_start=''
-    if marker_end is None: marker_end=''
-
     # Convert adjacency matrix into vector
     df = adjmat.stack().reset_index()
     # Set columns
@@ -725,6 +722,8 @@ def adjmat2dict(adjmat, min_weight=0, minmax=[0.5, 15], scaler='zscore', marker_
         df['weight_scaled'] = np.ones(df.shape[0]) * 1
 
     # Set marker start-end
+    if marker_start is None: marker_start=''
+    if marker_end is None: marker_end=''
     df['marker_start']=marker_start
     df['marker_end']=marker_end
     df['marker_color']=marker_color
@@ -835,7 +834,7 @@ def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler='zscore'):
     # Min-Max Scaling is too sensitive to outlier observations and generates problems unseen, out-of-scale datapoints.
     if scaler=='zscore' and len(np.unique(getsizes))>3:
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
-        getsizes = getsizes + (minscale-np.min(getsizes))
+        getsizes = getsizes + (minscale - np.min(getsizes))
     elif scaler=='minmax':
         getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
     else:

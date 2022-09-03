@@ -1,13 +1,13 @@
-function d3graphscript(config = {
 
-  // Default values
-  width: 800,
-  height: 600,
-  charge: -250,
-  distance: 0,
-  directed: false,
-  collision: 0.5
-}) {
+function d3graphscript(config = {
+    // Default values
+    width: 800,
+    height: 600,
+    charge: -250,
+    distance: 0,
+    directed: false,
+    collision: 0.5
+    }) {
 
     // console.log('d3graphscript config = ', config);
 
