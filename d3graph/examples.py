@@ -63,28 +63,6 @@ d3.show()
 d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
 d3.show()
 
-d3.set_edge_properties(directed=True)
-d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
-d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='#000FFF', cmap='Set2')
-d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
-d3.show()
-
-d3.edge_properties['Penny', 'Leonard']['color']='#ff0000'
-d3.edge_properties['Bernadette', 'Howard']['color']='#ff0000'
-d3.show(filepath='c:\\temp\\network.html')
-
-color, cluster_label, node_names = d3.get_cluster_color()
-
-# %%
-from d3graph import d3graph, adjmat2vec
-size=(100, 100)
-adjmat = pd.DataFrame(np.random.randint(0, 10, size=size))
-# Initialize
-d3 = d3graph(collision=0.5, charge=10350)
-d3.graph(adjmat)
-d3.set_node_properties(color='cluster')
-d3.show(figsize=(1500, 1500))
-
 # %% default example
 from d3graph import d3graph
 
@@ -101,13 +79,17 @@ d3.graph(adjmat)
 d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
 d3.show()
 
-d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster')
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1',
+                       edge_color='cluster')
 d3.show()
 
-d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1', edge_color='#000000', scaler='zscore', minmax=[10, 50])
+d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values,
+                       edge_size=df['degree'].values, cmap='Set1', edge_color='#000000', scaler='zscore',
+                       minmax=[10, 50])
 d3.show()
 
-d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values, cmap='Set1', edge_color='#000000', scaler=None, minmax=[10, 50])
+d3.set_node_properties(label=df['label'].values, color='cluster', size=df['degree'].values, cmap='Set1',
+                       edge_color='#000000', scaler=None, minmax=[10, 50])
 d3.show()
 
 d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
@@ -117,7 +99,6 @@ d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size
 d3.show()
 
 d3.set_node_properties(label=df['label'].values, color='#000000', edge_size=4, cmap='Set1', edge_color='cluster')
-
 
 d3.set_edge_properties(scaler='zscore')
 # d3.set_edge_properties(scaler=None)
@@ -140,6 +121,43 @@ d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values)
 d3.show()
 
+# %% Issue edge colors
+from d3graph import d3graph
+
+size = [10, 20, 10, 10, 15, 10, 5]
+
+# Initialize
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('bigbang')
+# Process adjmat
+d3.graph(adjmat)
+# Show
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values)
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size)
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+# d3.show()
+
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
+# d3.show()
+
+# d3.set_edge_properties(directed=True)
+# d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
+# d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='#000FFF', cmap='Set2')
+d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
+# d3.show()
+
+d3.edge_properties['Penny', 'Leonard']['color'] = '#ff0000'
+d3.edge_properties['Bernadette', 'Howard']['color'] = '#0000ff'
+d3.show()
+
+color, cluster_label, node_names = d3.get_cluster_color()
 
 # %%
 from d3graph import d3graph
@@ -154,13 +172,16 @@ d3.graph(adjmat)
 # d3.set_node_properties(color=adjmat.columns.values)
 # d3.show()
 
-d3.set_node_properties(color=adjmat.columns.values, tooltip=['This is text for node A','Text for node B','\nMore text can be added on a new line\n with the slash n','','','',''])
+d3.set_node_properties(color=adjmat.columns.values, hover=['This is text for node A', 'Text for node B',
+                                                           '\nMore text can be added on a new line\n with the slash n',
+                                                           '', '', '', ''])
 d3.show()
 
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
-source = ['Penny', 'Penny', 'Amy',        'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
-target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh',     'Howard',     'Howard',  'Leonard', 'Amy',     'Penny']
+
+source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
 adjmat = vec2adjmat(source, target)
 d3 = d3graph()
 print(d3.config)
@@ -171,17 +192,25 @@ d3.graph(adjmat)
 d3.set_edge_properties(directed=True)
 d3.show(showfig=True)
 
-
 # %% TEST EXCEPTIONS FOR WRONG COLOR
 from d3graph import d3graph
+
 d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
-d3.set_node_properties(color='', label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=[], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000', '#000000'], label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color='', label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=[], label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000', '#000000', '#000000', '#000000'],
+                       label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'],
+                       label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000', '#000000'],
+                       label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
 d3.show()
 
 # %%
@@ -190,31 +219,29 @@ from d3graph import d3graph
 d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
-d3.set_node_properties(label=adjmat.columns.values+' are the names', tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+d3.set_node_properties(label=adjmat.columns.values + ' are the names',
+                       hover=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
 d3.show()
-
 
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
 
-source = ['Penny', 'Penny', 'Amy',        'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
-target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh',     'Howard',     'Howard',  'Leonard', 'Amy',     'Penny']
+source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
+target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
 adjmat = vec2adjmat(source, target)
 d3 = d3graph()
 print(d3.config)
 
-# adjmat.iloc[0,0]=2
-# adjmat.iloc[0,1]=3
-# adjmat.iloc[0,2]=4
-# adjmat.iloc[1,3]=12
+# adjmat.iloc[0, 0] = 2
+# adjmat.iloc[0, 1] = 3
+# adjmat.iloc[0, 2] = 4
+# adjmat.iloc[1, 3] = 12
 
 d3.graph(adjmat)
 # d3.show(showfig=True)
 
 d3.set_edge_properties(directed=True, minmax=[5, 30])
 d3.show(showfig=True)
-
-
 
 # %%
 from d3graph import d3graph
@@ -233,9 +260,9 @@ d3.show()
 d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
 d3.show()
 
-
 # %%
 from d3graph import d3graph
+
 size = [10, 20, 10, 10, 15, 10, 5]
 
 # Example A: simple interactive network
@@ -268,13 +295,13 @@ d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::
 d3.show()
 
 # Example H: Include directed links. Arrows are set from source -> target
-d3.set_edge_properties(directed=True, edge_distance_minmax=[5, 30])
+d3.set_edge_properties(edge_distance=None, minmax=[5, 30], directed=True)
 d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size, edge_color='#000FFF', cmap='Set1')
 d3.show()
 
-
 # %%
 from d3graph import d3graph, vec2adjmat
+
 d3 = d3graph()
 # Load example
 adjmat = d3.import_example('small')
@@ -307,10 +334,11 @@ d3.show()
 d3.set_node_properties(color=label, size=node_size, label=label)
 d3.show()
 
-d3.set_node_properties(color=label, size=node_size, label=label, tooltip=label+' hover text')
+d3.set_node_properties(color=label, size=node_size, label=label, hover=label + ' hover text')
 d3.show()
 
-d3.set_node_properties(color=label, size=node_size, label=label, edge_color='cluster', edge_size=5, tooltip=label+' hover text')
+d3.set_node_properties(color=label, size=node_size, label=label, edge_color='cluster', edge_size=5,
+                       hover=label + ' hover text')
 d3.show()
 
 d3.set_edge_properties(edge_distance=100)
@@ -332,7 +360,6 @@ d3.graph(adjmat)
 d3.set_node_properties(color=label, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1', label=label)
 d3.show()
 
-
 # %% default example
 from d3graph import d3graph
 
@@ -349,11 +376,11 @@ d3.graph(adjmat)
 # d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
 # d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster')
 # d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
-d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='#000000')
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1',
+                       edge_color='#000000')
 
 # Plot
 d3.show()
-
 
 # %% Collision example
 from d3graph import d3graph
@@ -369,4 +396,3 @@ d3.graph(adjmat)
 
 # Plot
 d3.show(filepath='D://REPOS//erdogant.github.io//docs//d3graph//d3graph//karate_charge.html', figsize=(800, 600))
-
