@@ -1,10 +1,10 @@
-pandas
-numpy
-networkx>2
+colourmap
 ismember
-packaging
-sklearn
 jinja2
 markupsafe==2.0.1
-colourmap
+networkx>2
+numpy
+packaging
+pandas
 python-louvain
+sklearn
