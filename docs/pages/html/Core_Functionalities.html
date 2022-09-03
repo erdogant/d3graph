@@ -547,8 +547,8 @@ Each marker can be customized using the <code class="docutils literal notranslat
 <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">)</span>
 <span class="c1"># {(&#39;Amy&#39;, &#39;Bernadette&#39;): {&#39;weight&#39;: 2.0, &#39;weight_scaled&#39;: 2.0, &#39;color&#39;: &#39;#808080&#39;, &#39;marker_start&#39;: &#39;&#39;, &#39;marker_end&#39;: &#39;arrow&#39;, ...</span>
 
-<span class="c1"># Set all marker-end to square and keep marker_start to be None</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="c1"># Set all marker-end to square and keep marker_start to be None or &#39;&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="n">marker_start</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="c1"># Make some customized changes in the marker-end by removing all markers and set one for penny-leonard.</span>

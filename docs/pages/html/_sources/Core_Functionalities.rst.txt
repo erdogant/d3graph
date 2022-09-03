@@ -468,8 +468,8 @@ Each marker can be customized using the ``edge_properties``.
 	print(d3.edge_properties)
 	# {('Amy', 'Bernadette'): {'weight': 2.0, 'weight_scaled': 2.0, 'color': '#808080', 'marker_start': '', 'marker_end': 'arrow', ...
 	
-	# Set all marker-end to square and keep marker_start to be None
-	d3.set_edge_properties(directed=True, marker_end='square', marker_end='')
+	# Set all marker-end to square and keep marker_start to be None or ''
+	d3.set_edge_properties(directed=True, marker_end='square', marker_start='')
 	d3.show()
 
 	# Make some customized changes in the marker-end by removing all markers and set one for penny-leonard.
