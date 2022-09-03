@@ -1,8 +1,6 @@
 """Make interactive network in D3 javascript."""
 # ---------------------------------
 # Name        : d3graph.py
-# Author      : E.Taskesen
-# Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ---------------------------------
 
@@ -149,7 +147,7 @@ class d3graph:
             file_location = "file:///" + file_location
         webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance: int = None, minmax: List[float] = None, directed: bool = False, scaler: str = 'zscore') -> dict:
+    def set_edge_properties(self, edge_distance: int = None, minmax: List[float] = None, directed: bool = False, scaler: str = 'zscore', marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
         """Edge properties.
 
         Parameters
@@ -190,13 +188,21 @@ class d3graph:
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
         self.config['minmax'] = minmax
         self.config['edge_scaler'] = scaler
-        self.config['marker_start']=marker_start
+        self.config['marker_start'] = marker_start
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
 
         # Set the edge properties
-        self.edge_properties = adjmat2dict(self.adjmat, min_weight=0, minmax=self.config['minmax'],
-                                           scaler=self.config['edge_scaler'])
+        # Set the edge properties
+        self.edge_properties = adjmat2dict(self.adjmat,
+                                           min_weight=0,
+                                           minmax=self.config['minmax'],
+                                           scaler=self.config['edge_scaler'],
+                                           marker_start=self.config['marker_start'],
+                                           marker_end=self.config['marker_end'],
+                                           marker_color=self.config['marker_color'])
+
+		logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
     def set_node_properties(self, label: List[str] = None, hover: List[str] = None, color: Union[str, List[str]] = '#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax = None):
         """Node properties.
@@ -667,7 +673,7 @@ def json_create(G: nx.Graph) -> str:
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scaler: str = 'zscore') -> dict:
+def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scaler: str = 'zscore', marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -725,9 +731,8 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scal
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
     # Return
-    return {edge: {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080'} for
+    return {edge: {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': df['marker_start'].iloc[i], 'marker_end': df['marker_end'].iloc[i], 'marker_color': df['marker_color'].iloc[i]} for
             i, edge in enumerate(source_target)}
-
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
 def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
@@ -750,9 +755,11 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
-                   weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
-    # Return
+        #G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
+        #           weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+        G.add_edge(edge[0], edge[1], marker_color=edge_properties[edge]['marker_color'], marker_start=edge_properties[edge]['marker_start'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
+
+	# Return
     return G
 
 
@@ -915,7 +922,7 @@ def remove_special_chars(adjmat):
 
 
 # %%  Convert adjacency matrix to vector
-def vec2adjmat(source: list, target: list, weight: List[int] = None, symmetric: bool = True, aggfunc='sum')) -> pd.DataFrame:
+def vec2adjmat(source: list, target: list, weight: List[int] = None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
     """Convert source and target into adjacency matrix.
 
     Parameters
