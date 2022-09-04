@@ -708,7 +708,7 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scal
     # Remove self loops and no-connected edges
     Iloc = df['source'] != df['target']
     # Keep only edges with a minimum edge strength
-    if min_weight:
+    if min_weight is not None:
         logger.info("Keep only edges with weight>%g" % min_weight)
         Iloc2 = df['weight'] > min_weight
         Iloc = Iloc & Iloc2
