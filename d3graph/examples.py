@@ -4,6 +4,23 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+
+# %% Convert source-target to adjmat
+from d3graph import d3graph, vec2adjmat
+
+source = ['Penny', 'Penny', 'Amy']
+target = ['Leonard', 'Amy', 'Bernadette']
+adjmat = vec2adjmat(source, target)
+d3 = d3graph()
+print(d3.config)
+
+d3.graph(adjmat)
+# d3.show(showfig=True)
+
+d3.set_edge_properties(directed=True)
+d3.show(filepath='c:\\temp\\network1.html')
+
+
 # %% small example
 from d3graph import d3graph
 
@@ -27,12 +44,12 @@ d3.edge_properties['Sheldon', 'Howard']['marker_end']='stub'
 d3.edge_properties['Sheldon', 'Leonard']['marker_end']='circle'
 d3.edge_properties['Rajesh', 'Penny']['marker_end']='square'
 d3.edge_properties['Penny', 'Leonard']['marker_color']='#ff0000'
-d3.show(filepath='c:\\temp\\network1.html')
+d3.show(filepath='c:\\temp\\network2.html')
 
 d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10, 5])
 
 d3.node_properties['Penny']['tooltip']='test\ntest2'
-d3.show(filepath='c:\\temp\\network1.html')
+d3.show(filepath='c:\\temp\\network3.html')
 
 
 # %% Issue marker edges
