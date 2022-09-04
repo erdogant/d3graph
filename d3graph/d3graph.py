@@ -191,7 +191,7 @@ class d3graph:
         self.config['marker_start'] = marker_start
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
-        
+
         if (not directed) and (marker_end is not None) or (marker_start is not None):
             logger.info('Set directed=True to see the markers!')
 
@@ -758,11 +758,14 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
     edges = [*edge_properties]
     # Create edges in graph
     for edge in edges:
-        #G.add_edge(edge[0], edge[1], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
-        #           weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
-        G.add_edge(edge[0], edge[1], marker_color=edge_properties[edge]['marker_color'], marker_start=edge_properties[edge]['marker_start'], marker_end=edge_properties[edge]['marker_end'], weight_scaled=np.abs(edge_properties[edge]['weight_scaled']), weight=np.abs(edge_properties[edge]['weight']), color=edge_properties[edge]['color'])
-
-	# Return
+        G.add_edge(edge[0],
+                   edge[1],
+                   marker_color=edge_properties[edge]['marker_color'],
+                   marker_start=edge_properties[edge]['marker_start'],
+                   marker_end=edge_properties[edge]['marker_end'],
+                   weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
+                   weight=np.abs(edge_properties[edge]['weight']),
+                   color=edge_properties[edge]['color'])
     return G
 
 
@@ -991,7 +994,6 @@ def vec2adjmat(source: list, target: list, weight: List[int] = None, symmetric: 
     # Force columns to be string type
     adjmat.columns = adjmat.columns.astype(str)
     return adjmat
-
 
 
 # %%  Convert adjacency matrix to vector
