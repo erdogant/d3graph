@@ -316,7 +316,7 @@ class d3graph:
         elif 'numpy' in str(type(color)):
             color = _get_hexcolor(color, cmap=self.config['cmap'])
         elif isinstance(color, str) and color == 'cluster':
-            color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
+            color, group, _ = self.get_cluster_color(node_names=node_names)
         elif isinstance(color, str):
             color = np.array([color] * nodecount)
         elif color is None:
@@ -333,8 +333,8 @@ class d3graph:
         elif isinstance(edge_color, str) and edge_color == 'cluster':
             # Only cluster if this is not done previously. Otherwise, the random generator can create slightly
             # different clustering results, and thus colors.
-            if len(np.unique(cluster_label)) == 1:
-                edge_color, cluster_label, _ = self.get_cluster_color(node_names=node_names)
+            if len(np.unique(group)) == 1:
+                edge_color, group, _ = self.get_cluster_color(node_names=node_names)
             else:
                 edge_color = color
         elif isinstance(edge_color, str):
@@ -392,7 +392,7 @@ class d3graph:
                                           'size'         : size[i],
                                           'edge_size'    : edge_size[i],
                                           'edge_color'   : edge_color[i],
-                                          'cluster_label': cluster_label[i]}
+                                          'group'        : group[i]}
 
         logger.info('Number of unique nodes: %.0d', len(self.node_properties.keys()))
 
@@ -409,7 +409,7 @@ class d3graph:
 
         Returns
         -------
-        dict cluster_label.
+        dict group.
 
         """
         import networkx as nx
@@ -424,13 +424,13 @@ class d3graph:
         # Extract clusterlabels
         y = list(map(lambda x: cluster_labels.get(x), cluster_labels.keys()))
         hex_colors, _ = cm.fromlist(y, cmap=self.config['cmap'], scheme='hex')
-        labx = {key: {'name': key, 'color': hex_colors[i], 'cluster_label': cluster_labels.get(key)} for i, key in
+        labx = {key: {'name': key, 'color': hex_colors[i], 'group': cluster_labels.get(key)} for i, key in
                 enumerate(cluster_labels.keys())}
 
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
-        cluster_label = np.array(list(map(lambda x: labx.get(x)['cluster_label'], node_names)))
-        return color, cluster_label, node_names
+        group = np.array(list(map(lambda x: labx.get(x)['group'], node_names)))
+        return color, group, node_names
 
     def setup_slider(self) -> None:
         """Minimum maximum range of the slider.
@@ -736,6 +736,7 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scal
     # Return
     return {edge: {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': df['marker_start'].iloc[i], 'marker_end': df['marker_end'].iloc[i], 'marker_color': df['marker_color'].iloc[i]} for
             i, edge in enumerate(source_target)}
+
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
 def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
