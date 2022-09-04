@@ -156,7 +156,7 @@ class d3graph:
             Distance of nodes on the edges.
             * 0: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
             * 80: Constant edge distance
-        minmax : tuple(int,int), (default: [0.5, 15.0])
+        minmax : tuple(float, float), (default: [0.5, 15.0])
             Weights are normalized between minimum and maximum
             * [0.5, 15]
         scaler : str, (default: 'zscore')
@@ -204,7 +204,7 @@ class d3graph:
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
-    def set_node_properties(self, label: List[str] = None, tooltip: List[str] = None, color: Union[str, List[str]] = '#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax = None):
+    def set_node_properties(self, label: List[str] = None, tooltip: List[str] = None, color: Union[str, List[str]] = '#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax = [10, 50]):
         """Node properties.
 
         Parameters
