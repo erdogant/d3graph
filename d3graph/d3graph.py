@@ -191,6 +191,9 @@ class d3graph:
         self.config['marker_start'] = marker_start
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
+        
+        if (not directed) and (marker_end is not None) or (marker_start is not None):
+            logger.info('Set directed=True to see the markers!')
 
         # Set the edge properties
         # Set the edge properties
