@@ -9,7 +9,7 @@ function d3graphscript(config = {
     collision: 0.5
     }) {
 
-    // console.log('d3graphscript config = ', config);
+  // console.log('d3graphscript config = ', config);
 
   //Constants for the SVG
   var width = config.width;
