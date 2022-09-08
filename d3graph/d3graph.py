@@ -271,7 +271,7 @@ class d3graph:
             minmax = [10, 50]
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
-        cluster_label = np.zeros_like(node_names).astype(int)
+        group = np.zeros_like(node_names).astype(int)
         if isinstance(color, str) and len(color) != 7: raise ValueError(
             'Input parameter [color] has wrong format. Must be like color="#000000"')
         if isinstance(color, list) and len(color) == 0: raise ValueError(

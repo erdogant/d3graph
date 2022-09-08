@@ -5,6 +5,24 @@ import numpy as np
 from d3graph import d3graph, adjmat2vec
 
 
+# %% Checks with cluster label
+from d3graph import d3graph
+
+# Make some graphs
+d3 = d3graph(charge=450)
+# Load example
+adjmat, df = d3.import_example('karate')
+d3.graph(adjmat)
+d3.set_node_properties(color=df['label'].values, cmap='Set1')
+d3.show()
+
+d3.set_node_properties(color='cluster', cmap='Set1')
+d3.show(filepath='c:\\temp\\network1.html')
+
+d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
+d3.show()
+
+
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
 
@@ -75,6 +93,7 @@ d3.set_node_properties(color=adjmat.columns.values, size=size)
 d3.show()
 
 d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1])
+d3.set_edge_properties(directed=True, marker_end=None)
 d3.show()
 
 d3.set_node_properties(color=adjmat.columns.values, size=size, edge_size=size[::-1], edge_color='#00FFFF')
@@ -260,22 +279,6 @@ d3.graph(adjmat)
 d3.set_edge_properties(directed=True, minmax=[5, 30])
 d3.show(showfig=True)
 
-# %%
-from d3graph import d3graph
-
-# Make some graphs
-d3 = d3graph()
-# Load example
-adjmat, df = d3.import_example('karate')
-d3.graph(adjmat)
-d3.set_node_properties(color=df['label'].values, cmap='Set1')
-d3.show()
-
-d3.set_node_properties(color='cluster', cmap='Set1')
-d3.show()
-
-d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
-d3.show()
 
 # %%
 from d3graph import d3graph
