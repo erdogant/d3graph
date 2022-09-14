@@ -147,7 +147,7 @@ class d3graph:
             file_location = "file:///" + file_location
         webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance: int = None, minmax: List[float] = None, directed: bool = False, scaler: str = 'zscore', marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
+    def set_edge_properties(self, edge_distance: int = None, scaler: str = 'zscore', minmax: List[float] = None, directed: bool = False, marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
         """Edge properties.
 
         Parameters
@@ -156,13 +156,14 @@ class d3graph:
             Distance of nodes on the edges.
             * 0: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
             * 80: Constant edge distance
+        scaler : str, (default: 'zscore')
+            Scale the edge-width using the following scaler:
+            'zscore' : Scale values to Z-scores.
+            'minmax' : The sklearn scaler will shrink the distribution between minmax.
+            None : No scaler is used.
         minmax : tuple(float, float), (default: [0.5, 15.0])
             Weights are normalized between minimum and maximum
             * [0.5, 15]
-        scaler : str, (default: 'zscore')
-            Scale the edge-width in the range of a minimum and maximum [0.5, 15] using the following scaler:
-            'zscore' : Scale values to Z-scores.
-            'minmax' : The sklearn scaler will shrink the distribution.
         directed : Bool, (default: False)
             True: Edges are shown with an marker (e.g. arrow)
             False: Edges do not show markers.
@@ -246,9 +247,9 @@ class d3graph:
             All colors can be reversed with '_r', e.g. 'binary' to 'binary_r'
             'Set1',  'Set2', 'rainbow', 'bwr', 'binary', 'seismic', 'Blues', 'Reds', 'Pastel1', 'Paired'
         scaler : str, (default: 'zscore')
-            Scale the node size in the range of a minimum and maximum [0.5, 15] using the following scaler:
+            Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
-            'minmax' : The sklearn scaler will shrink the distribution.
+            'minmax' : The sklearn scaler will shrink the distribution between minmax.
             None : No scaler is used.
         minmax : tuple, (default: [10, 50])
             Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
@@ -456,7 +457,7 @@ class d3graph:
         self.config['slider'] = [int(min_slider), int(max_slider)]
         logger.info('Slider range is set to [%g, %g]' % (self.config['slider'][0], self.config['slider'][1]))
 
-    def graph(self, adjmat) -> None:
+    def graph(self, adjmat, scaler: str = 'zscore') -> None:
         """Process the adjacency matrix and set all properties to default.
 
         Description
@@ -468,6 +469,11 @@ class d3graph:
         ----------
         adjmat : pd.DataFrame()
             Adjacency matrix (symmetric). Values > 0 are edges.
+        scaler : str, (default: 'zscore')
+            Scale the edge-width using the following scaler:
+            'zscore' : Scale values to Z-scores.
+            'minmax' : The sklearn scaler will shrink the distribution between minmax.
+            None : No scaler is used.
 
         Examples
         --------
@@ -501,9 +507,9 @@ class d3graph:
         # Checks
         self.adjmat = data_checks(adjmat.copy())
         # Set default edge properties
-        self.set_edge_properties()
+        self.set_edge_properties(scaler=scaler)
         # Set default node properties
-        self.set_node_properties()
+        self.set_node_properties(scaler=scaler)
 
     def write_html(self, json_data, overwrite: bool = True) -> None:
         """Write html.
@@ -676,7 +682,7 @@ def json_create(G: nx.Graph) -> str:
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scaler: str = 'zscore', marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
+def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zscore', minmax=None, marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -685,10 +691,14 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, minmax=None, scal
         Adjacency matrix.
     min_weight : float
         edges are returned with a minimum weight.
+    scaler : str, (default: 'zscore')
+        Scale the edge-width using the following scaler:
+        'zscore' : Scale values to Z-scores.
+        'minmax' : The sklearn scaler will shrink the distribution between minmax.
+        None : No scaler is used.
     minmax : tuple(int,int), (default: [0.5, 15])
         Weights are normalized between minimum and maximum
         * [0.5, 15]
-    scaler : str
 
     Returns
     -------
@@ -829,8 +839,7 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 
 
 # %% Normalize in good d3 range
-def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union[int, float] = 4,
-                    scaler: str = 'zscore'):
+def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union[int, float] = 4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
     # out-of-scale datapoints.

@@ -26,7 +26,9 @@
     </script>
 </head>
 <body>
+
     {% if max_slider > min_slider %}
+	<div style="max-width:{{ width }}px;">
         <form>
             <h3>
                 Link threshold
@@ -36,7 +38,9 @@
                 {{ max_slider }}
             </h3>
         </form>
+	</div>
     {% endif %}
+
 </body>
 </html>
 
