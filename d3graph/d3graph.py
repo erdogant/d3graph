@@ -535,6 +535,7 @@ class d3graph:
                    'collision'    : self.config['network_collision']}
 
         jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
+        # jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
         index_template = jinja_env.get_template('index.html.j2')
         index_file = Path(self.config['filepath'])
         logger.info(f'Write to path: [{index_file.absolute()}]')

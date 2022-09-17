@@ -17,6 +17,11 @@ Github
 	`Source code of d3graph can be found at Github <https://github.com/erdogant/d3graph/>`_
 
 
+Citing
+#########
+
+.. note::
+	Bibtex can be found at the right side at the `github page <https://github.com/erdogant/d3graph/>`_.
 
 .. raw:: html
 

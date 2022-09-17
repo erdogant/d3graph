@@ -7,27 +7,16 @@ The ``d3graph`` library is a Python library that is built on D3 and creates a st
 	`Medium Blog: Creating beautiful stand-alone interactive D3 charts with Python <https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7>`_
 
 
-Sponsor
-=======
-**This library is created and maintained in my free time**. I like to work on my open-source libraries, and you can help by becoming a sponsor! The easiest way is by simply following me on medium, and it will cost you nothing! Simply go to my `medium profile <https://erdogant.medium.com/>`_ and press "follow". Read more on my `sponsor github page <https://github.com/sponsors/erdogant/>`_ why this is important. This also gives you various other ways to sponsor me!
 
-
-Star is important too!
+Star is important
 ======================
-If you like this project, **star** this repo at the github page! This is important because only then I know how much you like it :)
-
-
-Quick install
-=============
-.. code-block:: console
-
-   pip install d3graph
+If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/d3graph/>`_!
 
 
 Github
 ======
-`Github d3graph <https://github.com/erdogant/d3graph/>`_.
-Please report bugs, issues and feature extensions there.
+Please report bugs, issues and feature extensions at `github <https://github.com/erdogant/d3graph/>`_.
+
 
 
 Content
