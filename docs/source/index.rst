@@ -10,7 +10,7 @@ The ``d3graph`` library is a Python library that is built on D3 and creates a st
 
 You contribution is important
 ==============================
-If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/d3graph/>`_ and have a look at the `sponser page <https://github.com/erdogant/d3graph/pages/html/Documentation.html>`_!
+If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/d3graph/>`_ and have a look at the `sponser page <https://erdogant.github.io/d3graph/pages/html/Documentation.html>`_!
 
 
 
@@ -65,8 +65,6 @@ Content
   Documentation
   Coding quality
   d3graph.d3graph
-
-* :ref:`genindex`
 
 
 
