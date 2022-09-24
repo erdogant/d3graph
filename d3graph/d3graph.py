@@ -37,34 +37,34 @@ logger = logging.getLogger()
 
 # %%
 class d3graph:
-    """Make interactive network in D3 javascript."""
+    """Create interactive networks in d3js.
+
+    Description
+    -----------
+    d3graph is a Python library that is built on d3js to create interactive and standalone networks. The input
+    data is an adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
+    The output is an HTML file that is interactive and standalone.
+
+    Parameters
+    ----------
+    collision : float, (default: 0.5)
+        Response of the network. Higher means that more collisions are prevented.
+    charge : int, (default: 250)
+        Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
+    slider : list [min: int, max: int]:, (default: [None, None])
+        Slider is automatically set to the range of the edge weights.
+    verbose : int, (default: 20)
+        Print progress to screen.
+        60: None, 40: Error, 30: Warn, 20: Info, 10: Debug
+
+    Returns
+    -------
+    None.
+
+    """
 
     def __init__(self, collision: float = 0.5, charge: int = 250, slider: List[int] = None, verbose: int = 20) -> None:
-        """Initialize d3graph.
-
-        Description
-        -----------
-        d3graph is a Python library that is built on d3js and creates interactive and standalone networks. The input
-        data is a simple adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
-        The output is an HTML file that is interactive and standalone.
-
-        Parameters
-        ----------
-        collision : float, (default: 0.5)
-            Response of the network. Higher means that more collisions are prevented.
-        charge : int, (default: 250)
-            Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
-        slider : list [min: int, max: int]:, (default: [None, None])
-            Slider is automatically set to the range of the edge weights.
-        verbose : int, (default: 20)
-            Print progress to screen.
-            60: None, 40: Error, 30: Warn, 20: Info, 10: Debug
-
-        Returns
-        -------
-        None.
-
-        """
+        """Initialize d3graph."""
         if slider is None:
             slider = [None, None]
         # Cleaning

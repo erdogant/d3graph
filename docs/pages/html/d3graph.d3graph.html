@@ -171,7 +171,27 @@ None : No scaler is used.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
-<dd><p>Make interactive network in D3 javascript.</p>
+<dd><p>Create interactive networks in d3js.</p>
+<p>d3graph is a Python library that is built on d3js to create interactive and standalone networks. The input
+data is an adjacency matrix for which the columns and indexes are the nodes and elements&gt;0 the edges.
+The output is an HTML file that is interactive and standalone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collision</strong> (<em>float</em><em>, </em><em>(</em><em>default: 0.5</em><em>)</em>) – Response of the network. Higher means that more collisions are prevented.</p></li>
+<li><p><strong>charge</strong> (<em>int</em><em>, </em><em>(</em><em>default: 250</em><em>)</em>) – Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.</p></li>
+<li><p><strong>slider</strong> (<em>list</em><em> [</em><em>min: int</em><em>, </em><em>max: int</em><em>]</em><em>:</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>None</em><em>, </em><em>None</em><em>]</em><em>)</em>) – Slider is automatically set to the range of the edge weights.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default: 20</em><em>)</em>) – Print progress to screen.
+60: None, 40: Error, 30: Warn, 20: Info, 10: Debug</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.get_cluster_color">
 <span class="sig-name descname"><span class="pre">get_cluster_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.get_cluster_color" title="Permalink to this definition"></a></dt>
@@ -182,8 +202,11 @@ None : No scaler is used.</p></li>
 ‘target’
 ‘weight’</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict group.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict group.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,8 +251,11 @@ None : No scaler is used.</p></li>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,7 +407,7 @@ None : No scaler is used.</p></li>
 <dd class="field-odd"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[min, max].</p>
+<dd class="field-even"><p>[min, max]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -400,8 +426,11 @@ None : No scaler is used.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – Overwrite the existing html file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -414,8 +443,11 @@ None : No scaler is used.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_data</strong> (<em>json file</em>) – </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,8 +482,11 @@ None : No scaler is used.</p></li>
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Graph G</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,8 +499,11 @@ None : No scaler is used.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>G</strong> (<em>Networkx object</em>) – Graph G</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>json dumps</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>json dumps</p>
 </dd>
 </dl>
 </dd></dl>
@@ -475,8 +513,11 @@ None : No scaler is used.</p></li>
 <span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">library_compatibility_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.library_compatibility_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Library compatibility checks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -492,8 +533,11 @@ None : No scaler is used.</p></li>
 <li><p><strong>edge_properties</strong> (<em>dictionary</em>) – Dictionary containing edge properties</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict containing Graph G and dataframe.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict containing Graph G and dataframe.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -509,8 +553,11 @@ None : No scaler is used.</p></li>
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Graph G</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>
