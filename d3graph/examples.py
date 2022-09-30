@@ -10,11 +10,10 @@ from d3graph import d3graph
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat = d3.import_example('energy')
+adjmat, df = d3.import_example('karate')
 # Process adjmat
 d3.graph(adjmat)
-d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10, 5], scaler='minmax')
-d3.show(filepath='c:\\temp\\network1.html')
+d3.show(filepath='c:\\temp\\network1.html', show_slider=True)
 
 
 d3.set_edge_properties(directed=True, marker_end='square', marker_color='#000000')
