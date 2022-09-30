@@ -549,9 +549,11 @@ class d3graph:
                    'slider_comment_start' : show_slider[0],
                    'slider_comment_stop'  : show_slider[1],
                    }
-
-        jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
-        # jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
+        # Issue14: https://github.com/erdogant/d3graph/issues/14
+        try:
+            jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
+        except:
+            jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
         index_template = jinja_env.get_template('index.html.j2')
         index_file = Path(self.config['filepath'])
         logger.info(f'Write to path: [{index_file.absolute()}]')
