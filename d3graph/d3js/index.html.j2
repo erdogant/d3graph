@@ -27,19 +27,23 @@
 </head>
 <body>
 
+<!-- SLIDER -->
+{{ slider_comment_start }}
+
     {% if max_slider > min_slider %}
 	<div style="max-width:{{ width }}px;">
         <form>
             <h3>
-                Link threshold
+                Edge Threshold
                 {{ min_slider }}
-                <input type="range" autocomplete="off" id="thresholdSlider"
-                       value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}">
+                <input type="range" autocomplete="off" id="thresholdSlider" value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}">
                 {{ max_slider }}
             </h3>
         </form>
 	</div>
     {% endif %}
+
+{{ slider_comment_stop }}
 
 </body>
 </html>

@@ -52,7 +52,8 @@ class d3graph:
     charge : int, (default: 250)
         Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
     slider : list [min: int, max: int]:, (default: [None, None])
-        Slider is automatically set to the range of the edge weights.
+        [None, None] : Slider is automatically set to the min-max range using the edge weights.
+        [0, 10] : Slider is set to user defined range
     verbose : int, (default: 20)
         Print progress to screen.
         60: None, 40: Error, 30: Warn, 20: Info, 10: Debug
@@ -98,7 +99,7 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self, figsize: Tuple[int, int] = (1500, 800), title: str = 'd3graph', filepath: str = 'd3graph.html',
-             showfig: bool = True, overwrite: bool = True) -> None:
+             showfig: bool = True, overwrite: bool = True, show_slider: bool = True) -> None:
         """Build and show the graph.
 
         Parameters
@@ -113,6 +114,9 @@ class d3graph:
             Open the window to show the network.
         overwrite : bool, (default: True)
             Overwrite the existing html file.
+        show_slider : bool, (default: True)
+            True: Slider is shown in the HTML.
+            False: Slider is not shown in the HTML.
 
         Returns
         -------
@@ -126,7 +130,7 @@ class d3graph:
 
         self.config['figsize'] = figsize
         self.config['network_title'] = title
-        # self.config['path'] = '' if filepath is None else filepath
+        self.config['show_slider'] = show_slider
         self.config['showfig'] = showfig
         self.config['filepath'] = self.set_path(filepath)
 
@@ -530,6 +534,8 @@ class d3graph:
         None.
 
         """
+        show_slider = ['',''] if self.config['show_slider'] else ['<!--', '-->']
+        
         content = {'json_data'    : json_data,
                    'title'        : self.config['network_title'],
                    'width'        : self.config['figsize'][0],
@@ -539,7 +545,10 @@ class d3graph:
                    'min_slider'   : self.config['slider'][0],
                    'max_slider'   : self.config['slider'][1],
                    'directed'     : self.config['directed'],
-                   'collision'    : self.config['network_collision']}
+                   'collision'    : self.config['network_collision'],
+                   'slider_comment_start' : show_slider[0],
+                   'slider_comment_stop'  : show_slider[1],
+                   }
 
         jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
         # jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
