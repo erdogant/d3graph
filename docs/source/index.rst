@@ -37,6 +37,7 @@ Content
    :caption: Background
    
    Abstract
+   D3
 
 
 .. toctree::
@@ -56,7 +57,6 @@ Content
   :maxdepth: 1
   :caption: Methods
 
-  D3
   Core_Functionalities
 
 

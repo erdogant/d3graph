@@ -153,6 +153,24 @@ Karate Club network
 	d3.show()
 
 
+Hide Slider
+''''''''''''''''''''
+
+The slider can be hidden from the output HTML by setting the ``show_slider=False`` parameter.
+
+.. code:: python
+
+	from d3graph import d3graph
+
+	# Initialize
+	d3 = d3graph()
+	# Load example
+	adjmat, df = d3.import_example('karate')
+	# Process adjmat
+	d3.graph(adjmat)
+	d3.show(show_slider=False)
+
+
 .. raw:: html
 
 	<hr>
