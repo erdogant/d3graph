@@ -47,4 +47,11 @@ Examples
 >>> # Plot
 >>> d3.show()
 
+References
+----------
+* D3Graph: https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7
+* D3Blocks: https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4
+* Github : https://github.com/erdogant/d3graph
+* Documentation: https://erdogant.github.io/d3graph/
+
 """

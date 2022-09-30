@@ -1,4 +1,3 @@
-git+git://github.com/SuperKogito/sphinxcontrib-pdfembed
 irelease
 pytest
 rst2pdf

@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -73,7 +75,32 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API References</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API References</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.d3graph"><code class="docutils literal notranslate"><span class="pre">d3graph</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.get_cluster_color"><code class="docutils literal notranslate"><span class="pre">d3graph.get_cluster_color()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.graph"><code class="docutils literal notranslate"><span class="pre">d3graph.graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.import_example"><code class="docutils literal notranslate"><span class="pre">d3graph.import_example()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.set_edge_properties"><code class="docutils literal notranslate"><span class="pre">d3graph.set_edge_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.set_node_properties"><code class="docutils literal notranslate"><span class="pre">d3graph.set_node_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.set_path"><code class="docutils literal notranslate"><span class="pre">d3graph.set_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.setup_slider"><code class="docutils literal notranslate"><span class="pre">d3graph.setup_slider()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.show"><code class="docutils literal notranslate"><span class="pre">d3graph.show()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d3graph.d3graph.d3graph.write_html"><code class="docutils literal notranslate"><span class="pre">d3graph.write_html()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.data_checks"><code class="docutils literal notranslate"><span class="pre">data_checks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.edges2G"><code class="docutils literal notranslate"><span class="pre">edges2G()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.json_create"><code class="docutils literal notranslate"><span class="pre">json_create()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.library_compatibility_checks"><code class="docutils literal notranslate"><span class="pre">library_compatibility_checks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.make_graph"><code class="docutils literal notranslate"><span class="pre">make_graph()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.nodes2G"><code class="docutils literal notranslate"><span class="pre">nodes2G()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.remove_special_chars"><code class="docutils literal notranslate"><span class="pre">remove_special_chars()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.set_logger"><code class="docutils literal notranslate"><span class="pre">set_logger()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -103,11 +130,11 @@
            <div itemprop="articleBody">
              
   <section id="module-d3graph.d3graph">
-<span id="api-references"></span><h1>API References<a class="headerlink" href="#module-d3graph.d3graph" title="Permalink to this headline"></a></h1>
+<span id="api-references"></span><h1>API References<a class="headerlink" href="#module-d3graph.d3graph" title="Permalink to this heading"></a></h1>
 <p>Make interactive network in D3 javascript.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.adjmat2dict">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arrow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#808080'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arrow'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marker_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#808080'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#d3graph.d3graph.adjmat2dict" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -143,7 +170,7 @@ None : No scaler is used.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.adjmat2vec">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.adjmat2vec" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">adjmat2vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.adjmat2vec" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -185,13 +212,17 @@ The output is an HTML file that is interactive and standalone.</p>
 60: None, 40: Error, 30: Warn, 20: Info, 10: Debug</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p>D3Graph: <a class="reference external" href="https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7">https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7</a></p></li>
+<li><p>D3Blocks: <a class="reference external" href="https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4">https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4</a></p></li>
+<li><p>Github : <a class="reference external" href="https://github.com/erdogant/d3graph">https://github.com/erdogant/d3graph</a></p></li>
+<li><p>Documentation: <a class="reference external" href="https://erdogant.github.io/d3graph/">https://erdogant.github.io/d3graph/</a></p></li>
+</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.get_cluster_color">
 <span class="sig-name descname"><span class="pre">get_cluster_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.get_cluster_color" title="Permalink to this definition"></a></dt>
@@ -202,11 +233,8 @@ The output is an HTML file that is interactive and standalone.</p>
 ‘target’
 ‘weight’</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict group.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict group.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,11 +279,8 @@ None : No scaler is used.</p></li>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -324,28 +349,28 @@ False: Edges do not show markers.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown on the Node.
+<li><p><strong>label</strong> (<em>list</em><em> of </em><em>names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown on the Node.
 If not specified, the label text will be inherited from the adjacency matrix column-names.
 * [‘label 1’,’label 2’,’label 3’, …]</p></li>
-<li><p><strong>tooltip</strong> (<em>list of names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown when hovering over the Node.
+<li><p><strong>tooltip</strong> (<em>list</em><em> of </em><em>names</em><em> (</em><em>default: None</em><em>)</em>) – The text that is shown when hovering over the Node.
 If not specified, the text will inherit from the label.
 * [‘tooltip 1’,’tooltip 2’,’tooltip 3’, …]</p></li>
-<li><p><strong>color</strong> (<em>list of strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Color of the node.
+<li><p><strong>color</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Color of the node.
 * ‘cluster’ : Colours are based on the community distance clusters.
 * None: All nodes will have the same color (auto generated).
 * [‘#000000’]: All nodes will have the same hex color.
 * [‘#377eb8’,’#ffffff’,’#000000’,…]: Hex colors are directly used.
 * [‘A’]: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
 * [‘A’,’A’,’B’,…]:  Colors are generated using cmap and the unique labels accordingly colored.</p></li>
-<li><p><strong>size</strong> (<em>array of integers</em><em> (</em><em>default: 5</em><em>)</em>) – Size of the nodes.
+<li><p><strong>size</strong> (<em>array</em><em> of </em><em>integers</em><em> (</em><em>default: 5</em><em>)</em>) – Size of the nodes.
 * 10: all nodes sizes are set to 10
 * [10, 5, 3, 1, …]: Specify node sizes</p></li>
-<li><p><strong>edge_color</strong> (<em>list of strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Edge color of the node.
+<li><p><strong>edge_color</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: '#000080'</em><em>)</em>) – Edge color of the node.
 * ‘cluster’ : Colours are based on the community distance clusters.
 * [‘#377eb8’,’#ffffff’,’#000000’,…]: Hex colors are directly used.
 * [‘A’]: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
 * [‘A’,’A’,’B’,…]:  Colors are generated using cmap and the unique labels recordingly colored.</p></li>
-<li><p><strong>edge_size</strong> (<em>array of integers</em><em> (</em><em>default: 1</em><em>)</em>) – Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
+<li><p><strong>edge_size</strong> (<em>array</em><em> of </em><em>integers</em><em> (</em><em>default: 1</em><em>)</em>) – Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
 * 1: All nodes will be set on this size,
 * [2,5,1,…]  Specify per node the edge size.</p></li>
 <li><p><strong>cmap</strong> (<em>String</em><em>, </em><em>(</em><em>default: 'Set1'</em><em>)</em>) – All colors can be reversed with ‘_r’, e.g. ‘binary’ to ‘binary_r’
@@ -407,7 +432,7 @@ None : No scaler is used.</p></li>
 <dd class="field-odd"><p><strong>tuple</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[min, max]</p>
+<dd class="field-even"><p>[min, max].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -426,11 +451,8 @@ None : No scaler is used.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – Overwrite the existing html file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -443,11 +465,8 @@ None : No scaler is used.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>json_data</strong> (<em>json file</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -456,7 +475,7 @@ None : No scaler is used.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.data_checks">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">data_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.data_checks" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">data_checks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.data_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Check input Adjacency matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -473,7 +492,7 @@ None : No scaler is used.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.edges2G">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">edges2G</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">networkx.classes.graph.Graph</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">networkx.classes.graph.Graph</span></span></span><a class="headerlink" href="#d3graph.d3graph.edges2G" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">edges2G</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Graph</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="headerlink" href="#d3graph.d3graph.edges2G" title="Permalink to this definition"></a></dt>
 <dd><p>Convert edges to Graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -482,28 +501,22 @@ None : No scaler is used.</p></li>
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Graph G</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.json_create">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">json_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">networkx.classes.graph.Graph</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#d3graph.d3graph.json_create" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">json_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Graph</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#d3graph.d3graph.json_create" title="Permalink to this definition"></a></dt>
 <dd><p>Create json from Graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>G</strong> (<em>Networkx object</em>) – Graph G</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>json dumps</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>json dumps</p>
 </dd>
 </dl>
 </dd></dl>
@@ -513,11 +526,8 @@ None : No scaler is used.</p></li>
 <span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">library_compatibility_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.library_compatibility_checks" title="Permalink to this definition"></a></dt>
 <dd><p>Library compatibility checks.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -533,18 +543,15 @@ None : No scaler is used.</p></li>
 <li><p><strong>edge_properties</strong> (<em>dictionary</em>) – Dictionary containing edge properties</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict containing Graph G and dataframe.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict containing Graph G and dataframe.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.nodes2G">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">nodes2G</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">networkx.classes.graph.Graph</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">networkx.classes.graph.Graph</span></span></span><a class="headerlink" href="#d3graph.d3graph.nodes2G" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">nodes2G</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Graph</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Graph</span></span></span><a class="headerlink" href="#d3graph.d3graph.nodes2G" title="Permalink to this definition"></a></dt>
 <dd><p>Convert nodes to Graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -553,11 +560,8 @@ None : No scaler is used.</p></li>
 <li><p><strong>G</strong> (<em>Networkx object</em>) – Graph G.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Graph G</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Graph G</p>
 </dd>
 </dl>
 </dd></dl>
@@ -587,14 +591,14 @@ None : No scaler is used.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.vec2adjmat">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">vec2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggfunc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.vec2adjmat" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">vec2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggfunc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#d3graph.d3graph.vec2adjmat" title="Permalink to this definition"></a></dt>
 <dd><p>Convert source and target into adjacency matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<em>list</em>) – The source node.</p></li>
 <li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
-<li><p><strong>weight</strong> (<em>list of int</em>) – The Weights between the source-target values</p></li>
+<li><p><strong>weight</strong> (<em>list</em><em> of </em><em>int</em>) – The Weights between the source-target values</p></li>
 <li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
 <li><p><strong>aggfunc</strong> (<em>str</em><em>, </em><em>optional</em>) – Aggregate function in case multiple values exists for the same relationship.
 ‘sum’ (default)</p></li>
