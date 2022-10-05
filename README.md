@@ -8,7 +8,7 @@
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 [![DOI](https://zenodo.org/badge/228166657.svg)](https://zenodo.org/badge/latestdoi/228166657)
 [![Downloads](https://pepy.tech/badge/d3graph)](https://pepy.tech/project/d3graph)
-[![Downloads](https://pepy.tech/badge/d3graph/month)](https://pepy.tech/project/d3graph/month)
+[![Downloads](https://pepy.tech/badge/d3graph)](https://pepy.tech/project/d3graph/month)
 [![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/d3graph/)
 [![Medium](https://img.shields.io/badge/Medium-Blog-green)](https://erdogant.github.io/d3graph/pages/html/Documentation.html#medium-blog)
 <!---[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-yellow.svg)](https://www.buymeacoffee.com/erdogant)-->
