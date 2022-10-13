@@ -23,7 +23,6 @@ sys.path.insert(0, os.path.abspath('../../'))
 # config_file_path = os.path.join(parent_directory, 'setup.cfg')
 # config.read(config_file_path)
 
-sys.path.insert(0, os.path.abspath('../../'))
 
 
 # -- Download rst file -----------------------------------------------------
