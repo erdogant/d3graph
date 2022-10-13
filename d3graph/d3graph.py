@@ -144,13 +144,14 @@ class d3graph:
         self.write_html(json_data, overwrite=overwrite)
         # Open the webbrowser
         if self.config['showfig']:
-            self._showfig(self.config['filepath'])
+            self.showfig(self.config['filepath'])
             # webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
         # Return
         return self.G
 
     @staticmethod
-    def _showfig(filepath: str, sleep: float = 0.5) -> None:
+    def showfig(filepath: str, sleep: float = 0.5) -> None:
+        """Show figure."""
         # Sleeping is required to prevent overlapping windows
         time.sleep(sleep)
         file_location = os.path.abspath(filepath)
