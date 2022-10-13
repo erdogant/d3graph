@@ -4,6 +4,10 @@ from packaging import version
 from d3graph.d3graph import (
     vec2adjmat,
     adjmat2vec,
+    make_graph,
+    json_create,
+    adjmat2dict,
+    data_checks,
     )
 
 __author__ = 'Erdogan Tasksen'
