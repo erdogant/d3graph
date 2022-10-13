@@ -613,13 +613,13 @@ class d3graph:
             target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
             weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
             adjmat = vec2adjmat(source, target, weight=weight)
-            return adjmat
+            return adjmat, None
         elif network == 'bigbang':
             source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
             target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
             weight = [5, 3, 2, 2, 5, 2, 3, 5, 2]
             adjmat = vec2adjmat(source, target, weight=weight)
-            return adjmat
+            return adjmat, None
         elif network == 'karate':
             import scipy
             if version.parse(scipy.__version__) < version.parse('1.8.0'):
