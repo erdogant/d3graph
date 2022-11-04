@@ -84,7 +84,7 @@ class d3graph:
         # Setup configurations
         self.config = {}
         self.config['network_collision'] = collision
-        self.config['network_charge'] = charge * -1
+        self.config['network_charge'] = -abs(charge)
         self.config['slider'] = slider
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
