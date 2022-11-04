@@ -4,13 +4,33 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+
+# %%
+from d3graph import d3graph
+
+d3 = d3graph()
+# Load example
+adjmat, _ = d3.import_example('small')
+
+d3.graph(adjmat, group=None)
+d3.show()
+
+d3.set_node_properties(color='cluster')
+d3.show()
+
+d3.set_node_properties(color=adjmat.columns.values, tooltip=['This is text for node A', 'Text for node B',
+                                                           '\nMore text can be added on a new line\n with the slash n',
+                                                           '', '', '', ''])
+d3.show()
+
+
 # %% small example
 from d3graph import d3graph
 
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat, df = d3.import_example('karate')
+adjmat, df = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 d3.show(filepath='c:\\temp\\network1.html', show_slider=True)
@@ -80,7 +100,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat = d3.import_example('bigbang')
+adjmat, _ = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 d3.set_edge_properties(directed=True)
@@ -166,7 +186,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat = d3.import_example('bigbang')
+adjmat, _ = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 # Show
@@ -196,23 +216,6 @@ d3.show()
 
 color, cluster_label, node_names = d3.get_cluster_color()
 
-# %%
-from d3graph import d3graph
-
-d3 = d3graph()
-# Load example
-adjmat = d3.import_example('small')
-
-d3.graph(adjmat)
-# d3.show()
-
-# d3.set_node_properties(color=adjmat.columns.values)
-# d3.show()
-
-d3.set_node_properties(color=adjmat.columns.values, tooltip=['This is text for node A', 'Text for node B',
-                                                           '\nMore text can be added on a new line\n with the slash n',
-                                                           '', '', '', ''])
-d3.show()
 
 # %% Convert source-target to adjmat
 from d3graph import d3graph, vec2adjmat
@@ -233,28 +236,38 @@ d3.show(showfig=True)
 from d3graph import d3graph
 
 d3 = d3graph()
-adjmat = d3.import_example('bigbang')
+adjmat, _ = d3.import_example('bigbang')
 d3.graph(adjmat)
-d3.set_node_properties(color='', label=adjmat.columns.values + ' are the names',
+
+# Error expected:
+d3.set_node_properties(color='',
+                       label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+
+# Error expected:
 d3.set_node_properties(color=[], label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+
+# Error expected:
 d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000', '#000000', '#000000', '#000000'],
                        label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+
+# Error expected:
 d3.set_node_properties(color=['#000000', '#000000', '#000000', '#000000', '#000000', '#000000'],
                        label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
+
+# Error expected:
 d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000', '#000000'],
                        label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
-d3.show()
 
 # %%
 from d3graph import d3graph
 
 d3 = d3graph()
-adjmat = d3.import_example('bigbang')
+adjmat, _ = d3.import_example('bigbang')
 d3.graph(adjmat)
 d3.set_node_properties(label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
@@ -290,7 +303,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 d3 = d3graph()
 
 # Load example
-adjmat = d3.import_example('bigbang')
+adjmat, _ = d3.import_example('bigbang')
 
 d3.graph(adjmat)
 d3.show()
@@ -325,7 +338,7 @@ from d3graph import d3graph, vec2adjmat
 
 d3 = d3graph()
 # Load example
-adjmat = d3.import_example('small')
+adjmat, _ = d3.import_example('small')
 
 d3.graph(adjmat)
 d3.set_node_properties(color=adjmat.columns.values)
@@ -417,3 +430,5 @@ d3.graph(adjmat)
 
 # Plot
 # d3.show()
+
+# %%
