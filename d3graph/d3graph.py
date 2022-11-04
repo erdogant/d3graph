@@ -83,8 +83,8 @@ class d3graph:
         set_logger(verbose=verbose)
         # Setup configurations
         self.config = {}
-        self.config['network_collision'] = collision
-        self.config['network_charge'] = -abs(charge)
+        self.config['collision'] = collision
+        self.config['charge'] = -abs(charge)
         self.config['slider'] = slider
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
@@ -329,7 +329,7 @@ class d3graph:
         elif 'numpy' in str(type(color)):
             color = _get_hexcolor(color, cmap=self.config['cmap'])
         elif isinstance(color, str) and color == 'cluster':
-            color, group, _ = self.get_cluster_color(node_names=node_names)
+            color, group, _ = self.get_cluster_color(node_names=node_names, color=color)
         elif isinstance(color, str):
             color = np.array([color] * nodecount)
         elif color is None:
@@ -410,7 +410,7 @@ class d3graph:
         logger.info('Number of unique nodes: %.0d', len(self.node_properties.keys()))
 
     # compute clusters
-    def get_cluster_color(self, node_names: list = None) -> tuple:
+    def get_cluster_color(self, node_names: list = None, color: str = '#000080') -> tuple:
         """Clustering of graph labels.
 
         Parameters
@@ -428,6 +428,10 @@ class d3graph:
         import networkx as nx
         from community import community_louvain
         if node_names is None: node_names = [*self.node_properties.keys()]
+        if not isinstance(color, str): color = '#000080'
+        # Set defaults
+        labx = {key: {'name': key, 'color': color, 'group': '-1'} for i, key in
+                enumerate(node_names)}
 
         df = adjmat2vec(self.adjmat.copy())
         G = nx.from_pandas_edgelist(df, edge_attr=True, create_using=nx.MultiGraph)
@@ -437,8 +441,13 @@ class d3graph:
         # Extract clusterlabels
         y = list(map(lambda x: cluster_labels.get(x), cluster_labels.keys()))
         hex_colors, _ = cm.fromlist(y, cmap=self.config['cmap'], scheme='hex')
-        labx = {key: {'name': key, 'color': hex_colors[i], 'group': cluster_labels.get(key)} for i, key in
-                enumerate(cluster_labels.keys())}
+        # Update colors and labels based on clustering
+        for i, key in enumerate(cluster_labels.keys()):
+            labx.get(key)['group'] = cluster_labels.get(key)
+            labx.get(key)['color'] = hex_colors[i]
+
+        # labx = {key: {'name': key, 'color': hex_colors[i], 'group': cluster_labels.get(key)} for i, key in
+        #         enumerate(cluster_labels.keys())}
 
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
