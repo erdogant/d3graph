@@ -296,7 +296,7 @@ Customize the properties of one specific node
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat = d3.import_example('bigbang')
+	adjmat, _ = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
@@ -360,7 +360,7 @@ Customize Edge Properties
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat = d3.import_example('bigbang')
+	adjmat, _ = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
@@ -407,7 +407,7 @@ Let's see the differences between the different methods.
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat = d3.import_example('bigbang')
+	adjmat, _ = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
@@ -458,7 +458,7 @@ Each marker can be customized using the ``edge_properties``.
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat = d3.import_example('bigbang')
+	adjmat, _ = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 	# Set some node properties
