@@ -13,8 +13,16 @@ else:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-    install_requires=['pandas', 'numpy', 'colourmap', 'networkx>2', 'ismember', 'jinja2', 'sklearn', 'packaging',
-                      'markupsafe==2.0.1', 'python-louvain'], python_requires='>=3', name='d3graph',
+    install_requires=['pandas',
+                      'numpy',
+                      'colourmap',
+                      'networkx>2',
+                      'ismember',
+                      'jinja2',
+                      'sklearn',
+                      'packaging',
+                      'markupsafe==2.0.1',
+                      'python-louvain'], python_requires='>=3', name='d3graph',
     version=new_version, author="Erdogan Taskesen", author_email="erdogant@gmail.com",
     description="Python package to create interactive network based on d3js.", long_description=long_description,
     long_description_content_type="text/markdown", url="https://erdogant.github.io/d3graph",
