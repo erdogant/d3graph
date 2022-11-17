@@ -106,7 +106,8 @@ class d3graph:
         Parameters
         ----------
         figsize : tuple, (default: (1500, 800))
-            Size of the figure in the browser, [height, width].
+            Size of the figure in the browser, (width, height).
+            (None, None): Use the screen resolution.
         title : String, (default: None)
             Title of the figure.
         filepath : String, (Default: user temp directory)
@@ -552,12 +553,16 @@ class d3graph:
         None.
 
         """
+        # Hide slider.
         show_slider = ['',''] if self.config['show_slider'] else ['<!--', '-->']
+        # Set width and height to screen resolution if None.
+        width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
+        height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
         
         content = {'json_data'    : json_data,
                    'title'        : self.config['network_title'],
-                   'width'        : self.config['figsize'][0],
-                   'height'       : self.config['figsize'][1],
+                   'width'        : width,
+                   'height'       : height,
                    'charge'       : self.config['charge'],
                    'edge_distance': self.config['edge_distance'],
                    'min_slider'   : self.config['slider'][0],

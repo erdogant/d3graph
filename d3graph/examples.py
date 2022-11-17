@@ -13,10 +13,10 @@ d3 = d3graph()
 adjmat, df = d3.import_example('karate')
 
 d3.graph(adjmat, color='cluster')
-d3.show()
+d3.show(figsize=(None, None))
 
 d3.set_node_properties(color='cluster')
-d3.show()
+d3.show(figsize=(1500, 1200))
 
 
 # %% small example
