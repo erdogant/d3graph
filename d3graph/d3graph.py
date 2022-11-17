@@ -71,7 +71,7 @@ class d3graph:
 
     """
 
-    def __init__(self, collision: float = 0.5, charge: int = 250, slider: List[int] = None, verbose: int = 20) -> None:
+    def __init__(self, collision: float = 0.5, charge: int = 450, slider: List[int] = None, verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None:
             slider = [None, None]
