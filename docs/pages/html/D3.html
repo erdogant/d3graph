@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -113,10 +115,10 @@
              
   <hr class="docutils" id="code-directive" />
 <section id="d3-motivation">
-<h1>D3 Motivation<a class="headerlink" href="#d3-motivation" title="Permalink to this headline"></a></h1>
+<h1>D3 Motivation<a class="headerlink" href="#d3-motivation" title="Permalink to this heading"></a></h1>
 <p>D3 is a collection of modules that are designed to work together; you can use the modules independently, or you can use them together as part of the default build. The D3 website provides 168 working charts that allow for performant incremental updates during interaction and supports popular interaction such as dragging, brushing, and zooming. The charts can be used for many purposes, such as quantitative analysis, visualizing hierarchies, creating networks graphs, but also bar plots, line plots, scatter plots, radial plots, geographic projections, and various other interactive visualizations for explorable explanations. Some cherry-picked charts are shown in Figure 1.</p>
 <section id="four-parts">
-<h2>Four parts<a class="headerlink" href="#four-parts" title="Permalink to this headline"></a></h2>
+<h2>Four parts<a class="headerlink" href="#four-parts" title="Permalink to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library is created based on four distinct parts for which each part has its own role in the chart. To pythonize D3, all four parts are connected in an HTML file.</p>
 <blockquote>
 <div><ul class="simple">
@@ -144,19 +146,19 @@
 </figure>
 </section>
 <section id="the-cascading-style-sheets-css">
-<h2>The Cascading Style Sheets (CSS)<a class="headerlink" href="#the-cascading-style-sheets-css" title="Permalink to this headline"></a></h2>
+<h2>The Cascading Style Sheets (CSS)<a class="headerlink" href="#the-cascading-style-sheets-css" title="Permalink to this heading"></a></h2>
 <p>The CSS file is a simple mechanism for adding style in a structured manner to HTML files. For example, CSS files can define the size, color, font, line spacing, indentation, borders, and location of HTML elements. We are going to create force-directed network graphs, for which we will define the overall font sizes, font family, style, colors but also properties specific for the nodes, and edges. You can change the CSS accordingly, and set the properties as you think is best.</p>
 </section>
 <section id="d3-module">
-<h2>D3 module<a class="headerlink" href="#d3-module" title="Permalink to this headline"></a></h2>
+<h2>D3 module<a class="headerlink" href="#d3-module" title="Permalink to this heading"></a></h2>
 <p>The D3 module is the easiest part because it is directly embedded in the final HTML file. The D3 module contains all functions to create any of the charts. No edits in this file are required. The newest version is v7 which can be imported from a local source or the website. However, <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> works with a slightly older version (v3) because many functions were readily created using this version.</p>
 </section>
 <section id="javascript-for-the-network">
-<h2>Javascript for the network<a class="headerlink" href="#javascript-for-the-network" title="Permalink to this headline"></a></h2>
+<h2>Javascript for the network<a class="headerlink" href="#javascript-for-the-network" title="Permalink to this heading"></a></h2>
 <p>The network is build using javascript, and was started with the basic functionality from the D3 website and many functionalities are added to build an interactive force-directed network graph. A slider is included that can break the edges of the network based on the edge value, a double click on a node will highlight the node and its connected edges and many more options to customize the network based on the edge and node properties. The output is a single HTML file that contains the interactive force-directed graph.</p>
 </section>
 <section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline"></a></h2>
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h2>
 <p>It is important to get the data in the right shape for the javascript file. In <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>, the input can be an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. With <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> I solved the issue that a local .json-file using d3.json(), will not work because importing a local csv or json file with D3 is not considered to be safe. Therefore, all data is directly embedded in the final HTML file. However, depending on the amount of data, it can result in a massive HTML file. Nevertheless, embedding the data directly in the HTML will integrate all scripts and data into a single file which can be very practical.</p>
 <hr>
 <center>

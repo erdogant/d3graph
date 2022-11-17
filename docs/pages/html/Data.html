@@ -15,7 +15,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -110,11 +112,11 @@
              
   <hr class="docutils" id="code-directive" />
 <section id="input">
-<h1>Input<a class="headerlink" href="#input" title="Permalink to this headline"></a></h1>
+<h1>Input<a class="headerlink" href="#input" title="Permalink to this heading"></a></h1>
 <p>It is important to get the data in the right shape for the javascript file. In <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>, the input is an adjacency matrix for which the columns and indexes are the nodes and the elements with a values larger than 0 are an edge. The data is converted in a <em>json-file</em> and is embedded in the final HTML file. By embedding the data directly in the HTML file will integrate all scripts and data into a single file which can be very practical. Note that depending on the amount of data, it can result in a heavy HTML file.</p>
 <p>In its simplest form, the input for <code class="docutils literal notranslate"><span class="pre">d3.graph()</span></code> is an adjacency matrix in the form of a <code class="docutils literal notranslate"><span class="pre">pd.DataFrame()</span></code>. The index names are the <em>source</em> nodes and the column names the <em>target</em> nodes. An edge is created when the vertice between the source and target is larger than 0. This value also represents the strength of the edge.</p>
 <section id="adjacency-matrix">
-<h2>Adjacency matrix<a class="headerlink" href="#adjacency-matrix" title="Permalink to this headline"></a></h2>
+<h2>Adjacency matrix<a class="headerlink" href="#adjacency-matrix" title="Permalink to this heading"></a></h2>
 <p>Example of a simple adjacency matrix with 4 nodes. The <em>True</em> booleans represent the value 1 and the <em>False</em> the value 0.</p>
 <table class="docutils align-default">
 <colgroup>
@@ -174,7 +176,7 @@
 <span class="c1"># Initialize</span>
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 <span class="c1"># Load example</span>
-<span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="c1"># target      Amy  Bernadette  Howard  Leonard  Penny  Rajesh  Sheldon</span>
@@ -190,7 +192,7 @@
 </div>
 </section>
 <section id="create-adjacency-matrix">
-<h2>Create adjacency matrix<a class="headerlink" href="#create-adjacency-matrix" title="Permalink to this headline"></a></h2>
+<h2>Create adjacency matrix<a class="headerlink" href="#create-adjacency-matrix" title="Permalink to this heading"></a></h2>
 <p>A manner to create a network is by specifying the <em>source</em> to <em>target</em> nodes with its weights.
 The function <code class="docutils literal notranslate"><span class="pre">vec2adjmat</span></code> helps doing this: <code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.vec2adjmat()</span></code>.
 In the following example we will create the <em>bigbang</em> network from scratch:</p>
@@ -216,7 +218,7 @@ In the following example we will create the <em>bigbang</em> network from scratc
 </section>
 </section>
 <section id="output">
-<h1>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h1>
+<h1>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h1>
 <p>The output is a single HTML file that contains all scripts and data that forms the interactive force-directed graph.
 If no output directory is specfied, the <em>systems temporary directory</em> will be used.
 The following example will write the final HTML to a custom directory with a custome file name.</p>
@@ -227,7 +229,7 @@ The following example will write the final HTML to a custom directory with a cus
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 
 <span class="c1"># Load example</span>
-<span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
 
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 

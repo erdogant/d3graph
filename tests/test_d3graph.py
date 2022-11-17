@@ -25,3 +25,4 @@ def test_clean(d3, helpers) -> None:
     assert all(isinstance(i, int) for i in map(vars(d3_og).get, clean_fields))
     assert not [attr for attr in vars(d3_new) if attr in clean_fields]
     assert not any(hasattr(d3_new, attr) for attr in vars(d3_new) if attr in clean_fields)
+    
