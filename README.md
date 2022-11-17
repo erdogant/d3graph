@@ -11,6 +11,7 @@
 [![Downloads](https://pepy.tech/badge/d3graph/month)](https://pepy.tech/project/d3graph)
 [![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/d3graph/)
 [![Medium](https://img.shields.io/badge/Medium-Blog-green)](https://erdogant.github.io/d3graph/pages/html/Documentation.html#medium-blog)
+[![Donate](https://img.shields.io/badge/Support%20this%20project-grey.svg?logo=github%20sponsors)](https://erdogant.github.io/d3graph/pages/html/Documentation.html#)
 <!---[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-yellow.svg)](https://www.buymeacoffee.com/erdogant)-->
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
 
