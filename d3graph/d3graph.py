@@ -15,6 +15,7 @@ from tempfile import TemporaryDirectory
 from typing import List, Union, Tuple
 from unicodedata import normalize
 
+from community import community_louvain
 import colourmap as cm
 import networkx as nx
 import numpy as np
@@ -233,11 +234,10 @@ class d3graph:
             The text that is shown when hovering over the Node.
             If not specified, the text will inherit from the label.
             * ['tooltip 1','tooltip 2','tooltip 3', ...]
-        color : list of strings (default: '#000080')
+        color : list of strings (default: cluster')
             Color of the node.
-            * 'cluster' : Colours are based on the community distance clusters.
-            * None: All nodes will have the same color (auto generated).
-            * ['#000000']: All nodes will have the same hex color.
+            * 'cluster' or None : Colours are based on the community distance clusters.
+            * '#000000': All nodes will get this hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
@@ -333,7 +333,13 @@ class d3graph:
         elif isinstance(color, str):
             color = np.array([color] * nodecount)
         elif color is None:
-            color = np.array(['#000080'] * nodecount)
+            # Use existing keys if exist
+            color=[]
+            if hasattr(self, 'node_properties'):
+                for node in node_names:
+                    color.append(self.node_properties[node].get('color', '#000080'))
+            else:
+                color = np.array(['#000080'] * nodecount)
         else:
             assert 'Node color not possible'
         if len(color) != nodecount: raise ValueError("[color] must be of same length as the number of nodes")
@@ -425,13 +431,11 @@ class d3graph:
         dict group.
 
         """
-        import networkx as nx
-        from community import community_louvain
         if node_names is None: node_names = [*self.node_properties.keys()]
-        if not isinstance(color, str): color = '#000080'
+        if not isinstance(color, str): color = '#808080'
+        if color=='cluster': color = '#808080'
         # Set defaults
-        labx = {key: {'name': key, 'color': color, 'group': '-1'} for i, key in
-                enumerate(node_names)}
+        labx = {key: {'name': key, 'color': color, 'group': '-1'} for i, key in enumerate(node_names)}
 
         df = adjmat2vec(self.adjmat.copy())
         G = nx.from_pandas_edgelist(df, edge_attr=True, create_using=nx.MultiGraph)
@@ -445,9 +449,6 @@ class d3graph:
         for i, key in enumerate(cluster_labels.keys()):
             labx.get(key)['group'] = cluster_labels.get(key)
             labx.get(key)['color'] = hex_colors[i]
-
-        # labx = {key: {'name': key, 'color': hex_colors[i], 'group': cluster_labels.get(key)} for i, key in
-        #         enumerate(cluster_labels.keys())}
 
         # return
         color = np.array(list(map(lambda x: labx.get(x)['color'], node_names)))
