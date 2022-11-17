@@ -479,7 +479,7 @@ class d3graph:
         self.config['slider'] = [int(min_slider), int(max_slider)]
         logger.info('Slider range is set to [%g, %g]' % (self.config['slider'][0], self.config['slider'][1]))
 
-    def graph(self, adjmat, group: str = 'cluster', scaler: str = 'zscore') -> None:
+    def graph(self, adjmat, color: str = 'cluster', size = 10, scaler: str = 'zscore') -> None:
         """Process the adjacency matrix and set all properties to default.
 
         Description
@@ -491,10 +491,13 @@ class d3graph:
         ----------
         adjmat : pd.DataFrame()
             Adjacency matrix (symmetric). Values > 0 are edges.
-        group : list of strings (default: 'cluster')
-            Grouping (and coloring) of the nodes.
-            * 'cluster' : Colours are based on the community distance clusters.
-            * None: All nodes will have the same color (auto generated).
+        color : list of strings (default: 'cluster')
+            Coloring of the nodes.
+            * 'cluster' or None : Colours are based on the community distance clusters.
+        size : array of integers (default: 5)
+            Size of the nodes.
+            * 10: all nodes sizes are set to 10
+            * [10, 5, 3, 1, ...]: Specify node sizes
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
@@ -535,7 +538,7 @@ class d3graph:
         # Set default edge properties
         self.set_edge_properties(scaler=scaler)
         # Set default node properties
-        self.set_node_properties(color=group, scaler=scaler)
+        self.set_node_properties(color=color, size=size, scaler=scaler)
 
     def write_html(self, json_data, overwrite: bool = True) -> None:
         """Write html.
