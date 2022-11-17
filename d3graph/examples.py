@@ -10,17 +10,12 @@ from d3graph import d3graph
 
 d3 = d3graph()
 # Load example
-adjmat, _ = d3.import_example('small')
+adjmat, df = d3.import_example('karate')
 
-d3.graph(adjmat, group=None)
+d3.graph(adjmat, color='cluster')
 d3.show()
 
 d3.set_node_properties(color='cluster')
-d3.show()
-
-d3.set_node_properties(color=adjmat.columns.values, tooltip=['This is text for node A', 'Text for node B',
-                                                           '\nMore text can be added on a new line\n with the slash n',
-                                                           '', '', '', ''])
 d3.show()
 
 
@@ -86,9 +81,6 @@ d3.graph(adjmat)
 
 d3.set_edge_properties(directed=True)
 d3.show(filepath='c:\\temp\\network1.html')
-
-
-
 
 
 # %% Issue marker edges
@@ -410,8 +402,7 @@ d3.graph(adjmat)
 # d3.set_node_properties(label=df['label'].values, color=df['label'].values, edge_size=df['degree'].values, cmap='Set1')
 # d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='cluster')
 # d3.set_node_properties(label=df['label'].values, edge_color='cluster', edge_size=df['degree'].values, cmap='Set1')
-d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1',
-                       edge_color='#000000')
+d3.set_node_properties(label=df['label'].values, color='cluster', edge_size=df['degree'].values, cmap='Set1', edge_color='#000000')
 
 # Plot
 d3.show()
@@ -429,6 +420,7 @@ adjmat, df = d3.import_example('karate')
 d3.graph(adjmat)
 
 # Plot
-# d3.show()
+d3.show()
+
 
 # %%
