@@ -19,7 +19,7 @@ setuptools.setup(
                       'networkx>2',
                       'ismember',
                       'jinja2',
-                      'sklearn',
+                      'scikit-learn',
                       'packaging',
                       'markupsafe==2.0.1',
                       'python-louvain'], python_requires='>=3', name='d3graph',
