@@ -207,7 +207,7 @@ function d3graphscript(config = {
   function threshold() {
     let thresh = this.value;
 
-    console.log('Setting threshold', thresh)
+    // console.log('Setting threshold', thresh)
     graph.links.splice(0, graph.links.length);
 
     for (var i = 0; i < graphRec.links.length; i++) {
