@@ -4,6 +4,17 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% notebook examples
+from d3graph import d3graph
+d3 = d3graph()
+adjmat, df = d3.import_example('karate')
+d3.graph(adjmat, color='cluster')
+html = d3.show(filepath=None, notebook=False)
+assert html is not None
+html = d3.show(filepath=None, notebook=True)
+assert html is None
+html = d3.show(filepath='test.html', notebook=False)
+assert html is None
 
 # %%
 from d3graph import d3graph

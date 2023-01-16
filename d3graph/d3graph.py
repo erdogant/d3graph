@@ -29,7 +29,6 @@ logger = logging.getLogger('')
 for handler in logger.handlers[:]:
     logger.removeHandler(handler)
 console = logging.StreamHandler()
-# formatter = logging.Formatter('[%(asctime)s] [XXX]> %(levelname)s> %(message)s', datefmt='%H:%M:%S')
 formatter = logging.Formatter('[d3graph] %(levelname)s> %(message)s')
 console.setFormatter(formatter)
 logger.addHandler(console)
@@ -100,7 +99,7 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self, figsize: Tuple[int, int] = (1500, 800), title: str = 'd3graph', filepath: str = 'd3graph.html',
-             showfig: bool = True, overwrite: bool = True, show_slider: bool = True) -> None:
+             showfig: bool = True, overwrite: bool = True, show_slider: bool = True, notebook: bool = False) -> None:
         """Build and show the graph.
 
         Parameters
@@ -119,10 +118,13 @@ class d3graph:
         show_slider : bool, (default: True)
             True: Slider is shown in the HTML.
             False: Slider is not shown in the HTML.
+        notebook : bool
+            True: Use IPython to show chart in notebooks.
+            False: Do not use IPython.
 
         Returns
         -------
-        None.
+        html.
 
         """
         # Some checks
@@ -134,6 +136,7 @@ class d3graph:
         self.config['network_title'] = title
         self.config['show_slider'] = show_slider
         self.config['showfig'] = showfig
+        self.config['notebook'] = notebook
         self.config['filepath'] = self.set_path(filepath)
 
         # Create dataframe from co-occurrence matrix
@@ -143,23 +146,33 @@ class d3graph:
         # Create json
         json_data = json_create(self.G)
         # Create html with json file embedded
-        self.write_html(json_data, overwrite=overwrite)
-        # Open the webbrowser
-        if self.config['showfig']:
-            self.showfig(self.config['filepath'])
-            # webbrowser.open(os.path.abspath(self.config['filepath']), new=2)
-        # Return
-        return self.G
+        html = self.write_html(json_data, overwrite=overwrite)
+        # Display the chart
+        return self.display(html)
 
-    @staticmethod
-    def showfig(filepath: str, sleep: float = 0.5) -> None:
-        """Show figure."""
-        # Sleeping is required to prevent overlapping windows
-        time.sleep(sleep)
-        file_location = os.path.abspath(filepath)
-        if platform == "darwin":  # check if on OSX
-            file_location = "file:///" + file_location
-        webbrowser.open(file_location, new=2)
+    def display(self, html):
+        """Display."""
+        if self.config['notebook']:
+            import IPython
+            logger.info('Display in notebook using IPython.')
+            IPython.display.display(IPython.display.HTML(html))
+        elif self.config['filepath'] is not None:
+            # Open the webbrowser
+            self.open_browser()
+        else:
+            logger.info('Nothing to display when filepath is None and notebook is False. Return HTML.')
+            return html
+
+    def open_browser(self, sleep: float = 0.5) -> None:
+        """Open the browser to show the chart."""
+        if self.config['showfig']:
+            # Sleeping is required to prevent overlapping windows
+            time.sleep(sleep)
+            file_location = os.path.abspath(self.config['filepath'])
+            if platform == "darwin":  # check if on OSX
+                file_location = "file:///" + file_location
+            if os.path.isfile(file_location):
+                webbrowser.open(file_location, new=2)
 
     def set_edge_properties(self, edge_distance: int = None, scaler: str = 'zscore', minmax: List[float] = None, directed: bool = False, marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
         """Edge properties.
@@ -578,14 +591,21 @@ class d3graph:
         except:
             jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
         index_template = jinja_env.get_template('index.html.j2')
-        index_file = Path(self.config['filepath'])
-        logger.info(f'Write to path: [{index_file.absolute()}]')
+        html = index_template.render(content)
+
+        index_file = self.config['filepath']
         # index_file.write_text(index_template.render(content))
-        if os.path.isfile(index_file) and overwrite:
+        if overwrite and index_file:
+            logger.info(f'Write to path: [{index_file.absolute()}]')
             logger.info(f'File already exists and will be overwritten: [{index_file}]')
-            os.remove(index_file)
-        with open(index_file, 'w', encoding='utf-8') as f:
-            f.write(index_template.render(content))
+            if os.path.isfile(index_file): os.remove(index_file)
+            with open(index_file, 'w', encoding='utf-8') as f:
+                f.write(html)
+
+        # Generate html content
+        # write_html_file(config, html, logger)
+        # Return html
+        return html
 
     def set_path(self, filepath='d3graph.html') -> str:
         """Set the file path.
@@ -604,6 +624,9 @@ class d3graph:
             Path to graph.
 
         """
+        if filepath is None:
+            return None
+
         dirname, filename = os.path.split(filepath)
 
         if filename in (None, ''):
@@ -615,7 +638,7 @@ class d3graph:
         os.makedirs(dirname, exist_ok=True)
         filepath = os.path.abspath(os.path.join(dirname, filename))
         logger.debug(f'filepath is set to [{filepath}]')
-        return filepath
+        return Path(filepath)
 
     def import_example(self, network='small'):
         """Import example.
