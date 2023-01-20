@@ -12,7 +12,7 @@ from d3graph.d3graph import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.3.8'
+__version__ = '2.3.9'
 
 
 # module level doc-string
