@@ -98,8 +98,15 @@ class d3graph:
             self.__dict__.pop(attr, None)
         if clean_config and hasattr(self, 'config'): del self.config
 
-    def show(self, figsize: Tuple[int, int] = (1500, 800), title: str = 'd3graph', filepath: str = 'd3graph.html',
-             showfig: bool = True, overwrite: bool = True, show_slider: bool = True, notebook: bool = False) -> None:
+    def show(self,
+             figsize: Tuple[int, int] = (1500, 800),
+             title: str = 'd3graph',
+             filepath: str = 'd3graph.html',
+             showfig: bool = True,
+             overwrite: bool = True,
+             show_slider: bool = True,
+             click: dict = {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
+             notebook: bool = False) -> None:
         """Build and show the graph.
 
         Parameters
@@ -118,6 +125,10 @@ class d3graph:
         show_slider : bool, (default: True)
             True: Slider is shown in the HTML.
             False: Slider is not shown in the HTML.
+        click : dict,
+            On node click event. The size depicts the multiplication factor.
+                * {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}
+                * None : No action on click.
         notebook : bool
             True: Use IPython to show chart in notebooks.
             False: Do not use IPython.
@@ -137,6 +148,7 @@ class d3graph:
         self.config['show_slider'] = show_slider
         self.config['showfig'] = showfig
         self.config['notebook'] = notebook
+        self.config['click'] = click
         self.config['filepath'] = self.set_path(filepath)
 
         # Create dataframe from co-occurrence matrix
@@ -566,12 +578,19 @@ class d3graph:
         None.
 
         """
+        CLICK_COMMENT = ''
+        if self.config['click'] is None:
+            CLICK_COMMENT = '//'
+            self.config['click'] = {}
+        click_properties = {**{'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}, **self.config['click']}
         # Hide slider.
         show_slider = ['',''] if self.config['show_slider'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
         
+
+
         content = {'json_data'    : json_data,
                    'title'        : self.config['network_title'],
                    'width'        : width,
@@ -582,6 +601,13 @@ class d3graph:
                    'max_slider'   : self.config['slider'][1],
                    'directed'     : self.config['directed'],
                    'collision'    : self.config['collision'],
+
+                   'CLICK_COMMENT': CLICK_COMMENT,
+                   'CLICK_FILL'   : click_properties['fill'],
+                   'CLICK_STROKE' : click_properties['stroke'],
+                   'CLICK_SIZE'   : click_properties['size'],
+                   'CLICK_STROKEW': click_properties['stroke-width'],
+                   
                    'slider_comment_start' : show_slider[0],
                    'slider_comment_stop'  : show_slider[1],
                    }

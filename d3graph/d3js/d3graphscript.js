@@ -58,6 +58,9 @@ function d3graphscript(config = {
     .call(force.drag)
     .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
 
+  {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
+
+
   node.append("circle")
     .attr("r", function(d) { return d.node_size; })					// NODE SIZE
     .style("fill", function(d) {return d.node_color;})				// NODE-COLOR
@@ -179,6 +182,28 @@ function d3graphscript(config = {
   function neighboring(a, b) {
     return linkedByIndex[a.index + "," + b.index];
   }
+
+
+    // COLOR ON CLICK
+	function color_on_click() {
+		// Give the original color back
+		d3.selectAll(".node")
+		.select("circle")
+		.style("fill", function(d) {return d.node_color;})
+		.style("stroke", function(d) {return d.node_color_edge;})
+		.style("stroke-width", function(d) {return d.edge_width;})
+		.attr("r", function(d) { return d.node_size; })
+		;
+
+		// Set the color on click
+		d3.select(this).select("circle")
+		.style("fill", "{{ CLICK_FILL }}")
+		.style("stroke", "{{ CLICK_STROKE }}")
+		.style("stroke-width", {{ CLICK_STROKEW }})
+		.attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
+		;}
+
+
 
   function connectedNodes() {
     if (toggle == 0) {

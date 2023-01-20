@@ -4,6 +4,15 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% on click
+from d3graph import d3graph
+d3 = d3graph()
+adjmat, df = d3.import_example('karate')
+d3.graph(adjmat, color='cluster')
+html = d3.show(click={'fill': 'green', 'stroke': 'black', 'size': 2, 'stroke-width': 2}, filepath=r'c:\temp\d3graph\d3graph.html')
+html = d3.show(click=None, filepath=r'c:\temp\d3graph\d3graph.html')
+html = d3.show(filepath=r'c:\temp\d3graph\d3graph.html')
+
 # %% notebook examples
 from d3graph import d3graph
 d3 = d3graph()
