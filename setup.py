@@ -19,7 +19,6 @@ setuptools.setup(
                       'networkx>2',
                       'ismember',
                       'jinja2',
-                      'scikit-learn',
                       'packaging',
                       'markupsafe==2.0.1',
                       'python-louvain'],

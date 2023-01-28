@@ -7,4 +7,3 @@ numpy
 packaging
 pandas
 python-louvain
-scikit-learn

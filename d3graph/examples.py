@@ -4,6 +4,20 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %%
+from d3graph import d3graph
+
+d3 = d3graph()
+# Load example
+adjmat, df = d3.import_example('karate')
+
+d3.graph(adjmat, color='cluster')
+d3.show(figsize=(None, None))
+
+d3.set_node_properties(color='cluster', scaler='minmax')
+d3.show(figsize=(1500, 1200))
+
+
 # %% on click
 from d3graph import d3graph
 d3 = d3graph()
@@ -35,7 +49,7 @@ adjmat, df = d3.import_example('karate')
 d3.graph(adjmat, color='cluster')
 d3.show(figsize=(None, None))
 
-d3.set_node_properties(color='cluster')
+d3.set_node_properties(color='cluster', scaler='minmax')
 d3.show(figsize=(1500, 1200))
 
 

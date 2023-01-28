@@ -23,7 +23,6 @@ import pandas as pd
 from ismember import ismember
 from jinja2 import Environment, PackageLoader
 from packaging import version
-from sklearn.preprocessing import MinMaxScaler
 
 logger = logging.getLogger('')
 for handler in logger.handlers[:]:
@@ -32,7 +31,7 @@ console = logging.StreamHandler()
 formatter = logging.Formatter('[d3graph] %(levelname)s> %(message)s')
 console.setFormatter(formatter)
 logger.addHandler(console)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 # %%
@@ -247,7 +246,16 @@ class d3graph:
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
-    def set_node_properties(self, label: List[str] = None, tooltip: List[str] = None, color: Union[str, List[str]] = '#000080', size=10, edge_color='#000000', edge_size=1, cmap='Set1', scaler='zscore', minmax = [10, 50]):
+    def set_node_properties(self,
+                            label: List[str] = None,
+                            tooltip: List[str] = None,
+                            color: Union[str, List[str]] = '#000080',
+                            size=10,
+                            edge_color='#000000',
+                            edge_size=1,
+                            cmap: str = 'Set1',
+                            scaler: str = 'zscore',
+                            minmax = [10, 50]):
         """Node properties.
 
         Parameters
@@ -588,8 +596,6 @@ class d3graph:
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
-        
-
 
         content = {'json_data'    : json_data,
                    'title'        : self.config['network_title'],
@@ -601,16 +607,15 @@ class d3graph:
                    'max_slider'   : self.config['slider'][1],
                    'directed'     : self.config['directed'],
                    'collision'    : self.config['collision'],
-
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL'   : click_properties['fill'],
                    'CLICK_STROKE' : click_properties['stroke'],
                    'CLICK_SIZE'   : click_properties['size'],
                    'CLICK_STROKEW': click_properties['stroke-width'],
-                   
                    'slider_comment_start' : show_slider[0],
                    'slider_comment_stop'  : show_slider[1],
                    }
+
         # Issue14: https://github.com/erdogant/d3graph/issues/14
         try:
             jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
@@ -925,11 +930,10 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
     G = nx.DiGraph()
     G = edges2G(edge_properties, G=G)
     G = nodes2G(node_properties, G=G)
-
     return G
 
 
-# %% Normalize in good d3 range
+# %% Normalize.
 def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union[int, float] = 4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
@@ -938,6 +942,11 @@ def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
         getsizes = getsizes + (minscale - np.min(getsizes))
     elif scaler == 'minmax':
+        try:
+            from sklearn.preprocessing import MinMaxScaler
+        except:
+            raise Exception('sklearn needs to be pip installed first. Try: pip install scikit-learn')
+        # scaling
         getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
     else:
         getsizes = getsizes.ravel()
