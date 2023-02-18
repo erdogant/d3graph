@@ -1,6 +1,4 @@
-.. _code_directive:
-
--------------------------------------
+.. include:: add_top.add
 
 D3 Motivation
 '''''''''''''''
@@ -42,11 +40,6 @@ Data
 It is important to get the data in the right shape for the javascript file. In ``d3graph``, the input can be an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. With ``d3graph`` I solved the issue that a local .json-file using d3.json(), will not work because importing a local csv or json file with D3 is not considered to be safe. Therefore, all data is directly embedded in the final HTML file. However, depending on the amount of data, it can result in a massive HTML file. Nevertheless, embedding the data directly in the HTML will integrate all scripts and data into a single file which can be very practical.
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+.. include:: add_bottom.add

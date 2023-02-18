@@ -1,6 +1,4 @@
-.. _code_directive:
-
--------------------------------------
+.. include:: add_top.add
 
 Input
 '''''''''''''''
@@ -115,11 +113,6 @@ The following example will write the final HTML to a custom directory with a cus
 	d3.show(filepath='c://temp/d3graph_bigbang.html')
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+.. include:: add_bottom.add

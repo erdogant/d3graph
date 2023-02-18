@@ -17,7 +17,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -81,7 +80,6 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
-<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -110,8 +108,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <hr class="docutils" id="code-directive" />
-<section id="input">
+  <hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="text"></div>
+</center>
+<hr><section id="input">
 <h1>Input<a class="headerlink" href="#input" title="Permalink to this heading"></a></h1>
 <p>It is important to get the data in the right shape for the javascript file. In <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>, the input is an adjacency matrix for which the columns and indexes are the nodes and the elements with a values larger than 0 are an edge. The data is converted in a <em>json-file</em> and is embedded in the final HTML file. By embedding the data directly in the HTML file will integrate all scripts and data into a single file which can be very practical. Note that depending on the amount of data, it can result in a heavy HTML file.</p>
 <p>In its simplest form, the input for <code class="docutils literal notranslate"><span class="pre">d3.graph()</span></code> is an adjacency matrix in the form of a <code class="docutils literal notranslate"><span class="pre">pd.DataFrame()</span></code>. The index names are the <em>source</em> nodes and the column names the <em>target</em> nodes. An edge is created when the vertice between the source and target is larger than 0. This value also represents the strength of the edge.</p>
@@ -239,7 +243,10 @@ The following example will write the final HTML to a custom directory with a cus
 </div>
 <hr>
 <center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div>
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="text"></div> -->
 </center>
 <hr></section>
 

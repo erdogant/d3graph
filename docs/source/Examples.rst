@@ -1,6 +1,4 @@
-.. _code_directive:
-
--------------------------------------
+.. include:: add_top.add
 
 Big Bang network
 ''''''''''''''''''''
@@ -171,11 +169,6 @@ The slider can be hidden from the output HTML by setting the ``show_slider=False
 	d3.show(show_slider=False)
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+.. include:: add_bottom.add

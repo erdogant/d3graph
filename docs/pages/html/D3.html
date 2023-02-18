@@ -17,7 +17,6 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -84,7 +83,6 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
-<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html">API References</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -113,8 +111,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <hr class="docutils" id="code-directive" />
-<section id="d3-motivation">
+  <hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="text"></div>
+</center>
+<hr><section id="d3-motivation">
 <h1>D3 Motivation<a class="headerlink" href="#d3-motivation" title="Permalink to this heading"></a></h1>
 <p>D3 is a collection of modules that are designed to work together; you can use the modules independently, or you can use them together as part of the default build. The D3 website provides 168 working charts that allow for performant incremental updates during interaction and supports popular interaction such as dragging, brushing, and zooming. The charts can be used for many purposes, such as quantitative analysis, visualizing hierarchies, creating networks graphs, but also bar plots, line plots, scatter plots, radial plots, geographic projections, and various other interactive visualizations for explorable explanations. Some cherry-picked charts are shown in Figure 1.</p>
 <section id="four-parts">
@@ -162,7 +166,10 @@
 <p>It is important to get the data in the right shape for the javascript file. In <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>, the input can be an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. With <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> I solved the issue that a local .json-file using d3.json(), will not work because importing a local csv or json file with D3 is not considered to be safe. Therefore, all data is directly embedded in the final HTML file. However, depending on the amount of data, it can result in a massive HTML file. Nevertheless, embedding the data directly in the HTML will integrate all scripts and data into a single file which can be very practical.</p>
 <hr>
 <center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div>
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="text"></div> -->
 </center>
 <hr></section>
 </section>

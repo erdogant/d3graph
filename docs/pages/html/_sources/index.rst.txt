@@ -1,13 +1,19 @@
 D3Graph
 =======
 
-|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
-
-The ``d3graph`` library is a Python library that is built on D3 and creates a stand-alone, and interactive force-directed network graph. It allows the creation, manipulation, and study of the structure, dynamics, and functions of complex networks. The input data is an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. The output is a single HTML file that contains the interactive force-directed graph. ``d3graph`` has several features, among them a slider that can break the edges of the network based on the edge value, a double click on a node will highlight the node and its connected edges and many more options to customize the network based on the edge and node properties.
-
 .. raw:: html
 
    <iframe src="https://erdogant.github.io\docs\d3blocks\d3graph_example3.html" height="775px" width="775px", frameBorder="0"></iframe>
+
+
+|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
+
+
+.. include:: add_top.add
+
+
+The ``d3graph`` library is a Python library that is built on D3 and creates a stand-alone, and interactive force-directed network graph. It allows the creation, manipulation, and study of the structure, dynamics, and functions of complex networks. The input data is an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. The output is a single HTML file that contains the interactive force-directed graph. ``d3graph`` has several features, among them a slider that can break the edges of the network based on the edge value, a double click on a node will highlight the node and its connected edges and many more options to customize the network based on the edge and node properties.
+
 
 -------------------------------------
 
@@ -75,15 +81,6 @@ Indices and tables
 * :ref:`search`
 
 
-.. raw:: html
-
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
-
-
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/d3graph.svg
     :alt: |Python
@@ -109,7 +106,7 @@ Indices and tables
     :alt: Downloads in total
     :target: https://pepy.tech/project/d3graph
 
-.. |license| image:: https://img.shields.io/badge/license-MIT-green.svg
+.. |license| image:: https://img.shields.io/badge/license-BSD3-green.svg
     :alt: License
     :target: https://github.com/erdogant/d3graph/blob/master/LICENSE
 
@@ -137,3 +134,6 @@ Indices and tables
     :alt: Colab example
     :target: https://erdogant.github.io/d3graph/pages/html/Documentation.html#colab-notebook
 
+
+
+.. include:: add_bottom.add
