@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -31,6 +32,9 @@
         <div class="wy-side-nav-search" >
             <a href="index.html" class="icon icon-home"> d3graph
           </a>
+              <div class="version">
+                2.3.10
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -85,6 +89,18 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph"><code class="docutils literal notranslate"><span class="pre">d3graph</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.data_checks"><code class="docutils literal notranslate"><span class="pre">data_checks()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.edges2G"><code class="docutils literal notranslate"><span class="pre">edges2G()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.json_create"><code class="docutils literal notranslate"><span class="pre">json_create()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.library_compatibility_checks"><code class="docutils literal notranslate"><span class="pre">library_compatibility_checks()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.make_graph"><code class="docutils literal notranslate"><span class="pre">make_graph()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.nodes2G"><code class="docutils literal notranslate"><span class="pre">nodes2G()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.remove_special_chars"><code class="docutils literal notranslate"><span class="pre">remove_special_chars()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.set_logger"><code class="docutils literal notranslate"><span class="pre">set_logger()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -113,13 +129,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <hr>
-<center>
-        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
-        <div data-ea-publisher="erdogantgithubio" data-ea-type="text"></div>
-        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="text" data-ea-style="fixedfooter"></div> -->
-</center>
-<hr><section id="big-bang-network">
+  <section id="big-bang-network">
 <h1>Big Bang network<a class="headerlink" href="#big-bang-network" title="Permalink to this heading"></a></h1>
 <section id="default">
 <h2>Default<a class="headerlink" href="#default" title="Permalink to this heading"></a></h2>

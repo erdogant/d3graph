@@ -1,5 +1,3 @@
-.. include:: add_top.add
-
 
 .. automodule:: d3graph.d3graph
     :members:

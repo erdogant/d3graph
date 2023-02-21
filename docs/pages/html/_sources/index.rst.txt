@@ -3,8 +3,6 @@ D3Graph
 
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
 
-.. include:: add_top.add
-
 .. raw:: html
 
    <iframe src="https://erdogant.github.io\docs\d3blocks\d3graph_example3.html" height="775px" width="775px", frameBorder="0"></iframe>
