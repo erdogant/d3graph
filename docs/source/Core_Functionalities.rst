@@ -250,7 +250,7 @@ Change the **node fontsize** and ajust it according to the node color.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_node_text.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_nodefontsize.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 

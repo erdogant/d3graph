@@ -36,7 +36,7 @@ Node colors
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
-Node text colors
+Node fontcolors
 ----------------
 
 .. code:: python
