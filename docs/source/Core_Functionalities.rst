@@ -116,7 +116,8 @@ There are various possabilities to customize the network using the node properti
 	* 2. Node color
 	* 3. Node size
 	* 4. Node edge color
-	* 5. Noe edge size
+	* 5. Node text color
+	* 6. Node edge size
 
 
 Node label
@@ -199,7 +200,7 @@ Lets change the **node colors** from the *karate* example using the label inform
 
 
 Node color on clustering
---------------------------
+------------------------
 
 We can also change the node color on the clustering.
 
@@ -210,6 +211,25 @@ We can also change the node color on the clustering.
 
 	# Plot
 	d3.show()
+
+
+Node text color
+---------------
+
+Lets change the **node text colors** and ajust it according to the node color.
+
+.. code:: python
+
+	# Set node properties
+	d3.set_node_properties(label=df['label'].values, color='cluster', text_color='text_color')
+
+	# Plot
+	d3.show()
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_node_text.html" height="700px" width="850px", frameBorder="0"></iframe>
+
 
 
 Node edge color on clustering

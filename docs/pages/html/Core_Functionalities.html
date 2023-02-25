@@ -75,6 +75,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#tooltips">Tooltips</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color">Node color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-color-on-clustering">Node color on clustering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-text-color">Node text color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-color-on-clustering">Node edge color on clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-size">Node edge size</a></li>
@@ -261,7 +262,11 @@
 </ol>
 </li>
 <li><ol class="arabic simple" start="5">
-<li><p>Noe edge size</p></li>
+<li><p>Node text color</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="6">
+<li><p>Node edge size</p></li>
 </ol>
 </li>
 </ul>
@@ -335,6 +340,17 @@
 </pre></div>
 </div>
 </section>
+<section id="node-text-color">
+<h2>Node text color<a class="headerlink" href="#node-text-color" title="Permalink to this heading"></a></h2>
+<p>Lets change the <strong>node text colors</strong> and ajust it according to the node color.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">text_color</span><span class="o">=</span><span class="s1">&#39;text_color&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_node_text.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-edge-color-on-clustering">
 <h2>Node edge color on clustering<a class="headerlink" href="#node-edge-color-on-clustering" title="Permalink to this heading"></a></h2>
 <p>We can also change the node color on the clustering.</p>
