@@ -111,7 +111,7 @@ class d3graph:
              showfig: bool = True,
              overwrite: bool = True,
              show_slider: bool = True,
-             click: dict = {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
+             click: dict = {'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
              notebook: bool = False) -> None:
         """Build and show the graph.
 
@@ -134,6 +134,7 @@ class d3graph:
         click : dict,
             On node click event. The size depicts the multiplication factor.
                 * {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}
+                * {'fill': None, 'stroke': '#FFF000', 'size': 2, 'stroke-width': 1}
                 * None : No action on click.
         notebook : bool
             True: Use IPython to show chart in notebooks.
@@ -615,7 +616,10 @@ class d3graph:
         if self.config['click'] is None:
             CLICK_COMMENT = '//'
             self.config['click'] = {}
-        click_properties = {**{'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}, **self.config['click']}
+        click_properties = {**{'fill': "function(d) {return d.node_color;}", 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}, **self.config['click']}
+        if click_properties.get('fill', None) is None:
+            click_properties['fill'] = "function(d) {return d.node_color;}"
+        
         # Hide slider.
         show_slider = ['',''] if self.config['show_slider'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
