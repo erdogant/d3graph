@@ -11,27 +11,27 @@ from d3graph import d3graph
 d3 = d3graph()
 adjmat, df = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
-d3.set_node_properties(color='cluster', scaler='minmax', text_color='node_color', fontsize=14)
+d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=14)
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
-d3.set_node_properties(color='cluster', scaler='minmax', text_color='node_color', fontsize=[20,20,20,10,10,10,30])
+d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=[20,20,20,10,10,10,30])
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
 # %% 
 from d3graph import d3graph
-d3 = d3graph()
 adjmat, df = d3.import_example('bigbang')
+d3.graph(adjmat, color='cluster')
 
 hexcolors = ['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF']
 colors = ['cluster', '#000FFF', hexcolors]
 text_colors = ['node_color', 'cluster', '#000FFF', hexcolors]
 
 for color in colors:
-    for text_color in text_colors:
+    for fontcolor in text_colors:
         print('-----------------')
         print('color: %s' %(str(color)))
-        print('text_color: %s' %(str(text_color)))
-        d3.set_node_properties(color=color, scaler='minmax', text_color=text_color)
+        print('fontcolor: %s' %(str(fontcolor)))
+        d3.set_node_properties(color=color, scaler='minmax', fontcolor=fontcolor)
         d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
         input('press enter')
 

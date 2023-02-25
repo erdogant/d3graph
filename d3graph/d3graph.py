@@ -260,8 +260,8 @@ class d3graph:
                             size: Union[int, List[int]] = 10,
                             edge_color: Union[str, List[str]] = '#000000',
                             edge_size: Union[int, List[int]] = 1,
-                            text_color: Union[str, List[str]] = 'node_color',
-                            fontsize: Union[int, List[int]] = 10,
+                            fontcolor: Union[str, List[str]] = 'node_color',
+                            fontsize: Union[int, List[int]] = 12,
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
                             minmax = [10, 50]):
@@ -284,7 +284,7 @@ class d3graph:
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
-        text_color : list of strings (default: node_color')
+        fontcolor : list of strings (default: node_color')
             Color of the node.
             * 'node_color' : Colours are inherited from the node color
             * 'cluster' : Colours are based on the community distance clusters.
@@ -331,7 +331,7 @@ class d3graph:
                 'label': Label of the node
                 'color': color of the node
                 'size': size of the node
-                'text_color': color of the node text
+                'fontcolor': color of the node text
                 'fontsize': node text size
                 'edge_size': edge_size of the node
                 'edge_color': edge_color of the node
@@ -396,7 +396,7 @@ class d3graph:
         if len(color) != nodecount: raise ValueError("[color] must be of same length as the number of nodes")
 
         ############# Set node text color #############
-        text_color = _set_node_text_color(self, text_color, color, node_names, nodecount)
+        fontcolor = _set_node_fontcolor(self, fontcolor, color, node_names, nodecount)
 
         ############# Set node text color #############
         fontsize = _set_node_fontsize(self, fontsize, nodecount)
@@ -465,7 +465,7 @@ class d3graph:
                                           'label'        : label[i],
                                           'tooltip'      : tooltip[i],
                                           'color'        : color[i].astype(str),
-                                          'text_color'   : text_color[i].astype(str),
+                                          'fontcolor'   : fontcolor[i].astype(str),
                                           'fontsize'    : fontsize[i].astype(int),
                                           'size'         : size[i],
                                           'edge_size'    : edge_size[i],
@@ -796,7 +796,7 @@ def json_create(G: nx.Graph) -> str:
         nodes[i]['node_size'] = nodes[i].pop('size')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
-        nodes[i]['node_text_color'] = nodes[i].pop('text_color')
+        nodes[i]['node_fontcolor'] = nodes[i].pop('fontcolor')
         nodes[i]['node_fontsize'] = nodes[i].pop('fontsize')
         # Combine all information into new list
         nodes_new[i] = nodes[i]
@@ -1190,7 +1190,7 @@ def _set_node_fontsize(self, fontsize, nodecount):
         pass
     elif isinstance(fontsize, type(None)):
         # Set all nodes to the same default size of 10
-        fontsize = np.ones(nodecount, dtype=int) * 14
+        fontsize = np.ones(nodecount, dtype=int) * 12
     elif isinstance(fontsize, (int, float)):
         fontsize = np.ones(nodecount, dtype=int) * fontsize
     else:
@@ -1199,28 +1199,28 @@ def _set_node_fontsize(self, fontsize, nodecount):
     return fontsize
 
 
-def _set_node_text_color(self, text_color, color, node_names, nodecount):
+def _set_node_fontcolor(self, fontcolor, color, node_names, nodecount):
     # Set as node color
-    if isinstance(text_color, str) and text_color == 'node_color':
-        text_color = color.copy()
-    elif isinstance(text_color, str) and text_color == 'cluster':
-        text_color, _, _ = self.get_cluster_color(node_names=node_names, color=text_color)
-    elif isinstance(text_color, list) and len(text_color) == nodecount:
-        text_color = np.array(text_color)
-    elif 'numpy' in str(type(text_color)):
-        text_color = _get_hexcolor(text_color, cmap=self.config['cmap'])
-    elif isinstance(text_color, str):
-        text_color = np.array([text_color] * nodecount)
-    elif text_color is None:
+    if isinstance(fontcolor, str) and fontcolor == 'node_color':
+        fontcolor = color.copy()
+    elif isinstance(fontcolor, str) and fontcolor == 'cluster':
+        fontcolor, _, _ = self.get_cluster_color(node_names=node_names, color=fontcolor)
+    elif isinstance(fontcolor, list) and len(fontcolor) == nodecount:
+        fontcolor = np.array(fontcolor)
+    elif 'numpy' in str(type(fontcolor)):
+        fontcolor = _get_hexcolor(fontcolor, cmap=self.config['cmap'])
+    elif isinstance(fontcolor, str):
+        fontcolor = np.array([fontcolor] * nodecount)
+    elif fontcolor is None:
         # Use existing keys if exist
-        text_color=[]
+        fontcolor=[]
         if hasattr(self, 'node_properties'):
             for node in node_names:
-                text_color.append(self.node_properties[node].get('text_color', '#000080'))
+                fontcolor.append(self.node_properties[node].get('fontcolor', '#000080'))
         else:
-            text_color = np.array(['#000080'] * nodecount)
+            fontcolor = np.array(['#000080'] * nodecount)
     else:
-        assert 'text_color not possible'
-    if len(text_color) != nodecount: raise ValueError("[text_color] must be of same length as the number of nodes")
+        assert 'fontcolor not possible'
+    if len(fontcolor) != nodecount: raise ValueError("[fontcolor] must be of same length as the number of nodes")
     # return
-    return text_color
+    return fontcolor

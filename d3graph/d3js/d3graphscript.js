@@ -74,7 +74,7 @@ function d3graphscript(config = {
     .attr("dy", ".35em")
     .text(function(d) {return d.node_name}) // NODE-TEXT
     .style("font-size", function(d) {return d.node_fontsize + "px";}) // set font size equal to node edge size
-	.style("fill", function(d) {return d.node_text_color;}); // set the text fill color to the same as node color
+	.style("fill", function(d) {return d.node_fontcolor;}); // set the text fill color to the same as node color
   //  .style("stroke", "gray");
 
   let showInHover = ["node_tooltip"]; // Tooltip
