@@ -221,7 +221,7 @@ Lets change the **node text colors** and ajust it according to the node color.
 .. code:: python
 
 	# Set node properties
-	d3.set_node_properties(label=df['label'].values, color='cluster', text_color='text_color')
+	d3.set_node_properties(label=df['label'].values, color='cluster', text_color='node_color')
 
 	# Plot
 	d3.show()
