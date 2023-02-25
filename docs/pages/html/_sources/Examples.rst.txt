@@ -36,6 +36,20 @@ Node colors
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
+Node text colors
+----------------
+
+.. code:: python
+
+	d3.set_node_properties(color='cluster', text_color='node_color')
+	d3.show()
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_text_color.html" height="700px" width="850px", frameBorder="0"></iframe>
+
+
+
 Node sizes
 ----------
 
