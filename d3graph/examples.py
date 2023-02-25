@@ -4,6 +4,30 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+
+# %% Change color of text
+from d3graph import d3graph
+
+d3 = d3graph()
+# Load example
+adjmat, df = d3.import_example('bigbang')
+
+d3.graph(adjmat, color='cluster')
+# d3.set_node_properties(color='#00FFFF', scaler='minmax', text_color=['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF'])
+
+hexcolors = ['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF']
+colors = ['cluster', '#000FFF', hexcolors]
+text_colors = ['node_color', 'cluster', '#000FFF', hexcolors]
+
+for color in colors:
+    for text_color in text_colors:
+        print('-----------------')
+        print('color: %s' %(str(color)))
+        print('text_color: %s' %(str(text_color)))
+        d3.set_node_properties(color=color, scaler='minmax', text_color=text_color)
+        d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
+        input('press enter')
+
 # %%
 from d3graph import d3graph
 

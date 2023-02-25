@@ -33,6 +33,13 @@ console.setFormatter(formatter)
 logger.addHandler(console)
 logger = logging.getLogger(__name__)
 
+# logger = logging.getLogger(__name__)
+# console = logging.StreamHandler()
+# formatter = logging.Formatter('[d3graph] >%(levelname)s> %(message)s')
+# console.setFormatter(formatter)
+# logger.addHandler(console)
+# logger.propagate = False
+
 
 # %%
 class d3graph:
@@ -250,9 +257,10 @@ class d3graph:
                             label: List[str] = None,
                             tooltip: List[str] = None,
                             color: Union[str, List[str]] = '#000080',
-                            size=10,
-                            edge_color='#000000',
-                            edge_size=1,
+                            size: Union[int, List[int]] = 10,
+                            edge_color: Union[str, List[str]] = '#000000',
+                            edge_size: Union[int, List[int]] = 1,
+                            text_color: Union[str, List[str]] = 'node_color',
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
                             minmax = [10, 50]):
@@ -273,7 +281,15 @@ class d3graph:
             * 'cluster' or None : Colours are based on the community distance clusters.
             * '#000000': All nodes will get this hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
-            * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
+            * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
+            * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
+        text_color : list of strings (default: node_color')
+            Color of the node.
+            * 'node_color' : Colours are inherited from the node color
+            * 'cluster' : Colours are based on the community distance clusters.
+            * '#000000': All nodes will get this hex color.
+            * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
+            * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
         size : array of integers (default: 5)
             Size of the nodes.
@@ -283,7 +299,7 @@ class d3graph:
             Edge color of the node.
             * 'cluster' : Colours are based on the community distance clusters.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
-            * ['A']: All nodes will have hte same color. Color is generated on CMAP and the unique labels.
+            * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
         edge_size : array of integers (default: 1)
             Size of the node edge. Note that node edge sizes are automatically scaled between [0.1 - 4].
@@ -310,6 +326,7 @@ class d3graph:
                 'label': Label of the node
                 'color': color of the node
                 'size': size of the node
+                'text_color': color of the node text
                 'edge_size': edge_size of the node
                 'edge_color': edge_color of the node
 
@@ -319,19 +336,13 @@ class d3graph:
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
         group = np.zeros_like(node_names).astype(int)
-        if isinstance(color, str) and len(color) != 7: raise ValueError(
-            'Input parameter [color] has wrong format. Must be like color="#000000"')
-        if isinstance(color, list) and len(color) == 0: raise ValueError(
-            'Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
-        if isinstance(color, list) and (not np.all(list(map(lambda x: len(x) == 7, color)))): raise ValueError(
-            '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
-        if isinstance(color, list) and len(color) != nodecount:
-            raise ValueError(f'Input parameter [color] has wrong length. Must be of length: {str(nodecount)}')
-
+        # Check validity of color.
+        _check_hex_color(color, nodecount)
+        # Store in config
         self.config['cmap'] = 'Paired' if cmap is None else cmap
         self.config['node_scaler'] = scaler
 
-        # Set node label
+        ############# Set node label #############
         if isinstance(label, list):
             label = np.array(label).astype(str)
         elif 'numpy' in str(type(label)):
@@ -344,7 +355,7 @@ class d3graph:
             label = np.array([''] * nodecount)
         if len(label) != nodecount: raise ValueError("[label] must be of same length as the number of nodes")
 
-        # tooltip text
+        ############# tooltip text #############
         if isinstance(tooltip, list):
             tooltip = np.array(tooltip).astype(str)
         elif 'numpy' in str(type(tooltip)):
@@ -357,7 +368,7 @@ class d3graph:
             tooltip = np.array([''] * nodecount)
         if len(tooltip) != nodecount: raise ValueError("[tooltip text] must be of same length as the number of nodes")
 
-        # Set node color
+        ############# Set node color #############
         if isinstance(color, list) and len(color) == nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
@@ -378,7 +389,10 @@ class d3graph:
             assert 'Node color not possible'
         if len(color) != nodecount: raise ValueError("[color] must be of same length as the number of nodes")
 
-        # Set node color edge
+        ############# Set node text color #############
+        text_color = _set_node_text_color(self, text_color, color, node_names, nodecount)
+
+        ########### Set node color edge #############
         if isinstance(edge_color, list):
             edge_color = np.array(edge_color)
         elif 'numpy' in str(type(edge_color)):
@@ -402,7 +416,7 @@ class d3graph:
         # Check length edge color with node count. This should match.
         if len(edge_color) != nodecount: raise ValueError("[edge_color] must be of same length as the number of nodes")
 
-        # Set node size
+        ############# Set node size #############
         if isinstance(size, list):
             size = np.array(size)
         elif 'numpy' in str(type(size)):
@@ -418,7 +432,7 @@ class d3graph:
         size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler=self.config['node_scaler'])
         if len(size) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
 
-        # Set node edge size
+        ############# Set node edge size #############
         if isinstance(edge_size, list):
             edge_size = np.array(edge_size)
         elif 'numpy' in str(type(edge_size)):
@@ -431,17 +445,18 @@ class d3graph:
         else:
             raise ValueError(logger.error("Node edge size not possible"))
 
-        # Scale the edge-sizes
+        ############# Scale the edge-sizes #############
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.5, 4, scaler=self.config['node_scaler'])
         if len(edge_size) != nodecount: raise ValueError("[edge_size] must be of same length as the number of nodes")
 
-        # Store in dict
+        ############# Store in dict #############
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {'name'         : node,
                                           'label'        : label[i],
                                           'tooltip'      : tooltip[i],
                                           'color'        : color[i].astype(str),
+                                          'text_color'   : text_color[i].astype(str),
                                           'size'         : size[i],
                                           'edge_size'    : edge_size[i],
                                           'edge_color'   : edge_color[i],
@@ -771,6 +786,7 @@ def json_create(G: nx.Graph) -> str:
         nodes[i]['node_size'] = nodes[i].pop('size')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
+        nodes[i]['node_text_color'] = nodes[i].pop('text_color')
         # Combine all information into new list
         nodes_new[i] = nodes[i]
     data = {'links': links_new, 'nodes': nodes_new}
@@ -1143,3 +1159,41 @@ def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
     adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
     return adjmat
+
+
+def _check_hex_color(color, n=None):
+    if isinstance(color, str) and len(color) != 7: raise ValueError(
+        'Input parameter [color] has wrong format. Must be like color="#000000"')
+    if isinstance(color, list) and len(color) == 0: raise ValueError(
+        'Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
+    if isinstance(color, list) and (not np.all(list(map(lambda x: len(x) == 7, color)))): raise ValueError(
+        '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
+    if (n is not None) and isinstance(color, list) and len(color) != n:
+        raise ValueError(f'Input parameter [color] has wrong length. Must be of length: {str(n)}')
+
+
+def _set_node_text_color(self, text_color, color, node_names, nodecount):
+    # Set as node color
+    if isinstance(text_color, str) and text_color == 'node_color':
+        text_color = color.copy()
+    elif isinstance(text_color, str) and text_color == 'cluster':
+        text_color, _, _ = self.get_cluster_color(node_names=node_names, color=text_color)
+    elif isinstance(text_color, list) and len(text_color) == nodecount:
+        text_color = np.array(text_color)
+    elif 'numpy' in str(type(text_color)):
+        text_color = _get_hexcolor(text_color, cmap=self.config['cmap'])
+    elif isinstance(text_color, str):
+        text_color = np.array([text_color] * nodecount)
+    elif text_color is None:
+        # Use existing keys if exist
+        text_color=[]
+        if hasattr(self, 'node_properties'):
+            for node in node_names:
+                text_color.append(self.node_properties[node].get('text_color', '#000080'))
+        else:
+            text_color = np.array(['#000080'] * nodecount)
+    else:
+        assert 'text_color not possible'
+    if len(text_color) != nodecount: raise ValueError("[text_color] must be of same length as the number of nodes")
+    # return
+    return text_color
