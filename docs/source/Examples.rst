@@ -41,7 +41,7 @@ Node text colors
 
 .. code:: python
 
-	d3.set_node_properties(color='cluster', text_color='node_color')
+	d3.set_node_properties(color='cluster', fontcolor='node_color')
 	d3.show()
 
 .. raw:: html

@@ -11,10 +11,14 @@ from d3graph import d3graph
 d3 = d3graph()
 adjmat, df = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
-d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=14)
+d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=12)
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
-d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=[20,20,20,10,10,10,30])
+d3 = d3graph()
+adjmat, df = d3.import_example('bigbang')
+
+fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
+d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=fontsize)
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
 # %% 
