@@ -9,11 +9,15 @@ from d3graph import d3graph, adjmat2vec
 from d3graph import d3graph
 
 d3 = d3graph()
-# Load example
 adjmat, df = d3.import_example('bigbang')
-
 d3.graph(adjmat, color='cluster')
-# d3.set_node_properties(color='#00FFFF', scaler='minmax', text_color=['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF'])
+d3.set_node_properties(color='cluster', scaler='minmax', text_color='node_color')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
+
+# %% 
+from d3graph import d3graph
+d3 = d3graph()
+adjmat, df = d3.import_example('bigbang')
 
 hexcolors = ['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF']
 colors = ['cluster', '#000FFF', hexcolors]
