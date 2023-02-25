@@ -619,30 +619,33 @@ class d3graph:
         click_properties = {**{'fill': "function(d) {return d.node_color;}", 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}, **self.config['click']}
         if click_properties.get('fill', None) is None:
             click_properties['fill'] = "function(d) {return d.node_color;}"
-        
-        # Hide slider.
-        show_slider = ['',''] if self.config['show_slider'] else ['<!--', '-->']
+        # Set quotes surrounding the color name
+        if click_properties['fill'] != "function(d) {return d.node_color;}":
+            click_properties['fill'] = '"' + click_properties['fill'] + '"'
+
+        # Hide slider
+        show_slider = ['', ''] if self.config['show_slider'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
 
-        content = {'json_data'    : json_data,
-                   'title'        : self.config['network_title'],
-                   'width'        : width,
-                   'height'       : height,
-                   'charge'       : self.config['charge'],
+        content = {'json_data': json_data,
+                   'title': self.config['network_title'],
+                   'width': width,
+                   'height': height,
+                   'charge': self.config['charge'],
                    'edge_distance': self.config['edge_distance'],
-                   'min_slider'   : self.config['slider'][0],
-                   'max_slider'   : self.config['slider'][1],
-                   'directed'     : self.config['directed'],
-                   'collision'    : self.config['collision'],
+                   'min_slider': self.config['slider'][0],
+                   'max_slider': self.config['slider'][1],
+                   'directed': self.config['directed'],
+                   'collision': self.config['collision'],
                    'CLICK_COMMENT': CLICK_COMMENT,
-                   'CLICK_FILL'   : click_properties['fill'],
-                   'CLICK_STROKE' : click_properties['stroke'],
-                   'CLICK_SIZE'   : click_properties['size'],
+                   'CLICK_FILL': click_properties['fill'],
+                   'CLICK_STROKE': click_properties['stroke'],
+                   'CLICK_SIZE': click_properties['size'],
                    'CLICK_STROKEW': click_properties['stroke-width'],
-                   'slider_comment_start' : show_slider[0],
-                   'slider_comment_stop'  : show_slider[1],
+                   'slider_comment_start': show_slider[0],
+                   'slider_comment_stop': show_slider[1],
                    }
 
         # Issue14: https://github.com/erdogant/d3graph/issues/14

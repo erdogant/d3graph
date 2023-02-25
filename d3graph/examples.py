@@ -13,6 +13,7 @@ adjmat, df = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
 d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=12)
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html', click={'fill': 'black'})
+d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
 fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
 d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=fontsize)

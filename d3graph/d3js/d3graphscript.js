@@ -199,7 +199,7 @@ function d3graphscript(config = {
 
 		// Set the color on click
 		d3.select(this).select("circle")
-		.style("fill", "{{ CLICK_FILL }}")
+		.style("fill", {{ CLICK_FILL }})
 		.style("stroke", "{{ CLICK_STROKE }}")
 		.style("stroke-width", {{ CLICK_STROKEW }})
 		.attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
