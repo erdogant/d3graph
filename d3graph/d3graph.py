@@ -261,6 +261,7 @@ class d3graph:
                             edge_color: Union[str, List[str]] = '#000000',
                             edge_size: Union[int, List[int]] = 1,
                             text_color: Union[str, List[str]] = 'node_color',
+                            fontsize: Union[int, List[int]] = 10,
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
                             minmax = [10, 50]):
@@ -291,6 +292,10 @@ class d3graph:
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
+        fontsize : array of integers (default: 10)
+            Size of the node text..
+            * 10: All nodes will be set on this size,
+            * [10, 20, 5,...]  Specify per node the text size.
         size : array of integers (default: 5)
             Size of the nodes.
             * 10: all nodes sizes are set to 10
@@ -327,6 +332,7 @@ class d3graph:
                 'color': color of the node
                 'size': size of the node
                 'text_color': color of the node text
+                'fontsize': node text size
                 'edge_size': edge_size of the node
                 'edge_color': edge_color of the node
 
@@ -391,6 +397,9 @@ class d3graph:
 
         ############# Set node text color #############
         text_color = _set_node_text_color(self, text_color, color, node_names, nodecount)
+
+        ############# Set node text color #############
+        fontsize = _set_node_fontsize(self, fontsize, nodecount)
 
         ########### Set node color edge #############
         if isinstance(edge_color, list):
@@ -457,6 +466,7 @@ class d3graph:
                                           'tooltip'      : tooltip[i],
                                           'color'        : color[i].astype(str),
                                           'text_color'   : text_color[i].astype(str),
+                                          'fontsize'    : fontsize[i].astype(int),
                                           'size'         : size[i],
                                           'edge_size'    : edge_size[i],
                                           'edge_color'   : edge_color[i],
@@ -787,6 +797,7 @@ def json_create(G: nx.Graph) -> str:
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
         nodes[i]['node_text_color'] = nodes[i].pop('text_color')
+        nodes[i]['node_fontsize'] = nodes[i].pop('fontsize')
         # Combine all information into new list
         nodes_new[i] = nodes[i]
     data = {'links': links_new, 'nodes': nodes_new}
@@ -1170,6 +1181,22 @@ def _check_hex_color(color, n=None):
         '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
     if (n is not None) and isinstance(color, list) and len(color) != n:
         raise ValueError(f'Input parameter [color] has wrong length. Must be of length: {str(n)}')
+
+
+def _set_node_fontsize(self, fontsize, nodecount):
+    if isinstance(fontsize, list):
+        fontsize = np.array(fontsize)
+    elif 'numpy' in str(type(fontsize)):
+        pass
+    elif isinstance(fontsize, type(None)):
+        # Set all nodes to the same default size of 10
+        fontsize = np.ones(nodecount, dtype=int) * 14
+    elif isinstance(fontsize, (int, float)):
+        fontsize = np.ones(nodecount, dtype=int) * fontsize
+    else:
+        raise ValueError(logger.error("Node edge size not possible"))
+
+    return fontsize
 
 
 def _set_node_text_color(self, text_color, color, node_names, nodecount):
