@@ -116,8 +116,9 @@ There are various possabilities to customize the network using the node properti
 	* 2. Node color
 	* 3. Node size
 	* 4. Node edge color
-	* 5. Node text color
-	* 6. Node edge size
+	* 5. Node fontcolor
+	* 6. Node fontsize
+	* 7. Node edge size
 
 
 Node label
