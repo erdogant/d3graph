@@ -193,7 +193,7 @@ class d3graph:
             if os.path.isfile(file_location):
                 webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance: int = None, scaler: str = 'zscore', minmax: List[float] = None, directed: bool = False, marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
+    def set_edge_properties(self, edge_distance: int = None, scaler: str = 'zscore', minmax: List[float] = None, directed: bool = False, marker_start=None, marker_end='arrow', marker_color='#808080', label='') -> dict:
         """Edge properties.
 
         Parameters
@@ -238,6 +238,7 @@ class d3graph:
         self.config['marker_start'] = marker_start
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
+        self.config['label'] = label
 
         if (not directed) and (marker_end is not None) or (marker_start is not None):
             logger.info('Set directed=True to see the markers!')
@@ -250,7 +251,9 @@ class d3graph:
                                            scaler=self.config['edge_scaler'],
                                            marker_start=self.config['marker_start'],
                                            marker_end=self.config['marker_end'],
-                                           marker_color=self.config['marker_color'])
+                                           marker_color=self.config['marker_color'],
+                                           label=self.config['label'],
+                                           )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
@@ -792,6 +795,7 @@ def json_create(G: nx.Graph) -> str:
         links[i]['marker_start'] = links[i]['marker_start']
         links[i]['marker_end'] = links[i]['marker_end']
         links[i]['marker_color'] = links[i]['marker_color']
+        links[i]['label'] = links[i]['label']
         links_new.append(links[i])
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodes_new = [None] * len(nodes)
@@ -812,7 +816,7 @@ def json_create(G: nx.Graph) -> str:
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zscore', minmax=None, marker_start=None, marker_end='arrow', marker_color='#808080') -> dict:
+def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zscore', minmax=None, marker_start=None, marker_end='arrow', marker_color='#808080', label='') -> dict:
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -840,6 +844,7 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
             'marker_start': '', 'circle', 'square', 'arrow', 'stub'
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
             'marker_color': hex color of the marker.
+            'label': Text label for the edge.
 
     """
     # Convert adjacency matrix into vector
@@ -867,14 +872,21 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
     # Set marker start-end
     if marker_start is None: marker_start=''
     if marker_end is None: marker_end=''
+    if label is None: label=''
     df['marker_start']=marker_start
     df['marker_end']=marker_end
     df['marker_color']=marker_color
+    df['label']=label
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
     # Return
-    return {edge: {'weight': df['weight'].iloc[i], 'weight_scaled': df['weight_scaled'].iloc[i], 'color': '#808080', 'marker_start': df['marker_start'].iloc[i], 'marker_end': df['marker_end'].iloc[i], 'marker_color': df['marker_color'].iloc[i]} for
+    return {edge: {'weight': df['weight'].iloc[i],
+                   'weight_scaled': df['weight_scaled'].iloc[i],
+                   'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
+                   'marker_end': df['marker_end'].iloc[i],
+                   'marker_color': df['marker_color'].iloc[i],
+                   'label': df['label'].iloc[i]} for
             i, edge in enumerate(source_target)}
 
 
@@ -906,7 +918,9 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    marker_end=edge_properties[edge]['marker_end'],
                    weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
                    weight=np.abs(edge_properties[edge]['weight']),
-                   color=edge_properties[edge]['color'])
+                   color=edge_properties[edge]['color'],
+                   label=edge_properties[edge]['label'],
+                   )
     return G
 
 

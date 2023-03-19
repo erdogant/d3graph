@@ -23,6 +23,7 @@ function d3graphscript(config = {
     .linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
     .size([width, height]);
 
+  // DRAGGING START
   function dragstarted(d) {
     d3.event.sourceEvent.stopPropagation();
     d3.select(this).classed("dragging", true);
@@ -42,10 +43,13 @@ function d3graphscript(config = {
     .on("drag", dragged)
     .on("dragend", dragended);
 
+  // DRAGGING STOP
+
   //Append a SVG to the body of the html page. Assign this SVG as an object to svg
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
+    // DRAGGING
     .call(d3.behavior.zoom().on("zoom", function () {
       svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
     }))
