@@ -4,6 +4,14 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% Edge link
+d3 = d3graph()
+adjmat, df = d3.import_example('bigbang')
+d3.graph(adjmat, color='cluster')
+d3.set_edge_properties(directed=True, marker_end='square', marker_color='#000000', label='TEST')
+
+d3.edge_properties
+d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
 
 # %% Change color of text
 from d3graph import d3graph
