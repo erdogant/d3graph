@@ -23,6 +23,11 @@ function d3graphscript(config = {
     .linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
     .size([width, height]);
 
+  function dragstarted(d) {
+    d3.event.sourceEvent.stopPropagation();
+    d3.select(this).classed("dragging", true);
+  }
+
   function dragged(d) {
     d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
   }
