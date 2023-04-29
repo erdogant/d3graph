@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Big Bang network &mdash; d3graph d3graph documentation</title>
@@ -13,16 +13,13 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Sponsor" href="Documentation.html" />
-    <link rel="prev" title="Core Functionalities" href="Core_Functionalities.html" /> 
+    <link rel="prev" title="On Click Actions" href="On%20Click%20Actions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -30,14 +27,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> d3graph
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            d3graph
           </a>
               <div class="version">
-                2.4.1
+                2.4.3
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -64,8 +65,9 @@
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html">Core Functionalities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html#node-properties">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Node%20properties.html">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Edge%20properties.html">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="On%20Click%20Actions.html">On Click Actions</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
@@ -81,7 +83,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#karate-club-network">Karate Club network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#hide-slider">Hide Slider</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -119,8 +120,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Big Bang network</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Big Bang network</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Examples.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -244,21 +245,6 @@
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="hide-slider">
-<h1>Hide Slider<a class="headerlink" href="#hide-slider" title="Permalink to this heading"></a></h1>
-<p>The slider can be hidden from the output HTML by setting the <code class="docutils literal notranslate"><span class="pre">show_slider=False</span></code> parameter.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
-
-<span class="c1"># Initialize</span>
-<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
-<span class="c1"># Load example</span>
-<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
-<span class="c1"># Process adjmat</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">show_slider</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -272,7 +258,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Core_Functionalities.html" class="btn btn-neutral float-left" title="Core Functionalities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="On%20Click%20Actions.html" class="btn btn-neutral float-left" title="On Click Actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="Documentation.html" class="btn btn-neutral float-right" title="Sponsor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -60,6 +60,8 @@ Content
   :caption: Methods
 
   Core_Functionalities
+  Node properties
+  Edge properties
   On Click Actions
 
 

@@ -1,8 +1,8 @@
 Big Bang network
-''''''''''''''''''''
+####################
 
 Default
---------------------------------------------------
+************************************
 
 .. code:: python
 
@@ -24,7 +24,7 @@ Default
 
 
 Node colors
-------------
+************************************
 
 .. code:: python
 
@@ -37,7 +37,7 @@ Node colors
 
 
 Node fontcolors
-----------------
+************************************
 
 .. code:: python
 
@@ -51,7 +51,7 @@ Node fontcolors
 
 
 Node sizes
-----------
+************************************
 
 .. code:: python
 
@@ -63,7 +63,7 @@ Node sizes
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 Edge sizes
-----------
+************************************
 
 .. code:: python
 
@@ -76,7 +76,7 @@ Edge sizes
 
 
 Edge colors
------------
+************************************
 
 .. code:: python
 
@@ -89,7 +89,7 @@ Edge colors
 
 
 Colormap
------------
+************************************
 
 .. code:: python
 
@@ -102,7 +102,7 @@ Colormap
 
 
 Directed arrows
-----------------------
+************************************
 
 .. code:: python
 
@@ -116,7 +116,7 @@ Directed arrows
 
 
 Karate Club network
-''''''''''''''''''''
+####################
 
 .. code:: python
 
@@ -162,23 +162,6 @@ Karate Club network
 	d3.set_node_properties(color=label, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1')
 	d3.show()
 
-
-Hide Slider
-''''''''''''''''''''
-
-The slider can be hidden from the output HTML by setting the ``show_slider=False`` parameter.
-
-.. code:: python
-
-	from d3graph import d3graph
-
-	# Initialize
-	d3 = d3graph()
-	# Load example
-	adjmat, df = d3.import_example('karate')
-	# Process adjmat
-	d3.graph(adjmat)
-	d3.show(show_slider=False)
 
 
 

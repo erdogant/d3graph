@@ -11,18 +11,25 @@ d3.graph(adjmat, color='cluster')
 d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
 
 # %% Edge link
+
+# Import
+from d3graph import d3graph
+# intialize to load example dataset
 d3 = d3graph()
 adjmat, _ = d3.import_example('bigbang')
-# adjmat=adjmat.iloc[0:3, 0:3]
-d3.graph(adjmat, color='cluster')
-d3.set_edge_properties(directed=True, label='test')
-d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
 
-d3.set_edge_properties(directed=True, marker_color='#000FFF', label='TEST')
-d3.show(filepath=r'c:\temp\\d3graph\d3graph2.html')
+# Initialize with clustering colors
+d3.graph(adjmat, color='cluster')
+
+# Set all edge labels to "test"
+d3.set_edge_properties(directed=True, label='test')
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_1.html')
+
+# Set edge labels 
 d3.edge_properties
 
-d3.set_edge_properties(directed=True, marker_color='#000FFF', label='')
+# We will first set all label properties to None and then we will adjust two of them
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
 d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
 d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
 d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
@@ -31,8 +38,7 @@ d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
 d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
 d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
 
-d3.edge_properties
-d3.show(filepath=r'c:\temp\\d3graph\d3graph3.html')
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_2.html')
 
 # %% Change color of text
 
