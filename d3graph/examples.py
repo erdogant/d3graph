@@ -35,16 +35,29 @@ d3.edge_properties
 d3.show(filepath=r'c:\temp\\d3graph\d3graph3.html')
 
 # %% Change color of text
+
+# Import library
 from d3graph import d3graph
 
+# Initialize with defaults
 d3 = d3graph()
-adjmat, df = d3.import_example('bigbang')
-d3.graph(adjmat, color='cluster')
-d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=12)
-d3.show(filepath=r'c:\temp\\d3graph\d3graph.html', click={'fill': 'black'})
-d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
+# Load example
+adjmat, df = d3.import_example('bigbang')
+# Color on clustering
+d3.graph(adjmat)
 fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
+
+# Set some node properties
+d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color')
+
+# Set the click properties: Create green node on click with black border
+d3.show(filepath=r'c:\temp\\d3graph\click_example_1.html', click={'fill': '#00FF00', 'stroke': '#000000'})
+
+# Keep the original color but set the stroke to grey and increase both node size and stroke width
+d3.show(filepath=r'c:\temp\\d3graph\click_example_2.html', click={'fill': None, 'stroke': '#F0F0F0', 'size': 2.5, 'stroke-width': 10})
+
+
 d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=fontsize)
 d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
