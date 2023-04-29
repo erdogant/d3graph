@@ -6,12 +6,33 @@ from d3graph import d3graph, adjmat2vec
 
 # %% Edge link
 d3 = d3graph()
-adjmat, df = d3.import_example('bigbang')
+adjmat, df = d3.import_example('karate')
 d3.graph(adjmat, color='cluster')
-d3.set_edge_properties(directed=True, marker_end='square', marker_color='#000000', label='TEST')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
+
+# %% Edge link
+d3 = d3graph()
+adjmat, _ = d3.import_example('bigbang')
+# adjmat=adjmat.iloc[0:3, 0:3]
+d3.graph(adjmat, color='cluster')
+d3.set_edge_properties(directed=True, label='test')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
+
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label='TEST')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph2.html')
+d3.edge_properties
+
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label='')
+d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
+d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
+d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
+d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
+d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
+d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
 
 d3.edge_properties
-d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph3.html')
 
 # %% Change color of text
 from d3graph import d3graph
