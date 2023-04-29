@@ -103,6 +103,7 @@ function d3graphscript(config = {
   node.append("circle")
     .attr("r", function(d) { return d.node_size; })					// NODE SIZE
     .style("fill", function(d) {return d.node_color;})				// NODE-COLOR
+    .style("opacity", 0.95)
     .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
     .style("stroke", function(d) {return d.node_color_edge;})		// NODE-COLOR-EDGE
   //  .style("stroke", '#000')										// NODE-EDGE-COLOR (all black)
@@ -174,8 +175,8 @@ function d3graphscript(config = {
         //.style("fill", function(d) {return d.marker_color;}) // Marker color
         .style("fill", '#808080')                              // Marker color
         .style("stroke", '#808080')                            // Marker edge-color
-        .style("opacity", "1")                                 // Marker opacity
-        .style("stroke-width", '1');                           // Marker edge thickness
+        .style("opacity", 0.95)                                // Marker opacity
+        .style("stroke-width", 1);                             // Marker edge thickness
 
   // --------- END MARKER -----------
 
@@ -264,7 +265,7 @@ function d3graphscript(config = {
       toggle = 1;
     } else {
       //Put them back to opacity=1
-      node.style("opacity", 1);
+      node.style("opacity", 0.95);
       link.style("opacity", 1);
 
       toggle = 0;
