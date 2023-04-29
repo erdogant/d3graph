@@ -1044,6 +1044,11 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union[int, float] = 4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
+
+    # Set sizes to 0 if not available
+    getsizes[np.isinf(getsizes)]=0
+    getsizes[np.isnan(getsizes)]=0
+
     # out-of-scale datapoints.
     if scaler == 'zscore' and len(np.unique(getsizes)) > 3:
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
