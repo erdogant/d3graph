@@ -64,7 +64,7 @@ function d3graphscript(config = {
     .links(graph.links)
     .start();
 
-  // Create all the line svgs but without locations yet
+ // Create all the line svgs but without locations yet
   var link = svg.selectAll(".link")
     .data(graph.links)
     .enter().append("line")
@@ -76,6 +76,18 @@ function d3graphscript(config = {
     .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
 //  .style("stroke-width", 1); // WIDTH OF THE LINKS
   ;
+
+  // ADD TEXT ON THE EDGES (PART 1/2)
+   var linkText = svg.selectAll(".link-text")
+     .data(graph.links)
+     .enter().append("text")
+     .attr("class", "link-text")
+     .attr("font-size", function(d) {return d.label_fontsize + "px";})
+     .style("fill", function(d) {return d.label_color;})
+     .style("font-family", "Arial")
+     //.attr("transform", "rotate(90)")
+     .text(function(d) { return d.label; });
+
 
   //Do the same with the circles for the nodes
   var node = svg.selectAll(".node")
@@ -121,7 +133,11 @@ function d3graphscript(config = {
     d3.selectAll("circle").attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; });
     d3.selectAll("text").attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; });
+      .attr("y", function(d) { return d.y; })
+	linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
+      .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
+      .attr("text-anchor", "middle");
+      ;
 
     node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 

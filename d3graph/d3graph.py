@@ -193,7 +193,17 @@ class d3graph:
             if os.path.isfile(file_location):
                 webbrowser.open(file_location, new=2)
 
-    def set_edge_properties(self, edge_distance: int = None, scaler: str = 'zscore', minmax: List[float] = None, directed: bool = False, marker_start=None, marker_end='arrow', marker_color='#808080', label='') -> dict:
+    def set_edge_properties(self,
+                            edge_distance: int = None,
+                            scaler: str = 'zscore',
+                            minmax: List[float] = None,
+                            directed: bool = False,
+                            marker_start=None,
+                            marker_end='arrow',
+                            marker_color='#808080',
+                            label: str = None,
+                            label_color = '#808080',
+                            label_fontsize : int = 8) -> dict:
         """Edge properties.
 
         Parameters
@@ -219,6 +229,15 @@ class d3graph:
         marker_end : (list of) str, (default: 'arrow')
             The end of the edge can be one of the following markers:
             'arrow','square','circle','stub',None or ''
+        marker_color : str, (default: '#808080')
+            The label color in hex.
+        label : str, (default: '')
+            The edge label.
+        label_color : str, (default: None)
+            The label color in hex.
+            None : Inherits the color from marker_color.
+        label_fontsize : int, (default: 8)
+            The fontsize of the label.
 
         Returns
         -------
@@ -229,8 +248,7 @@ class d3graph:
                 'color': color of the edge
 
         """
-        if minmax is None:
-            minmax = [0.5, 15.0]
+        if minmax is None: minmax = [0.5, 15.0]
         self.config['directed'] = directed
         self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
         self.config['minmax'] = minmax
@@ -239,6 +257,8 @@ class d3graph:
         self.config['marker_end'] = marker_end
         self.config['marker_color'] = marker_color
         self.config['label'] = label
+        self.config['label_color'] = label_color
+        self.config['label_fontsize'] = label_fontsize
 
         if (not directed) and (marker_end is not None) or (marker_start is not None):
             logger.info('Set directed=True to see the markers!')
@@ -253,6 +273,8 @@ class d3graph:
                                            marker_end=self.config['marker_end'],
                                            marker_color=self.config['marker_color'],
                                            label=self.config['label'],
+                                           label_color=self.config['label_color'],
+                                           label_fontsize=self.config['label_fontsize'],
                                            )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
@@ -796,6 +818,8 @@ def json_create(G: nx.Graph) -> str:
         links[i]['marker_end'] = links[i]['marker_end']
         links[i]['marker_color'] = links[i]['marker_color']
         links[i]['label'] = links[i]['label']
+        links[i]['label_color'] = links[i]['label_color']
+        links[i]['label_fontsize'] = links[i]['label_fontsize']
         links_new.append(links[i])
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodes_new = [None] * len(nodes)
@@ -816,7 +840,17 @@ def json_create(G: nx.Graph) -> str:
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zscore', minmax=None, marker_start=None, marker_end='arrow', marker_color='#808080', label='') -> dict:
+def adjmat2dict(adjmat: pd.DataFrame,
+                min_weight: float = 0.0,
+                scaler: str = 'zscore',
+                minmax=None,
+                marker_start=None,
+                marker_end='arrow',
+                marker_color='#808080',
+                label=None,
+                label_color='#808080',
+                label_fontsize: int = 8,
+                ) -> dict:
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -833,6 +867,21 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
     minmax : tuple(int,int), (default: [0.5, 15])
         Weights are normalized between minimum and maximum
         * [0.5, 15]
+    marker_start : (list of) str, (default: 'arrow')
+        The start of the edge can be one of the following markers:
+        'arrow','square','circle','stub',None or ''
+    marker_end : (list of) str, (default: 'arrow')
+        The end of the edge can be one of the following markers:
+        'arrow','square','circle','stub',None or ''
+    marker_color : str, (default: '#808080')
+        The label color in hex.
+    label : str, (default: None)
+        The edge label.
+    label_color : str, (default: None)
+        The label color in hex.
+        None : Inherits the color from marker_color.
+    label_fontsize : int, (default: 8)
+        The fontsize of the label.
 
     Returns
     -------
@@ -845,11 +894,12 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
             'marker_color': hex color of the marker.
             'label': Text label for the edge.
+            'label_color': color of the label.
+            'label_fontsize': fontsize of the label.
 
     """
     # Convert adjacency matrix into vector
-    if minmax is None:
-        minmax = [0.5, 15]
+    if minmax is None: minmax = [0.5, 15]
     df = adjmat.stack().reset_index()
     # Set columns
     df.columns = ['source', 'target', 'weight']
@@ -873,10 +923,14 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
     if marker_start is None: marker_start=''
     if marker_end is None: marker_end=''
     if label is None: label=''
+
+    # Store in dataframe
     df['marker_start']=marker_start
     df['marker_end']=marker_end
     df['marker_color']=marker_color
     df['label']=label
+    df['label_color']=label_color
+    df['label_fontsize']=label_fontsize
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -886,7 +940,10 @@ def adjmat2dict(adjmat: pd.DataFrame, min_weight: float = 0.0, scaler: str = 'zs
                    'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
-                   'label': df['label'].iloc[i]} for
+                   'label': df['label'].iloc[i],
+                   'label_color': df['label_color'].iloc[i],
+                   'label_fontsize': df['label_fontsize'].iloc[i],
+                   } for
             i, edge in enumerate(source_target)}
 
 
@@ -920,6 +977,8 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    weight=np.abs(edge_properties[edge]['weight']),
                    color=edge_properties[edge]['color'],
                    label=edge_properties[edge]['label'],
+                   label_color=edge_properties[edge]['label_color'],
+                   label_fontsize=edge_properties[edge]['label_fontsize'],
                    )
     return G
 
