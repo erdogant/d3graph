@@ -202,7 +202,7 @@ class d3graph:
                             marker_start=None,
                             marker_end='arrow',
                             marker_color='#808080',
-                            label: str = 'weight',
+                            label: str = None,
                             label_color = '#808080',
                             label_fontsize: int = 8,
                             minmax: List[float] = [0.5, 15],
@@ -238,7 +238,7 @@ class d3graph:
             The label color in hex.
         label : str, (default: '')
             None : No labels
-            'weight' : This will add the weight accordingly.
+            'weight' : This will add the weights on each edge.
             list : The edge label.
         label_color : str, (default: None)
             The label color in hex.
