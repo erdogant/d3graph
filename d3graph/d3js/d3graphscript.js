@@ -20,7 +20,8 @@ function d3graphscript(config = {
 
   var force = d3.layout.force()
     .charge(config.charge)
-    .linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
+    .linkDistance((d) => d.edge_distance || config.distance)
+    //.linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
     .size([width, height]);
 
   // DRAGGING START

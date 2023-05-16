@@ -156,7 +156,8 @@ class d3graph:
         self.config['showfig'] = showfig
         self.config['notebook'] = notebook
         self.config['click'] = click
-        self.config['filepath'] = self.set_path(filepath)
+        # self.config['filepath'] = self.set_path(filepath)
+        if self.config.get('filepath', None)!='d3graph.html': self.config['filepath'] = self.set_path(filepath)
 
         # Create dataframe from co-occurrence matrix
         self.G = make_graph(self.node_properties, self.edge_properties)
@@ -194,32 +195,36 @@ class d3graph:
                 webbrowser.open(file_location, new=2)
 
     def set_edge_properties(self,
-                            edge_distance: int = None,
+                            edge_distance=None,
+                            edge_weight=None,
                             scaler: str = 'zscore',
-                            minmax: List[float] = None,
                             directed: bool = False,
                             marker_start=None,
                             marker_end='arrow',
                             marker_color='#808080',
-                            label: str = None,
+                            label: str = 'weight',
                             label_color = '#808080',
-                            label_fontsize : int = 8) -> dict:
+                            label_fontsize: int = 8,
+                            minmax: List[float] = [0.5, 15],
+                            minmax_distance: List[float] = [50, 100],
+                            ) -> dict:
         """Edge properties.
 
         Parameters
         ----------
-        edge_distance : Int (default: 30)
-            Distance of nodes on the edges.
-            * 0: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
-            * 80: Constant edge distance
+        edge_distance : Int (default: 50)
+            Distance between the edges.
+            * None: Distance is based on the weights in the adjacency matrix. Weights are normalized between the minmax
+            * 50: Constant edge distance
+        edge_weight : Int (default: 10)
+            Thickness of the edges.
+            * None: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
+            * 10: Constant edge distance
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution between minmax.
             None : No scaler is used.
-        minmax : tuple(float, float), (default: [0.5, 15.0])
-            Weights are normalized between minimum and maximum
-            * [0.5, 15]
         directed : Bool, (default: False)
             True: Edges are shown with an marker (e.g. arrow)
             False: Edges do not show markers.
@@ -232,12 +237,22 @@ class d3graph:
         marker_color : str, (default: '#808080')
             The label color in hex.
         label : str, (default: '')
-            The edge label.
+            None : No labels
+            'weight' : This will add the weight accordingly.
+            list : The edge label.
         label_color : str, (default: None)
             The label color in hex.
             None : Inherits the color from marker_color.
         label_fontsize : int, (default: 8)
             The fontsize of the label.
+        minmax : tuple(float, float), (default: [0.5, 15.0])
+            Edge thickness is normalized between minimum and maximum
+            * [0.5, 15]
+            * None: Do not change
+        minmax_distance : tuple(float, float), (default: [50, 100])
+            Distances are normalized between minimum and maximum
+            * [50, 100]
+            * None: Do not change
 
         Returns
         -------
@@ -248,10 +263,11 @@ class d3graph:
                 'color': color of the edge
 
         """
-        if minmax is None: minmax = [0.5, 15.0]
         self.config['directed'] = directed
-        self.config['edge_distance'] = 30 if edge_distance is None else edge_distance
+        self.config['edge_weight'] = edge_weight
+        self.config['edge_distance'] = edge_distance
         self.config['minmax'] = minmax
+        self.config['minmax_distance'] = minmax_distance
         self.config['edge_scaler'] = scaler
         self.config['marker_start'] = marker_start
         self.config['marker_end'] = marker_end
@@ -264,10 +280,10 @@ class d3graph:
             logger.info('Set directed=True to see the markers!')
 
         # Set the edge properties
-        # Set the edge properties
         self.edge_properties = adjmat2dict(self.adjmat,
-                                           min_weight=0,
+                                           filter_weight=0,
                                            minmax=self.config['minmax'],
+                                           minmax_distance=self.config['minmax_distance'],
                                            scaler=self.config['edge_scaler'],
                                            marker_start=self.config['marker_start'],
                                            marker_end=self.config['marker_end'],
@@ -275,6 +291,8 @@ class d3graph:
                                            label=self.config['label'],
                                            label_color=self.config['label_color'],
                                            label_fontsize=self.config['label_fontsize'],
+                                           edge_weight=self.config['edge_weight'],
+                                           edge_distance=self.config['edge_distance'],
                                            )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
@@ -647,6 +665,7 @@ class d3graph:
         # Set quotes surrounding the color name
         if click_properties['fill'] != "function(d) {return d.node_color;}":
             click_properties['fill'] = '"' + click_properties['fill'] + '"'
+        if self.config['edge_distance'] is None: self.config['edge_distance']=50
 
         # Hide slider
         show_slider = ['', ''] if self.config['show_slider'] else ['<!--', '-->']
@@ -750,7 +769,7 @@ class d3graph:
         elif network == 'bigbang':
             source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
             target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
-            weight = [5, 3, 2, 2, 5, 2, 3, 5, 2]
+            weight = [5, 3, 2, 2, 5, 2, 3, 5, 10]
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat, None
         elif network == 'karate':
@@ -805,10 +824,12 @@ def json_create(G: nx.Graph) -> str:
         source.append(node_id[edge[0] == node_ui][0])
         target.append(node_id[edge[1] == node_ui][0])
 
+    # Set edge properties
     links = pd.DataFrame([*G.edges.values()]).T.to_dict()
     links_new = []
     for i in range(len(links)):
         links[i]['edge_width'] = links[i].pop('weight_scaled')
+        links[i]['edge_distance'] = links[i].pop('edge_distance')
         links[i]['edge_weight'] = links[i]['weight']
         links[i]['source'] = int(source[i])
         links[i]['target'] = int(target[i])
@@ -821,6 +842,8 @@ def json_create(G: nx.Graph) -> str:
         links[i]['label_color'] = links[i]['label_color']
         links[i]['label_fontsize'] = links[i]['label_fontsize']
         links_new.append(links[i])
+
+    # Set node properties
     nodes = pd.DataFrame([*G.nodes.values()]).T.to_dict()
     nodes_new = [None] * len(nodes)
     for i, node in enumerate(nodes):
@@ -841,15 +864,18 @@ def json_create(G: nx.Graph) -> str:
 
 # %%  Convert adjacency matrix to vector
 def adjmat2dict(adjmat: pd.DataFrame,
-                min_weight: float = 0.0,
+                filter_weight: float = 0.0,
                 scaler: str = 'zscore',
-                minmax=None,
                 marker_start=None,
                 marker_end='arrow',
                 marker_color='#808080',
                 label=None,
                 label_color='#808080',
                 label_fontsize: int = 8,
+                edge_weight: int = 1,
+                edge_distance: int = 50,
+                minmax: list[float] = [0.5, 15],
+                minmax_distance: list[float] = [50, 100],
                 ) -> dict:
     """Convert adjacency matrix into vector with source and target.
 
@@ -857,16 +883,13 @@ def adjmat2dict(adjmat: pd.DataFrame,
     ----------
     adjmat : pd.DataFrame()
         Adjacency matrix.
-    min_weight : float
+    filter_weight : float
         edges are returned with a minimum weight.
     scaler : str, (default: 'zscore')
         Scale the edge-width using the following scaler:
         'zscore' : Scale values to Z-scores.
         'minmax' : The sklearn scaler will shrink the distribution between minmax.
         None : No scaler is used.
-    minmax : tuple(int,int), (default: [0.5, 15])
-        Weights are normalized between minimum and maximum
-        * [0.5, 15]
     marker_start : (list of) str, (default: 'arrow')
         The start of the edge can be one of the following markers:
         'arrow','square','circle','stub',None or ''
@@ -876,19 +899,30 @@ def adjmat2dict(adjmat: pd.DataFrame,
     marker_color : str, (default: '#808080')
         The label color in hex.
     label : str, (default: None)
-        The edge label.
+        None : No label
+        'weight' : Weight of the edge
+        list : The edge label.
     label_color : str, (default: None)
         The label color in hex.
         None : Inherits the color from marker_color.
     label_fontsize : int, (default: 8)
         The fontsize of the label.
+    minmax : tuple(int,int), (default: [0.5, 15])
+        Thickness of the edges are normalized between minimum and maximum
+        * [0.5, 15]
+        * None: Do not change
+    minmax_distance : tuple(int,int), (default: [50, 100])
+        Distances between the edges are normalized between minimum and maximum
+        * [50, 100]
+        * None: Do not change
 
     Returns
     -------
     edge_properties: dict
         key: (source, target)
             'weight': weight of the edge.
-            'weight_scaled': scaled weight of the edge.
+            'weight_scaled': scaled weight (thickness) of the edge.
+            'edge_distance': scaled distance of the edge.
             'color': color of the edge.
             'marker_start': '', 'circle', 'square', 'arrow', 'stub'
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
@@ -899,30 +933,44 @@ def adjmat2dict(adjmat: pd.DataFrame,
 
     """
     # Convert adjacency matrix into vector
-    if minmax is None: minmax = [0.5, 15]
     df = adjmat.stack().reset_index()
     # Set columns
     df.columns = ['source', 'target', 'weight']
     # Remove self loops and no-connected edges
     Iloc = df['source'] != df['target']
     # Keep only edges with a minimum edge strength
-    if min_weight is not None:
-        logger.info("Keep only edges with weight>%g" % min_weight)
-        Iloc2 = df['weight'] > min_weight
+    if filter_weight is not None:
+        logger.info("Keep only edges with weight>%g" % filter_weight)
+        Iloc2 = df['weight'] > filter_weight
         Iloc = Iloc & Iloc2
     df = df.loc[Iloc, :]
     df.reset_index(drop=True, inplace=True)
 
     # Scale the weights for visualization purposes
-    if len(np.unique(df['weight'].values.reshape(-1, 1))) > 2:
-        df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
+    if minmax_distance is not None:
+        df['edge_distance'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax_distance[0], minmax_distance[1], scaler='minmax')
+    elif edge_distance is not None:
+        df['edge_distance'] = edge_distance
+        logger.info('Setting constant edge distance of %g' %(edge_distance))
     else:
-        df['weight_scaled'] = np.ones(df.shape[0]) * 1
+        df['edge_distance'] = df['weight']
+
+    if (len(np.unique(df['weight'].values.reshape(-1, 1))) > 2 or (minmax is not None)) and (scaler is not None):
+        df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
+    elif edge_weight is not None:
+        df['weight_scaled'] = edge_weight
+        logger.info('Setting constant edge thickness of %g' %(edge_weight))
+    else:
+        df['edge_distance'] = df['weight']
 
     # Set marker start-end
     if marker_start is None: marker_start=''
     if marker_end is None: marker_end=''
-    if label is None: label=''
+    if label is None:
+        label=''
+    elif label == 'weight':
+        # Remove trailing zeros
+        label = list(map(lambda x: '(' + ('%f' % x).rstrip('0').rstrip('.') + ')', df['weight'].values))
 
     # Store in dataframe
     df['marker_start']=marker_start
@@ -937,6 +985,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     # Return
     return {edge: {'weight': df['weight'].iloc[i],
                    'weight_scaled': df['weight_scaled'].iloc[i],
+                   'edge_distance': df['edge_distance'].iloc[i],
                    'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
@@ -974,6 +1023,7 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    marker_start=edge_properties[edge]['marker_start'],
                    marker_end=edge_properties[edge]['marker_end'],
                    weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
+                   edge_distance=np.abs(edge_properties[edge]['edge_distance']),
                    weight=np.abs(edge_properties[edge]['weight']),
                    color=edge_properties[edge]['color'],
                    label=edge_properties[edge]['label'],
