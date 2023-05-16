@@ -46,15 +46,10 @@ Edge network properties can also be changed for the edges:
 	d3.show()
 
 
-.. |fig1a| image:: ../figs/example_fig1a.png
-    :scale: 70%
+.. raw:: html
 
-.. table:: Edge properties
-   :align: center
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe>
 
-   +---------+
-   | |fig1a| |
-   +---------+
 
 
 Markers
@@ -92,7 +87,7 @@ Each marker can be customized using the ``edge_properties``.
 	d3.show()
 
 	# Make some customized changes in the marker-end by removing all markers and set one for penny-leonard.
-	d3.set_edge_properties(directed=True, marker_end='')
+	d3.set_edge_properties(directed=True, marker_end='', label='weight')
 
 	# Set markers for individual edges
 	d3.edge_properties['Penny', 'Leonard']['marker_end']='arrow'
@@ -101,17 +96,14 @@ Each marker can be customized using the ``edge_properties``.
 	d3.edge_properties['Rajesh', 'Penny']['marker_end']='square'
 	d3.show()
 
+.. raw:: html
 
-.. |fig3a| image:: ../figs/example_fig3a.png
-.. |fig3b| image:: ../figs/example_fig3b.png
-    :scale: 70%
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe>
 
-.. table:: Edge markers. Left=marker-end to square, right=arrow only for one edge.
-   :align: center
+.. raw:: html
 
-   +---------+---------+
-   | |fig3a| | |fig3b| |
-   +---------+---------+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe>
+
 
 
 Scaling edges
@@ -133,7 +125,7 @@ Let's see the differences between the different methods.
 	d3.graph(adjmat)
 
   	# Set to no scaler (default)
-	d3.set_edge_properties(directed=True, minmax=[1, 20], scaler=None)
+	d3.set_edge_properties(directed=True)
 	d3.show()
 
 	# Set to minmax scaler
@@ -145,18 +137,18 @@ Let's see the differences between the different methods.
 	d3.show()
 
 
+.. raw:: html
 
-.. |fig2a| image:: ../figs/example_fig2a.png
-.. |fig2b| image:: ../figs/example_fig2b.png
-.. |fig2c| image:: ../figs/example_fig2c.png
-    :scale: 70%
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe>
 
-.. table:: Normalizations on the edge width. Left=No normalization, middle=minmax, right=z-score.
-   :align: center
+.. raw:: html
 
-   +---------+---------+---------+
-   | |fig2a| | |fig2b| | |fig2c| |
-   +---------+---------+---------+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe>
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe>
+
 
 
 Edge Labels
@@ -180,7 +172,12 @@ Set all edge labels to "test".
 
 .. code:: python
 
+    # Adding specifc labels to the edges
 	d3.set_edge_properties(directed=True, label='test')
+	
+	# Adding the weights can be as following:
+    d3.set_edge_properties(directed=True, label='weight')
+
 	print(d3.edge_properties)
 
 	# {('Amy', 'Bernadette'): {'weight': 2.0,

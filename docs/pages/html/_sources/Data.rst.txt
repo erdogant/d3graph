@@ -86,6 +86,10 @@ In the following example we will create the *bigbang* network from scratch:
 	d3.show()
 
 
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/d3graph_data_1.html" height="700px" width="850px", frameBorder="0"></iframe>
+
 
 Output
 '''''''''''''''
@@ -110,6 +114,9 @@ The following example will write the final HTML to a custom directory with a cus
 	# Write to specified directory with custom filename
 	d3.show(filepath='c://temp/d3graph_bigbang.html')
 
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/d3graph_data_2.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 

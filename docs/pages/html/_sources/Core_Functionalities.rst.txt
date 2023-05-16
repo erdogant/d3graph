@@ -30,14 +30,14 @@ The initialization is directly performed after importing the ``d3graph`` library
 
 .. code:: python
 	
-	# Import library
-	from d3graph import d3graph
 	# Initialization with default parameters
 	d3 = d3graph()
 	# Load karate example
 	adjmat, df = d3.import_example('karate')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
+	# Node properties
+	d3.set_node_properties(label=df['label'].values, tooltip=df['label'].values, color='cluster')
 	# Plot
 	d3.show()
 

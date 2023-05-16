@@ -34,7 +34,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.3
+                2.4.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -190,14 +190,7 @@
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<table class="docutils align-center" id="id1">
-<caption><span class="caption-text">Edge properties</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_images/example_fig1a.png"><img alt="fig1a" src="_images/example_fig1a.png" style="width: 472.49999999999994px; height: 319.2px;" /></a></p></td>
-</tr>
-</tbody>
-</table>
-</section>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="markers">
 <h2>Markers<a class="headerlink" href="#markers" title="Permalink to this heading"></a></h2>
 <dl class="simple">
@@ -232,7 +225,7 @@ Each marker can be customized using the <code class="docutils literal notranslat
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="c1"># Make some customized changes in the marker-end by removing all markers and set one for penny-leonard.</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
 
 <span class="c1"># Set markers for individual edges</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">,</span> <span class="s1">&#39;Leonard&#39;</span><span class="p">][</span><span class="s1">&#39;marker_end&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;arrow&#39;</span>
@@ -242,15 +235,7 @@ Each marker can be customized using the <code class="docutils literal notranslat
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<table class="docutils align-center" id="id2">
-<caption><span class="caption-text">Edge markers. Left=marker-end to square, right=arrow only for one edge.</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<tbody>
-<tr class="row-odd"><td><p><img alt="fig3a" src="_images/example_fig3a.png" /></p></td>
-<td><p><a class="reference internal" href="_images/example_fig3b.png"><img alt="fig3b" src="_images/example_fig3b.png" style="width: 317.09999999999997px; height: 216.29999999999998px;" /></a></p></td>
-</tr>
-</tbody>
-</table>
-</section>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="scaling-edges">
 <h2>Scaling edges<a class="headerlink" href="#scaling-edges" title="Permalink to this heading"></a></h2>
 <p>There are two manners to scale the edges; scaling using the <strong>minmax</strong> or scaling using the <strong>z-score</strong>.
@@ -266,7 +251,7 @@ Let’s see the differences between the different methods.</p>
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 
 <span class="c1"># Set to no scaler (default)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="n">scaler</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="c1"># Set to minmax scaler</span>
@@ -278,16 +263,7 @@ Let’s see the differences between the different methods.</p>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<table class="docutils align-center" id="id3">
-<caption><span class="caption-text">Normalizations on the edge width. Left=No normalization, middle=minmax, right=z-score.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<tbody>
-<tr class="row-odd"><td><p><img alt="fig2a" src="_images/example_fig2a.png" /></p></td>
-<td><p><img alt="fig2b" src="_images/example_fig2b.png" /></p></td>
-<td><p><a class="reference internal" href="_images/example_fig2c.png"><img alt="fig2c" src="_images/example_fig2c.png" style="width: 352.09999999999997px; height: 247.1px;" /></a></p></td>
-</tr>
-</tbody>
-</table>
-</section>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="edge-labels">
 <h2>Edge Labels<a class="headerlink" href="#edge-labels" title="Permalink to this heading"></a></h2>
 <p>The labels of the edges can be set per edge in a similar manner as for the other edge properties.</p>
@@ -302,29 +278,34 @@ Let’s see the differences between the different methods.</p>
 </pre></div>
 </div>
 <p>Set all edge labels to “test”.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adding specifc labels to the edges</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
 
-<span class="c1"># {(&#39;Amy&#39;, &#39;Bernadette&#39;): {&#39;weight&#39;: 2.0,</span>
-<span class="c1">#   &#39;weight_scaled&#39;: 2.0,</span>
-<span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
-<span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
-<span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
-<span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
-<span class="c1">#  (&#39;Bernadette&#39;, &#39;Howard&#39;): {&#39;weight&#39;: 5.0,</span>
-<span class="c1">#   &#39;weight_scaled&#39;: 5.0,</span>
-<span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
-<span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
-<span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
-<span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
-<span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
+    <span class="c1"># Adding the weights can be as following:</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
 
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">)</span>
+
+    <span class="c1"># {(&#39;Amy&#39;, &#39;Bernadette&#39;): {&#39;weight&#39;: 2.0,</span>
+    <span class="c1">#   &#39;weight_scaled&#39;: 2.0,</span>
+    <span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
+    <span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
+    <span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
+    <span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
+    <span class="c1">#  (&#39;Bernadette&#39;, &#39;Howard&#39;): {&#39;weight&#39;: 5.0,</span>
+    <span class="c1">#   &#39;weight_scaled&#39;: 5.0,</span>
+    <span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
+    <span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
+    <span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
+    <span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
+    <span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
+
+    <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_labels_1.html" height="400px" width="750px", frameBorder="0"></iframe><p>We will first set all label properties to None and then we will adjust two of them.</p>
