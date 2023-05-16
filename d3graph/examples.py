@@ -4,6 +4,44 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec
 
+# %% Edge distance
+
+# Import
+from d3graph import d3graph
+# intialize to load example dataset
+d3 = d3graph()
+adjmat, _ = d3.import_example('bigbang')
+
+# Initialize with clustering colors
+d3.graph(adjmat, color='cluster')
+
+# Set all edge labels to "test"
+d3.set_edge_properties(directed=True, minmax_distance=None)
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_1.html')
+d3.set_edge_properties(directed=True)
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_3.html')
+d3.set_edge_properties(directed=True, minmax_distance=[20, 200])
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_3.html')
+d3.set_edge_properties
+
+d3.set_edge_properties(directed=True, label=None)
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_2.html')
+
+# Set edge labels 
+d3.edge_properties
+
+# We will first set all label properties to None and then we will adjust two of them
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
+d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
+d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
+d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
+d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
+d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
+d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
+
+d3.show(filepath=r'c:\temp\\d3graph\edge_labels_2.html')
+
 # %% Edge link
 d3 = d3graph()
 adjmat, df = d3.import_example('karate')
@@ -41,7 +79,7 @@ d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
 d3.show(filepath=r'c:\temp\\d3graph\edge_labels_2.html')
 
 # %% Change color of text
-
+import numpy as np
 # Import library
 from d3graph import d3graph
 
