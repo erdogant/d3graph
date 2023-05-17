@@ -9,7 +9,7 @@ from d3graph import d3graph, adjmat2vec
 # Import
 from d3graph import d3graph
 # intialize to load example dataset
-d3 = d3graph()
+d3 = d3graph(support=False)
 adjmat, _ = d3.import_example('bigbang')
 
 # Initialize with clustering colors

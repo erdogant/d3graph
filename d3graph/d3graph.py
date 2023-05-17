@@ -77,7 +77,7 @@ class d3graph:
 
     """
 
-    def __init__(self, collision: float = 0.5, charge: int = 450, slider: List[int] = None, verbose: int = 20) -> None:
+    def __init__(self, collision: float = 0.5, charge: int = 450, slider: List[int] = None, support='text', verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None:
             slider = [None, None]
@@ -92,6 +92,7 @@ class d3graph:
         self.config['collision'] = collision
         self.config['charge'] = -abs(charge)
         self.config['slider'] = slider
+        self.config['support'] = get_support(support)
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
         self.config['d3_library'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3.v3.js'))
@@ -690,9 +691,9 @@ class d3graph:
                    'CLICK_STROKEW': click_properties['stroke-width'],
                    'slider_comment_start': show_slider[0],
                    'slider_comment_stop': show_slider[1],
+                   'SUPPORT': self.config['support'],
                    }
 
-        # Issue14: https://github.com/erdogant/d3graph/issues/14
         try:
             jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
         except:
@@ -1359,3 +1360,15 @@ def _set_node_fontcolor(self, fontcolor, color, node_names, nodecount):
     if len(fontcolor) != nodecount: raise ValueError("[fontcolor] must be of same length as the number of nodes")
     # return
     return fontcolor
+
+
+def get_support(support):
+    script=''
+    if isinstance(support, bool) and (not support): support = None
+    if isinstance(support, bool) and support: support = 'text'
+    if support is not None:
+        script="<script async src='https://media.ethicalads.io/media/client/ethicalads.min.js'></script>"
+        script = script + '\n' + "<div data-ea-publisher='erdogantgithubio' data-ea-type='{TYPE}' data-ea-style='stickybox'></div>".replace('{TYPE}', support)
+
+    # Return
+    return script
