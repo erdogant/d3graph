@@ -971,7 +971,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
         label=''
     elif label == 'weight':
         # Remove trailing zeros
-        label = list(map(lambda x: '(' + ('%f' % x).rstrip('0').rstrip('.') + ')', df['weight'].values))
+        label = list(map(lambda x: ('%f' % x).rstrip('0').rstrip('.'), df['weight'].values))
 
     # Store in dataframe
     df['marker_start']=marker_start
