@@ -23,6 +23,7 @@ import pandas as pd
 from ismember import ismember
 from jinja2 import Environment, PackageLoader
 from packaging import version
+import datazets as dz
 
 logger = logging.getLogger('')
 for handler in logger.handlers[:]:
@@ -33,20 +34,11 @@ console.setFormatter(formatter)
 logger.addHandler(console)
 logger = logging.getLogger(__name__)
 
-# logger = logging.getLogger(__name__)
-# console = logging.StreamHandler()
-# formatter = logging.Formatter('[d3graph] >%(levelname)s> %(message)s')
-# console.setFormatter(formatter)
-# logger.addHandler(console)
-# logger.propagate = False
-
 
 # %%
 class d3graph:
     """Create interactive networks in d3js.
 
-    Description
-    -----------
     d3graph is a Python library that is built on d3js to create interactive and standalone networks. The input
     data is an adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
     The output is an HTML file that is interactive and standalone.
@@ -77,7 +69,12 @@ class d3graph:
 
     """
 
-    def __init__(self, collision: float = 0.5, charge: int = 450, slider: List[int] = None, support='text', verbose: int = 20) -> None:
+    def __init__(self,
+                 collision: float = 0.5,
+                 charge: int = 450,
+                 slider: List[int] = None,
+                 support='text',
+                 verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None:
             slider = [None, None]
@@ -301,7 +298,8 @@ class d3graph:
     def set_node_properties(self,
                             label: List[str] = None,
                             tooltip: List[str] = None,
-                            color: Union[str, List[str]] = '#000080',
+                            color: Union[str, List[str]] = None,
+                            opacity: Union[float, List[float]] = None,
                             size: Union[int, List[int]] = 10,
                             edge_color: Union[str, List[str]] = '#000000',
                             edge_size: Union[int, List[int]] = 1,
@@ -324,11 +322,19 @@ class d3graph:
             * ['tooltip 1','tooltip 2','tooltip 3', ...]
         color : list of strings (default: cluster')
             Color of the node.
-            * 'cluster' or None : Colours are based on the community distance clusters.
+            * None: Colors are inhereted from the initialization
+            * 'cluster': Colours are based on the community distance clusters.
             * '#000000': All nodes will get this hex color.
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
-            * ['A','A','B',...]:  Colors are generated using cmap and the unique labels accordingly colored.
+            * ['A','A','B',...]:  Colors are generated using cmap and according to the unique labels.
+        opacity : list of floats (default: 'degree')
+            Set the opacity of the node [0-1] where 0=transparant and 1=no transparancy.
+            * None: Colors are inhereted from the initialization
+            * 'degree' opacity is based on the centrality measure.
+            * 0.99: All nodes will get this transparancy
+            * ['0.4, 0.1, 0.3,...]
+            * ['A','A','B',...]:  Opacity is generated using cmap and according to the unique labels.
         fontcolor : list of strings (default: node_color')
             Color of the node.
             * 'node_color' : Colours are inherited from the node color
@@ -375,6 +381,7 @@ class d3graph:
             key: node_name
                 'label': Label of the node
                 'color': color of the node
+                'opacity': Opacity of the node
                 'size': size of the node
                 'fontcolor': color of the node text
                 'fontsize': node text size
@@ -439,6 +446,9 @@ class d3graph:
         else:
             assert 'Node color not possible'
         if len(color) != nodecount: raise ValueError("[color] must be of same length as the number of nodes")
+
+        ############# Set opacity #############
+        opacity = _set_opacity(self, opacity, nodecount, node_names)
 
         ############# Set node text color #############
         fontcolor = _set_node_fontcolor(self, fontcolor, color, node_names, nodecount)
@@ -510,6 +520,7 @@ class d3graph:
                                           'label'        : label[i],
                                           'tooltip'      : tooltip[i],
                                           'color'        : color[i].astype(str),
+                                          'opacity'      : opacity[i].astype(str),
                                           'fontcolor'    : fontcolor[i].astype(str),
                                           'fontsize'     : fontsize[i].astype(int),
                                           'size'         : size[i],
@@ -583,11 +594,9 @@ class d3graph:
         self.config['slider'] = [int(min_slider), int(max_slider)]
         logger.info('Slider range is set to [%g, %g]' % (self.config['slider'][0], self.config['slider'][1]))
 
-    def graph(self, adjmat, color: str = 'cluster', size = 10, scaler: str = 'zscore') -> None:
+    def graph(self, adjmat, color: str = 'cluster', opacity: str = 'degree', size = 10, scaler: str = 'zscore', cmap: str = 'Set2') -> None:
         """Process the adjacency matrix and set all properties to default.
 
-        Description
-        -----------
         This function processes the adjacency matrix. The nodes are the column and index names.
         A connect edge is seen in case vertices have values larger than 0. The strenght of the edge is based on the vertices values.
 
@@ -642,7 +651,7 @@ class d3graph:
         # Set default edge properties
         self.set_edge_properties(scaler=scaler)
         # Set default node properties
-        self.set_node_properties(color=color, size=size, scaler=scaler)
+        self.set_node_properties(color=color, opacity=opacity, size=size, scaler=scaler, cmap=cmap)
 
     def write_html(self, json_data, overwrite: bool = True) -> None:
         """Write html.
@@ -865,6 +874,7 @@ def json_create(G: nx.Graph) -> str:
         # nodes[i]['node_label'] = nodes[i].pop('label')
         nodes[i]['node_tooltip'] = nodes[i].pop('tooltip')
         nodes[i]['node_color'] = nodes[i].pop('color')
+        nodes[i]['node_opacity'] = nodes[i].pop('opacity')
         nodes[i]['node_size'] = nodes[i].pop('size')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
@@ -969,6 +979,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     else:
         df['edge_distance'] = df['weight']
 
+    # Scale the weights
     if (len(np.unique(df['weight'].values.reshape(-1, 1))) > 2 or (minmax is not None)) and (scaler is not None):
         df['weight_scaled'] = _normalize_size(df['weight'].values.reshape(-1, 1), minmax[0], minmax[1], scaler=scaler)
     elif edge_weight is not None:
@@ -1114,9 +1125,10 @@ def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union
     getsizes[np.isnan(getsizes)]=0
 
     # out-of-scale datapoints.
-    if scaler == 'zscore' and len(np.unique(getsizes)) > 3:
+    if scaler == 'zscore' and len(np.unique(getsizes)) >= 2:
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
-        getsizes = getsizes + (minscale - np.min(getsizes))
+        if minscale is not None: getsizes = getsizes + (minscale - np.min(getsizes))
+        if maxscale is not None: getsizes = np.minimum(getsizes, maxscale)
     elif scaler == 'minmax':
         try:
             from sklearn.preprocessing import MinMaxScaler
@@ -1330,6 +1342,41 @@ def _check_hex_color(color, n=None):
         '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
     if (n is not None) and isinstance(color, list) and len(color) != n:
         raise ValueError(f'Input parameter [color] has wrong length. Must be of length: {str(n)}')
+
+
+def _set_opacity(self, opacity, nodecount, node_names):
+    if isinstance(opacity, float): opacity = [opacity]
+
+    if isinstance(opacity, list) and len(opacity) == nodecount:
+        opacity = np.array(opacity)
+    elif 'numpy' in str(type(opacity)):
+        opacity = _get_hexcolor(opacity, cmap=self.config['cmap'])
+    elif isinstance(opacity, str) and opacity == 'degree':
+        # Create a graph from the adjacency DataFrame
+        G = nx.from_pandas_adjacency(self.adjmat)
+        # Compute degree centrality
+        degree_centrality = nx.degree_centrality(G)
+        opacity = list(map(degree_centrality.get, self.adjmat.index.values))
+        # Normalize
+        # opacity = opacity + [0, 1]
+        opacity = _normalize_size(np.array(opacity).reshape(-1, 1), 0.35, 0.99, scaler='zscore')
+        # opacity = opacity[:-2]
+    elif isinstance(opacity, float):
+        opacity = np.array([opacity] * nodecount)
+    elif (opacity is None) and hasattr(self, 'node_properties'):
+        # Use existing keys if exist
+        opacity=[]
+        for node in node_names:
+            opacity.append(self.node_properties[node].get('opacity', 0.99))
+    elif (opacity is not None) and len(opacity)==1:
+        opacity = np.array(opacity * nodecount)
+    else:
+        opacity = np.array([0.99] * nodecount)
+        
+    if len(opacity) != nodecount: raise ValueError("[opacity] must be of same length as the number of nodes")
+
+    # Return
+    return opacity
 
 
 def _set_node_fontsize(self, fontsize, nodecount):

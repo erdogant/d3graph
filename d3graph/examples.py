@@ -2,7 +2,21 @@
 import networkx as nx
 import pandas as pd
 import numpy as np
-from d3graph import d3graph, adjmat2vec
+from d3graph import d3graph, adjmat2vec, vec2adjmat
+
+# %% opacity
+from d3graph import d3graph
+# intialize to load example dataset
+d3 = d3graph()
+df = d3.import_example(data='bigbang')
+# df, adjmat = d3.import_example(data='karate')
+# df = d3.import_example(data='energy')
+# df=vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+d3.graph(df)
+
+# d3.set_node_properties(opacity='centrality')
+d3.show(filepath='c://temp/network.html')
+
 
 # %% Edge distance
 
@@ -458,7 +472,7 @@ d3.set_node_properties(color=adjmat.columns.values)
 d3.show()
 
 # Example C: include node size
-d3.set_node_properties(color=adjmat.columns.values, size=size)
+d3.set_node_properties(color=adjmat.columns.values, size=size, scaler=None)
 d3.show()
 
 # Example D: include node-edge-size

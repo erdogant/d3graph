@@ -104,7 +104,7 @@ function d3graphscript(config = {
   node.append("circle")
     .attr("r", function(d) { return d.node_size; })					// NODE SIZE
     .style("fill", function(d) {return d.node_color;})				// NODE-COLOR
-    .style("opacity", 0.95)
+    .style("opacity", function(d) {return d.node_opacity;}) 	    // NODE-OPACITY
     .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
     .style("stroke", function(d) {return d.node_color_edge;})		// NODE-COLOR-EDGE
   //  .style("stroke", '#000')										// NODE-EDGE-COLOR (all black)
@@ -238,6 +238,7 @@ function d3graphscript(config = {
 		d3.selectAll(".node")
 		.select("circle")
 		.style("fill", function(d) {return d.node_color;})
+		.style("opacity", function(d) {return d.node_opacity;})
 		.style("stroke", function(d) {return d.node_color_edge;})
 		.style("stroke-width", function(d) {return d.edge_width;})
 		.attr("r", function(d) { return d.node_size; })
