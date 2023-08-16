@@ -748,32 +748,42 @@ class d3graph:
         logger.debug(f'filepath is set to [{filepath}]')
         return Path(filepath)
 
-    def import_example(self, network='small'):
-        """Import example.
+    def import_example(self, data='energy', url=None, sep=','):
+        """Import example dataset from github source.
+
+        Import one of the few datasets from github source or specify your own download url link.
 
         Parameters
         ----------
-        network : str, optional
-            Import example adjacency matrix. The default is 'small'.
+        data : str
+            Name of datasets: 'sprinkler', 'titanic', 'student', 'fifa', 'cancer', 'waterpump', 'retail'
+        url : str
+            url link to to dataset.
 
         Returns
         -------
-        adjmat : pd.DataFrame()
+        pd.DataFrame()
+            Dataset containing mixed features.
+
+        References
+        ----------
+            * https://github.com/erdogant/datazets
 
         """
-        if network == 'small':
+
+        if data == 'small':
             source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
             target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
             weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat, None
-        elif network == 'bigbang':
+        elif data == 'bigbang':
             source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
             target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
             weight = [5, 3, 2, 2, 5, 2, 3, 5, 10]
             adjmat = vec2adjmat(source, target, weight=weight)
-            return adjmat, None
-        elif network == 'karate':
+            return adjmat
+        elif data == 'karate':
             import scipy
             if version.parse(scipy.__version__) < version.parse('1.8.0'):
                 raise ImportError(
@@ -793,6 +803,9 @@ class d3graph:
             df['label'] = [G.nodes[i]['club'] for i in range(len(G.nodes))]
 
             return adjmat, df
+        else:
+            return dz.get(data=data, url=url, sep=sep)
+
 
 
 # %%
