@@ -1372,6 +1372,41 @@ def _set_opacity(self, opacity, nodecount, node_names):
     return opacity
 
 
+def _compute_centrality(adjmat):
+    # Create a graph from the adjacency DataFrame
+    G = nx.from_pandas_adjacency(adjmat)
+    degree_centrality = nx.degree_centrality(G)
+    opacity = list(map(degree_centrality.get, adjmat.index.values))
+    # Normalize
+    # opacity = opacity + [0, 1]
+    opacity = _normalize_size(np.array(opacity).reshape(-1, 1), 0.35, 0.99, scaler='zscore')
+    # opacity = opacity[:-2]
+    return opacity
+
+
+def _set_node_size(self, size, minmax, nodecount):
+    node_scaler = self.config['node_scaler']
+    if isinstance(size, list):
+        size = np.array(size)
+    elif 'numpy' in str(type(size)):
+        pass
+    elif isinstance(size, type(None)):
+        # Set all nodes same default size
+        size = np.ones(nodecount, dtype=int) * 10
+    elif isinstance(size, (int, float)):
+        size = np.ones(nodecount, dtype=int) * size
+    elif isinstance(size, str) and size == 'degree':
+        size = _compute_centrality(self.adjmat)
+        node_scaler = 'minmax'
+    else:
+        raise ValueError(logger.error("Node size not possible"))
+    # Scale the sizes
+    size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler=node_scaler)
+    # size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler='minmax')
+    if len(size) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
+    # Return
+    return size
+
 def _set_node_fontsize(self, fontsize, nodecount):
     if isinstance(fontsize, list):
         fontsize = np.array(fontsize)
