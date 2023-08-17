@@ -300,14 +300,14 @@ class d3graph:
                             tooltip: List[str] = None,
                             color: Union[str, List[str]] = 'cluster',
                             opacity: Union[float, List[float]] = 'degree',
-                            size: Union[int, List[int]] = 10,
+                            size: Union[int, List[int]] = 15,
                             edge_color: Union[str, List[str]] = '#000000',
                             edge_size: Union[int, List[int]] = 1,
                             fontcolor: Union[str, List[str]] = 'node_color',
                             fontsize: Union[int, List[int]] = 12,
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
-                            minmax = [10, 50]):
+                            minmax = [8, 13]):
         """Node properties.
 
         Parameters
@@ -369,7 +369,7 @@ class d3graph:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution between minmax.
             None : No scaler is used.
-        minmax : tuple, (default: [10, 50])
+        minmax : tuple, (default: [0.5, 15])
             Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
             'zscore' : Scale values to Z-scores.
             'minmax' : The sklearn scaler will shrink the distribution.
@@ -389,8 +389,7 @@ class d3graph:
                 'edge_color': edge_color of the node
 
         """
-        if minmax is None:
-            minmax = [10, 50]
+        if minmax is None: minmax = [8, 13]
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
         group = np.zeros_like(node_names).astype(int)
@@ -481,20 +480,7 @@ class d3graph:
         if len(edge_color) != nodecount: raise ValueError("[edge_color] must be of same length as the number of nodes")
 
         ############# Set node size #############
-        if isinstance(size, list):
-            size = np.array(size)
-        elif 'numpy' in str(type(size)):
-            pass
-        elif isinstance(size, type(None)):
-            # Set all nodes same default size
-            size = np.ones(nodecount, dtype=int) * 5
-        elif isinstance(size, (int, float)):
-            size = np.ones(nodecount, dtype=int) * size
-        else:
-            raise ValueError(logger.error("Node size not possible"))
-        # Scale the sizes
-        size = _normalize_size(size.reshape(-1, 1), minmax[0], minmax[1], scaler=self.config['node_scaler'])
-        if len(size) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
+        size = _set_node_size(self, size, minmax, nodecount)
 
         ############# Set node edge size #############
         if isinstance(edge_size, list):
@@ -594,7 +580,13 @@ class d3graph:
         self.config['slider'] = [int(min_slider), int(max_slider)]
         logger.info('Slider range is set to [%g, %g]' % (self.config['slider'][0], self.config['slider'][1]))
 
-    def graph(self, adjmat, color: str = 'cluster', opacity: str = 'degree', size = 10, scaler: str = 'zscore', cmap: str = 'Set2') -> None:
+    def graph(self,
+              adjmat,
+              color: str = 'cluster',
+              opacity: str = 'degree',
+              size = 'degree',
+              scaler: str = 'zscore',
+              cmap: str = 'Set2') -> None:
         """Process the adjacency matrix and set all properties to default.
 
         This function processes the adjacency matrix. The nodes are the column and index names.
@@ -1352,15 +1344,8 @@ def _set_opacity(self, opacity, nodecount, node_names):
     elif 'numpy' in str(type(opacity)):
         opacity = _get_hexcolor(opacity, cmap=self.config['cmap'])
     elif isinstance(opacity, str) and opacity == 'degree':
-        # Create a graph from the adjacency DataFrame
-        G = nx.from_pandas_adjacency(self.adjmat)
         # Compute degree centrality
-        degree_centrality = nx.degree_centrality(G)
-        opacity = list(map(degree_centrality.get, self.adjmat.index.values))
-        # Normalize
-        # opacity = opacity + [0, 1]
-        opacity = _normalize_size(np.array(opacity).reshape(-1, 1), 0.35, 0.99, scaler='zscore')
-        # opacity = opacity[:-2]
+        opacity = _compute_centrality(self.adjmat)
     elif isinstance(opacity, float):
         opacity = np.array([opacity] * nodecount)
     elif (opacity is None) and hasattr(self, 'node_properties'):
