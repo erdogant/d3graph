@@ -8,8 +8,7 @@ from d3graph import d3graph, adjmat2vec, vec2adjmat
 from d3graph import d3graph
 # intialize to load example dataset
 d3 = d3graph()
-# df = d3.import_example(data='bigbang')
-# df, adjmat = d3.import_example(data='karate')
+# 
 df = d3.import_example(data='energy')
 df=vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # d3.graph(df, size='degree', opacity='degree', color='cluster', scaler='zscore')

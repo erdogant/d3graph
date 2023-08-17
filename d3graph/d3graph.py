@@ -335,6 +335,11 @@ class d3graph:
             * 0.99: All nodes will get this transparancy
             * ['0.4, 0.1, 0.3,...]
             * ['A','A','B',...]:  Opacity is generated using cmap and according to the unique labels.
+        size : array of integers (default: 5)
+            Size of the nodes.
+            * 'degree' opacity is based on the centrality measure.
+            * 10: all nodes sizes are set to 10
+            * [10, 5, 3, 1, ...]: Specify node sizes
         fontcolor : list of strings (default: node_color')
             Color of the node.
             * 'node_color' : Colours are inherited from the node color
@@ -347,10 +352,6 @@ class d3graph:
             Size of the node text..
             * 10: All nodes will be set on this size,
             * [10, 20, 5,...]  Specify per node the text size.
-        size : array of integers (default: 5)
-            Size of the nodes.
-            * 10: all nodes sizes are set to 10
-            * [10, 5, 3, 1, ...]: Specify node sizes
         edge_color : list of strings (default: '#000080')
             Edge color of the node.
             * 'cluster' : Colours are based on the community distance clusters.
