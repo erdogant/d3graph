@@ -601,8 +601,16 @@ class d3graph:
             * 'cluster' or None : Colours are based on the community distance clusters.
         size : array of integers (default: 5)
             Size of the nodes.
+            * 'degree' size is based on the centrality measure.
             * 10: all nodes sizes are set to 10
             * [10, 5, 3, 1, ...]: Specify node sizes
+        opacity : list of floats (default: 'degree')
+            Set the opacity of the node [0-1] where 0=transparant and 1=no transparancy.
+            * None: Colors are inhereted from the initialization
+            * 'degree' opacity is based on the centrality measure.
+            * 0.99: All nodes will get this transparancy
+            * ['0.4, 0.1, 0.3,...]
+            * ['A','A','B',...]:  Opacity is generated using cmap and according to the unique labels.
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
