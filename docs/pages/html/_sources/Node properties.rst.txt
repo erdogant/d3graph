@@ -134,7 +134,7 @@ Change the **node fontsize** and ajust it according to the node color.
 .. code:: python
 
 	d3 = d3graph()
-	adjmat, df = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 
 	fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
 	d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=fontsize)
@@ -228,7 +228,7 @@ Customize the properties of one specific node
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
