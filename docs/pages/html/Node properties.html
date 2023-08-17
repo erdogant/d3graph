@@ -76,6 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#node-fontsize">Node fontsize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-color-on-clustering">Node edge color on clustering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-size">Node size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#node-opacity">Node opacity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-size">Node edge size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#node-edge-color">Node edge color</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#customize-the-properties-of-one-specific-node">Customize the properties of one specific node</a></li>
@@ -151,27 +152,31 @@
 <li><p>Node tooltip</p></li>
 </ol>
 </li>
-<li><ol class="arabic simple" start="2">
+<li><ol class="arabic simple" start="3">
 <li><p>Node color</p></li>
 </ol>
 </li>
-<li><ol class="arabic simple" start="3">
+<li><ol class="arabic simple" start="4">
 <li><p>Node size</p></li>
 </ol>
 </li>
-<li><ol class="arabic simple" start="4">
-<li><p>Node edge color</p></li>
-</ol>
-</li>
 <li><ol class="arabic simple" start="5">
-<li><p>Node fontcolor</p></li>
+<li><p>Node opacity</p></li>
 </ol>
 </li>
 <li><ol class="arabic simple" start="6">
-<li><p>Node fontsize</p></li>
+<li><p>Node edge color</p></li>
 </ol>
 </li>
 <li><ol class="arabic simple" start="7">
+<li><p>Node fontcolor</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="8">
+<li><p>Node fontsize</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="9">
 <li><p>Node edge size</p></li>
 </ol>
 </li>
@@ -215,11 +220,11 @@
 <span class="n">label</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
 <span class="c1"># Set node properties</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="c1"># If you want thinner lines</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">25</span><span class="p">])</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -287,6 +292,21 @@
 <p>Lets change the <strong>node size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">)</span>
+<span class="c1"># Plot</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
+<section id="node-opacity">
+<h2>Node opacity<a class="headerlink" href="#node-opacity" title="Permalink to this heading"></a></h2>
+<p>We can change the <strong>node opacity</strong> using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">opacity</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
