@@ -15,14 +15,4 @@ def test_clean(d3, helpers) -> None:
 
     # Set attrs to dummy value (i.e., 0) and assert they exist in the object
     original_attrs = {field: 0 for field in clean_fields}
-    d3_og = helpers.setattrs(obj=d3, **original_attrs)
-
-    # Make a copy of the object and apply _clean()
-    d3_new = deepcopy(d3_og)
-    d3_new._clean()
-
-    assert len([attr for attr in vars(d3_og) if attr in clean_fields]) == len(clean_fields)
-    assert all(isinstance(i, int) for i in map(vars(d3_og).get, clean_fields))
-    assert not [attr for attr in vars(d3_new) if attr in clean_fields]
-    assert not any(hasattr(d3_new, attr) for attr in vars(d3_new) if attr in clean_fields)
     

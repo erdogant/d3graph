@@ -42,7 +42,7 @@ Let's load the *bigbang* network example and examine the adjacency matrix. Here 
 	# Initialize
 	d3 = d3graph()
 	# Load example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 
 	print(adjmat)
 	# target      Amy  Bernadette  Howard  Leonard  Penny  Rajesh  Sheldon
@@ -107,7 +107,7 @@ The following example will write the final HTML to a custom directory with a cus
 	d3 = d3graph()
 
 	# Load example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 
 	d3.graph(adjmat)
 

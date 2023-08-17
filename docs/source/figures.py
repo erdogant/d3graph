@@ -28,7 +28,7 @@ from d3graph import d3graph
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 
 print(adjmat)
 
@@ -58,7 +58,7 @@ from d3graph import d3graph, vec2adjmat
 d3 = d3graph()
 
 # Load example
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 
 html = d3.graph(adjmat, html=True)
 
