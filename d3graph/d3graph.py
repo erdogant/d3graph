@@ -1,5 +1,6 @@
 """Make interactive network in D3 javascript."""
 # ---------------------------------
+# Author      : E.Taskesen
 # Name        : d3graph.py
 # Licence     : See licences
 # ---------------------------------
@@ -12,7 +13,6 @@ from json import dumps
 from pathlib import Path
 from sys import platform
 from tempfile import TemporaryDirectory
-from typing import List, Union, Tuple
 from unicodedata import normalize
 
 from community import community_louvain
@@ -72,7 +72,7 @@ class d3graph:
     def __init__(self,
                  collision: float = 0.5,
                  charge: int = 450,
-                 slider: List[int] = None,
+                 slider: list[int] = None,
                  support='text',
                  verbose: int = 20) -> None:
         """Initialize d3graph."""
@@ -103,7 +103,7 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self,
-             figsize: Tuple[int, int] = (1500, 800),
+             figsize: tuple[int, int] = (1500, 800),
              title: str = 'd3graph',
              filepath: str = 'd3graph.html',
              showfig: bool = True,
@@ -203,8 +203,8 @@ class d3graph:
                             label: str = None,
                             label_color = '#808080',
                             label_fontsize: int = 8,
-                            minmax: List[float] = [0.5, 15],
-                            minmax_distance: List[float] = [50, 100],
+                            minmax: list[float] = [0.5, 15],
+                            minmax_distance: list[float] = [50, 100],
                             ) -> dict:
         """Edge properties.
 
@@ -296,15 +296,15 @@ class d3graph:
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
     def set_node_properties(self,
-                            label: List[str] = None,
-                            tooltip: List[str] = None,
-                            color: Union[str, List[str]] = 'cluster',
-                            opacity: Union[float, List[float]] = 'degree',
-                            size: Union[int, List[int]] = 15,
-                            edge_color: Union[str, List[str]] = '#000000',
-                            edge_size: Union[int, List[int]] = 1,
-                            fontcolor: Union[str, List[str]] = 'node_color',
-                            fontsize: Union[int, List[int]] = 12,
+                            label: list[str] = None,
+                            tooltip: list[str] = None,
+                            color: tuple[str, list[str]] = 'cluster',
+                            opacity: tuple[float, list[float]] = 'degree',
+                            size: tuple[int, list[int]] = 15,
+                            edge_color: tuple[str, list[str]] = '#000000',
+                            edge_size: tuple[int, list[int]] = 1,
+                            fontcolor: tuple[str, list[str]] = 'node_color',
+                            fontsize: tuple[int, list[int]] = 12,
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
                             minmax = [8, 13]):
@@ -503,17 +503,17 @@ class d3graph:
         ############# Store in dict #############
         self.node_properties = {}
         for i, node in enumerate(node_names):
-            self.node_properties[node] = {'name'         : node,
-                                          'label'        : label[i],
-                                          'tooltip'      : tooltip[i],
-                                          'color'        : color[i].astype(str),
-                                          'opacity'      : opacity[i].astype(str),
-                                          'fontcolor'    : fontcolor[i].astype(str),
-                                          'fontsize'     : fontsize[i].astype(int),
-                                          'size'         : size[i],
-                                          'edge_size'    : edge_size[i],
-                                          'edge_color'   : edge_color[i],
-                                          'group'        : group[i]}
+            self.node_properties[node] = {'name': node,
+                                          'label': label[i],
+                                          'tooltip': tooltip[i],
+                                          'color': color[i].astype(str),
+                                          'opacity': opacity[i].astype(str),
+                                          'fontcolor': fontcolor[i].astype(str),
+                                          'fontsize': fontsize[i].astype(int),
+                                          'size': size[i],
+                                          'edge_size': edge_size[i],
+                                          'edge_color': edge_color[i],
+                                          'group': group[i]}
 
         logger.info('Number of unique nodes: %.0d', len(self.node_properties.keys()))
 
@@ -780,7 +780,6 @@ class d3graph:
             * https://github.com/erdogant/datazets
 
         """
-
         if data == 'small':
             source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
             target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
@@ -788,10 +787,8 @@ class d3graph:
             adjmat = vec2adjmat(source, target, weight=weight)
             return adjmat, None
         elif data == 'bigbang':
-            source = ['Penny', 'Penny', 'Amy', 'Bernadette', 'Bernadette', 'Sheldon', 'Sheldon', 'Sheldon', 'Rajesh']
-            target = ['Leonard', 'Amy', 'Bernadette', 'Rajesh', 'Howard', 'Howard', 'Leonard', 'Amy', 'Penny']
-            weight = [5, 3, 2, 2, 5, 2, 3, 5, 10]
-            adjmat = vec2adjmat(source, target, weight=weight)
+            df = dz.get(data=data)
+            adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'])
             return adjmat
         elif data == 'karate':
             import scipy
@@ -815,7 +812,6 @@ class d3graph:
             return adjmat, df
         else:
             return dz.get(data=data, url=url, sep=sep)
-
 
 
 # %%
@@ -1117,7 +1113,10 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 
 
 # %% Normalize.
-def _normalize_size(getsizes, minscale: Union[int, float] = 0.5, maxscale: Union[int, float] = 4, scaler: str = 'zscore'):
+def _normalize_size(getsizes,
+                    minscale: tuple[int, float] = 0.5,
+                    maxscale: tuple[int, float] = 4,
+                    scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
 
@@ -1227,7 +1226,7 @@ def remove_special_chars(adjmat):
 
 
 # %%  Convert adjacency matrix to vector
-def vec2adjmat(source: list, target: list, weight: List[int] = None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
+def vec2adjmat(source: list, target: list, weight: list[int] = None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
     """Convert source and target into adjacency matrix.
 
     Parameters
