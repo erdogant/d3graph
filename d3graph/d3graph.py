@@ -895,8 +895,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 label_fontsize: int = 8,
                 edge_weight: int = 1,
                 edge_distance: int = 50,
-                minmax: list[float] = [0.5, 15],
-                minmax_distance: list[float] = [50, 100],
+                minmax: list = [0.5, 15],
+                minmax_distance: list = [50, 100],
                 ) -> dict:
     """Convert adjacency matrix into vector with source and target.
 
