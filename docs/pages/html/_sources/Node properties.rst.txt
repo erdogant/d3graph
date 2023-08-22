@@ -6,12 +6,13 @@ There are various possabilities to customize the network using the node properti
 .. note::
 	* 1. Node label
 	* 1. Node tooltip
-	* 2. Node color
-	* 3. Node size
-	* 4. Node edge color
-	* 5. Node fontcolor
-	* 6. Node fontsize
-	* 7. Node edge size
+	* 3. Node color
+	* 4. Node size
+	* 5. Node opacity
+	* 6. Node edge color
+	* 7. Node fontcolor
+	* 8. Node fontsize
+	* 9. Node edge size
 
 
 Node label
@@ -63,11 +64,11 @@ Getting more information when hovering over a node can be easily done using the 
 	label = df['label'].values
 
 	# Set node properties
-	d3.set_node_properties(label=label, tooltip=tooltip, color=label)
+	d3.set_node_properties(label=label, tooltip=tooltip, color=label, size='degree')
 	d3.show()
 
 	# If you want thinner lines
-	d3.set_node_properties(label=label, tooltip=tooltip, color=label, minmax=[0.1, 25])
+	d3.set_node_properties(label=label, tooltip=tooltip, color=label, size='degree', minmax=[0.1, 15])
 	d3.show()
 
 .. raw:: html
@@ -134,7 +135,7 @@ Change the **node fontsize** and ajust it according to the node color.
 .. code:: python
 
 	d3 = d3graph()
-	adjmat, df = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 
 	fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
 	d3.set_node_properties(color='cluster', scaler='minmax', fontcolor='node_color', fontsize=fontsize)
@@ -172,6 +173,28 @@ Lets change the **node size** from the *karate* example using the degree of the 
 
 	# Set node properties
 	d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values)
+	# Plot
+	d3.show()
+
+	# Set node properties
+	d3.set_node_properties(label=df['label'].values, color=df['label'].values, size='degree')
+	# Plot
+	d3.show()
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html" height="700px" width="850px", frameBorder="0"></iframe>
+
+
+Node opacity
+**************************************************
+
+We can change the **node opacity** using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.
+
+.. code:: python
+
+	# Set node properties
+	d3.set_node_properties(opacity='degree', size='degree', color='cluster')
 
 	# Plot
 	d3.show()
@@ -228,7 +251,7 @@ Customize the properties of one specific node
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 

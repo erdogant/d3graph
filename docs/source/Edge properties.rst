@@ -24,7 +24,7 @@ Edge network properties can also be changed for the edges:
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
@@ -72,7 +72,7 @@ Each marker can be customized using the ``edge_properties``.
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 	# Set some node properties
@@ -120,7 +120,7 @@ Let's see the differences between the different methods.
 	# Initialization
 	d3 = d3graph()
 	# Load karate example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process the adjacency matrix
 	d3.graph(adjmat)
 
@@ -162,7 +162,7 @@ The labels of the edges can be set per edge in a similar manner as for the other
 	from d3graph import d3graph
 	# intialize to load example dataset
 	d3 = d3graph()
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 
 	# Initialize with clustering colors
 	d3.graph(adjmat, color='cluster')

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Description &mdash; d3graph d3graph documentation</title>
+  <title>&lt;no title&gt; &mdash; d3graph d3graph documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -12,6 +12,8 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
@@ -33,7 +35,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.4
+                2.4.7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -98,6 +100,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.data_checks"><code class="docutils literal notranslate"><span class="pre">data_checks()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.edges2G"><code class="docutils literal notranslate"><span class="pre">edges2G()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.get_support"><code class="docutils literal notranslate"><span class="pre">get_support()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.json_create"><code class="docutils literal notranslate"><span class="pre">json_create()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.library_compatibility_checks"><code class="docutils literal notranslate"><span class="pre">library_compatibility_checks()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.make_graph"><code class="docutils literal notranslate"><span class="pre">make_graph()</span></code></a></li>
@@ -123,7 +126,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Description</li>
+      <li class="breadcrumb-item active">&lt;no title&gt;</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/d3graph.d3graph.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -218,42 +221,24 @@ None : Inherits the color from marker_color.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">450</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">d3graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">450</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'text'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph" title="Permalink to this definition"></a></dt>
 <dd><p>Create interactive networks in d3js.</p>
-<section id="description">
-<h1>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h1>
 <p>d3graph is a Python library that is built on d3js to create interactive and standalone networks. The input
 data is an adjacency matrix for which the columns and indexes are the nodes and elements&gt;0 the edges.
 The output is an HTML file that is interactive and standalone.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param collision<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Response of the network. Higher means that more collisions are prevented.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collision</strong> (<em>float</em><em>, </em><em>(</em><em>default: 0.5</em><em>)</em>) – Response of the network. Higher means that more collisions are prevented.</p></li>
+<li><p><strong>charge</strong> (<em>int</em><em>, </em><em>(</em><em>default: 250</em><em>)</em>) – Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.</p></li>
+<li><p><strong>slider</strong> (<em>list</em><em> [</em><em>min: int</em><em>, </em><em>max: int</em><em>]</em><em>:</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>None</em><em>, </em><em>None</em><em>]</em><em>)</em>) – [None, None] : Slider is automatically set to the min-max range using the edge weights.
+[0, 10] : Slider is set to user defined range</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default: 20</em><em>)</em>) – Print progress to screen.
+60: None, 40: Error, 30: Warn, 20: Info, 10: Debug</p></li>
+</ul>
 </dd>
-<dt class="field-even">type collision<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, (default: 0.5)</p>
-</dd>
-<dt class="field-odd">param charge<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.</p>
-</dd>
-<dt class="field-even">type charge<span class="colon">:</span></dt>
-<dd class="field-even"><p>int, (default: 250)</p>
-</dd>
-<dt class="field-odd">param slider<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[None, None] : Slider is automatically set to the min-max range using the edge weights.
-[0, 10] : Slider is set to user defined range</p>
-</dd>
-<dt class="field-even">type slider<span class="colon">:</span></dt>
-<dd class="field-even"><p>list [min: int, max: int]:, (default: [None, None])</p>
-</dd>
-<dt class="field-odd">param verbose<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Print progress to screen.
-60: None, 40: Error, 30: Warn, 20: Info, 10: Debug</p>
-</dd>
-<dt class="field-even">type verbose<span class="colon">:</span></dt>
-<dd class="field-even"><p>int, (default: 20)</p>
-</dd>
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
@@ -287,89 +272,85 @@ The output is an HTML file that is interactive and standalone.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.graph">
-<span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cluster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.graph" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cluster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'degree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'degree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Set2'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.graph" title="Permalink to this definition"></a></dt>
 <dd><p>Process the adjacency matrix and set all properties to default.</p>
-<section id="id1">
-<h2>Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>This function processes the adjacency matrix. The nodes are the column and index names.
 A connect edge is seen in case vertices have values larger than 0. The strenght of the edge is based on the vertices values.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param adjmat<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Adjacency matrix (symmetric). Values &gt; 0 are edges.</p>
-</dd>
-<dt class="field-even">type adjmat<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame()</p>
-</dd>
-<dt class="field-odd">param color<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Coloring of the nodes.
-* ‘cluster’ or None : Colours are based on the community distance clusters.</p>
-</dd>
-<dt class="field-even">type color<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of strings (default: ‘cluster’)</p>
-</dd>
-<dt class="field-odd">param size<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Size of the nodes.
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix (symmetric). Values &gt; 0 are edges.</p></li>
+<li><p><strong>color</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: 'cluster'</em><em>)</em>) – Coloring of the nodes.
+* ‘cluster’ or None : Colours are based on the community distance clusters.</p></li>
+<li><p><strong>size</strong> (<em>array</em><em> of </em><em>integers</em><em> (</em><em>default: 5</em><em>)</em>) – Size of the nodes.
+* ‘degree’ size is based on the centrality measure.
 * 10: all nodes sizes are set to 10
-* [10, 5, 3, 1, …]: Specify node sizes</p>
-</dd>
-<dt class="field-even">type size<span class="colon">:</span></dt>
-<dd class="field-even"><p>array of integers (default: 5)</p>
-</dd>
-<dt class="field-odd">param scaler<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Scale the edge-width using the following scaler:
+* [10, 5, 3, 1, …]: Specify node sizes</p></li>
+<li><p><strong>opacity</strong> (<em>list</em><em> of </em><em>floats</em><em> (</em><em>default: 'degree'</em><em>)</em>) – Set the opacity of the node [0-1] where 0=transparant and 1=no transparancy.
+* None: Colors are inhereted from the initialization
+* ‘degree’ opacity is based on the centrality measure.
+* 0.99: All nodes will get this transparancy
+* [‘0.4, 0.1, 0.3,…]
+* [‘A’,’A’,’B’,…]:  Opacity is generated using cmap and according to the unique labels.</p></li>
+<li><p><strong>scaler</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'zscore'</em><em>)</em>) – Scale the edge-width using the following scaler:
 ‘zscore’ : Scale values to Z-scores.
 ‘minmax’ : The sklearn scaler will shrink the distribution between minmax.
-None : No scaler is used.</p>
-</dd>
-<dt class="field-even">type scaler<span class="colon">:</span></dt>
-<dd class="field-even"><p>str, (default: ‘zscore’)</p>
+None : No scaler is used.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load karate example</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Node properties</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Edge properties</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.import_example">
-<span class="sig-name descname"><span class="pre">import_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'small'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.import_example" title="Permalink to this definition"></a></dt>
-<dd><p>Import example.</p>
+<span class="sig-name descname"><span class="pre">import_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'energy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.import_example" title="Permalink to this definition"></a></dt>
+<dd><p>Import example dataset from github source.</p>
+<p>Import one of the few datasets from github source or specify your own download url link.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>network</strong> (<em>str</em><em>, </em><em>optional</em>) – Import example adjacency matrix. The default is ‘small’.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Name of datasets: ‘sprinkler’, ‘titanic’, ‘student’, ‘fifa’, ‘cancer’, ‘waterpump’, ‘retail’</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – url link to to dataset.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>adjmat</strong></p>
+<dd class="field-even"><p>Dataset containing mixed features.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/erdogant/datazets">https://github.com/erdogant/datazets</a></p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -434,7 +415,7 @@ None : Inherits the color from marker_color.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.set_node_properties">
-<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tooltip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#000080'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontcolor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node_color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">50]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tooltip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cluster'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'degree'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontcolor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'node_color'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Set1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'zscore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[8,</span> <span class="pre">13]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.d3graph.set_node_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Node properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -446,11 +427,18 @@ If not specified, the label text will be inherited from the adjacency matrix col
 If not specified, the text will inherit from the label.
 * [‘tooltip 1’,’tooltip 2’,’tooltip 3’, …]</p></li>
 <li><p><strong>color</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: cluster'</em><em>)</em>) – Color of the node.
-* ‘cluster’ or None : Colours are based on the community distance clusters.
+* None: Colors are inhereted from the initialization
+* ‘cluster’: Colours are based on the community distance clusters.
 * ‘#000000’: All nodes will get this hex color.
 * [‘#377eb8’,’#ffffff’,’#000000’,…]: Hex colors are directly used.
 * [‘A’]: All nodes will have the same color. Color is generated on CMAP and the unique labels.
-* [‘A’,’A’,’B’,…]:  Colors are generated using cmap and the unique labels accordingly colored.</p></li>
+* [‘A’,’A’,’B’,…]:  Colors are generated using cmap and according to the unique labels.</p></li>
+<li><p><strong>opacity</strong> (<em>list</em><em> of </em><em>floats</em><em> (</em><em>default: 'degree'</em><em>)</em>) – Set the opacity of the node [0-1] where 0=transparant and 1=no transparancy.
+* None: Colors are inhereted from the initialization
+* ‘degree’ opacity is based on the centrality measure.
+* 0.99: All nodes will get this transparancy
+* [‘0.4, 0.1, 0.3,…]
+* [‘A’,’A’,’B’,…]:  Opacity is generated using cmap and according to the unique labels.</p></li>
 <li><p><strong>fontcolor</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: node_color'</em><em>)</em>) – Color of the node.
 * ‘node_color’ : Colours are inherited from the node color
 * ‘cluster’ : Colours are based on the community distance clusters.
@@ -478,7 +466,7 @@ If not specified, the text will inherit from the label.
 ‘zscore’ : Scale values to Z-scores.
 ‘minmax’ : The sklearn scaler will shrink the distribution between minmax.
 None : No scaler is used.</p></li>
-<li><p><strong>minmax</strong> (<em>tuple</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>10</em><em>, </em><em>50</em><em>]</em><em>)</em>) – Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
+<li><p><strong>minmax</strong> (<em>tuple</em><em>, </em><em>(</em><em>default:</em><em> [</em><em>0.5</em><em>, </em><em>15</em><em>]</em><em>)</em>) – Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
 ‘zscore’ : Scale values to Z-scores.
 ‘minmax’ : The sklearn scaler will shrink the distribution.
 None : No scaler is used.</p></li>
@@ -489,6 +477,7 @@ None : No scaler is used.</p></li>
 <dl class="simple">
 <dt>key: node_name</dt><dd><p>’label’: Label of the node
 ‘color’: color of the node
+‘opacity’: Opacity of the node
 ‘size’: size of the node
 ‘fontcolor’: color of the node text
 ‘fontsize’: node text size
@@ -586,7 +575,6 @@ False: Do not use IPython.</p></li>
 </dl>
 </dd></dl>
 
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -622,6 +610,11 @@ False: Do not use IPython.</p></li>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="d3graph.d3graph.get_support">
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">get_support</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">support</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.get_support" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.json_create">

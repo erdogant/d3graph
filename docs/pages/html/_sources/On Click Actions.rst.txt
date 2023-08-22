@@ -11,7 +11,7 @@ Changing the click actions is easy using the click dictionary.
 
 	# Initialize with defaults to load example
 	d3 = d3graph()
-	adjmat, df = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	
 	# Initialize with data
 	d3.graph(adjmat)

@@ -1,5 +1,6 @@
 from d3graph.d3graph import d3graph
 from packaging import version
+from datazets import get as import_example
 
 from d3graph.d3graph import (
     vec2adjmat,
@@ -10,9 +11,10 @@ from d3graph.d3graph import (
     data_checks,
     )
 
+
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.4.6'
+__version__ = '2.4.9'
 
 
 # module level doc-string
@@ -20,8 +22,6 @@ __doc__ = """
 d3graph
 =======================================================================================
 
-Description
-------------
 d3graph is a python library that is build on d3js and creates interactive and stand-alone networks.
 The input data is a simple adjacency matrix for which the columns and indexes are the nodes and elements>0 the edges.
 The ouput is a html file that is interactive and stand alone.

@@ -2,7 +2,21 @@
 import networkx as nx
 import pandas as pd
 import numpy as np
+from d3graph import d3graph, adjmat2vec, vec2adjmat
+
+# %% opacity
 from d3graph import d3graph, adjmat2vec
+# intialize to load example dataset
+d3 = d3graph()
+# 
+df = d3.import_example(data='energy')
+df=vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# d3.graph(df, size='degree', opacity='degree', color='cluster', scaler='zscore')
+d3.graph(df)
+
+# d3.set_node_properties(opacity='centrality')
+d3.show(filepath='c://temp/network.html')
+
 
 # %% Edge distance
 
@@ -10,7 +24,7 @@ from d3graph import d3graph, adjmat2vec
 from d3graph import d3graph
 # intialize to load example dataset
 d3 = d3graph(support=False)
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 
 # Initialize with clustering colors
 d3.graph(adjmat, color='cluster')
@@ -54,7 +68,7 @@ d3.show(filepath=r'c:\temp\\d3graph\d3graph1.html')
 from d3graph import d3graph
 # intialize to load example dataset
 d3 = d3graph()
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 
 # Initialize with clustering colors
 d3.graph(adjmat, color='cluster')
@@ -87,7 +101,7 @@ from d3graph import d3graph
 d3 = d3graph()
 
 # Load example
-adjmat, df = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 # Color on clustering
 d3.graph(adjmat)
 fontsize=np.random.randint(low=6, high=40, size=adjmat.shape[0])
@@ -107,7 +121,7 @@ d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
 # %% 
 from d3graph import d3graph
-adjmat, df = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
 
 hexcolors = ['#000000', '#000000', '#000000', '#000FFF', '#000FFF', '#000FFF', '#000FFF']
@@ -178,7 +192,7 @@ from d3graph import d3graph
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat, df = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 d3.show(filepath='c:\\temp\\network1.html', show_slider=True)
@@ -245,7 +259,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 d3.set_edge_properties(directed=True)
@@ -331,7 +345,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 # Initialize
 d3 = d3graph()
 # Load example
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 # Process adjmat
 d3.graph(adjmat)
 # Show
@@ -381,7 +395,7 @@ d3.show(showfig=True)
 from d3graph import d3graph
 
 d3 = d3graph()
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
 
 # Error expected:
@@ -412,7 +426,7 @@ d3.set_node_properties(color=['#000000', '#000000', '#00', '#000000', '#000000',
 from d3graph import d3graph
 
 d3 = d3graph()
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 d3.graph(adjmat)
 d3.set_node_properties(label=adjmat.columns.values + ' are the names',
                        tooltip=['\nFemale\nMore info', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male'])
@@ -448,7 +462,7 @@ size = [10, 20, 10, 10, 15, 10, 5]
 d3 = d3graph()
 
 # Load example
-adjmat, _ = d3.import_example('bigbang')
+adjmat = d3.import_example('bigbang')
 
 d3.graph(adjmat)
 d3.show()
@@ -458,7 +472,7 @@ d3.set_node_properties(color=adjmat.columns.values)
 d3.show()
 
 # Example C: include node size
-d3.set_node_properties(color=adjmat.columns.values, size=size)
+d3.set_node_properties(color=adjmat.columns.values, size=size, scaler=None)
 d3.show()
 
 # Example D: include node-edge-size

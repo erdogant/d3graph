@@ -94,11 +94,12 @@ var node = svg.selectAll(".node")
     .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
 
   node.append("circle")
-    .attr("r", function(d) { return d.node_size; })
-    .style("fill", function(d) { return d.node_color; })
-    .style("opacity", 0.95)
-    .style("stroke-width", function(d) { return d.node_size_edge; })
-    .style("stroke", function(d) { return d.node_color_edge; });
+    .attr("r", function(d) { return d.node_size; })			            // NODE SIZE
+    .style("fill", function(d) { return d.node_color; })            // NODE-COLOR
+    .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
+    .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
+    .style("stroke", function(d) {return d.node_color_edge;})		    // NODE-COLOR-EDGE
+  //  .style("stroke", '#000')										                  // NODE-EDGE-COLOR (all black)
 
   node.append("text")
     .attr("dx", 10)
@@ -167,6 +168,26 @@ var node = svg.selectAll(".node")
   function neighboring(a, b) {
     return linkedByIndex[a.index + "," + b.index];
   }
+
+    // COLOR ON CLICK
+	function color_on_click() {
+		// Give the original color back
+		d3.selectAll(".node")
+		.select("circle")
+		.style("fill", function(d) {return d.node_color;})
+		.style("opacity", function(d) {return d.node_opacity;})
+		.style("stroke", function(d) {return d.node_color_edge;})
+		.style("stroke-width", function(d) {return d.edge_width;})
+		.attr("r", function(d) { return d.node_size; })
+		;
+
+		// Set the color on click
+		d3.select(this).select("circle")
+		.style("fill", {{ CLICK_FILL }})
+		.style("stroke", "{{ CLICK_STROKE }}")
+		.style("stroke-width", {{ CLICK_STROKEW }})
+		.attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
+		;}
 
   function connectedNodes() {
     if (toggle == 0) {

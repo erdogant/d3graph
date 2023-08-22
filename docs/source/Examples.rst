@@ -12,7 +12,7 @@ Default
 	# Initialize
 	d3 = d3graph()
 	# Load example
-	adjmat, _ = d3.import_example('bigbang')
+	adjmat = d3.import_example('bigbang')
 	# Process adjmat
 	d3.graph(adjmat)
 	# Show
