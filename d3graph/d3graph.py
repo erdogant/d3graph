@@ -203,8 +203,8 @@ class d3graph:
                             label: str = None,
                             label_color = '#808080',
                             label_fontsize: int = 8,
-                            minmax: list[float] = [0.5, 15],
-                            minmax_distance: list[float] = [50, 100],
+                            minmax: list[float, float] = [0.5, 15],
+                            minmax_distance: list[float, float] = [50, 100],
                             ) -> dict:
         """Edge properties.
 
