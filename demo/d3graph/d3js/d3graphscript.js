@@ -9,8 +9,6 @@ function d3graphscript(config = {
     collision: 0.5
     }) {
 
-  // console.log('d3graphscript config = ', config);
-
   //Constants for the SVG
   var width = config.width;
   var height = config.height;
@@ -72,7 +70,7 @@ function d3graphscript(config = {
     .attr("class", "link")
     .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
 	.attr("marker-end", function(d) {
-		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+    	if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
     .style("stroke", function(d) {return d.color;})                     // EDGE-COLORS
 //  .style("stroke-width", 1); // WIDTH OF THE LINKS
@@ -88,7 +86,6 @@ function d3graphscript(config = {
      .style("font-family", "Arial")
      //.attr("transform", "rotate(90)")
      .text(function(d) { return d.label; });
-
 
   //Do the same with the circles for the nodes
   var node = svg.selectAll(".node")

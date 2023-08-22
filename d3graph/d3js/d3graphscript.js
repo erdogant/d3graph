@@ -1,3 +1,4 @@
+
 function d3graphscript(config = {
   // Default values
   width: 800,
@@ -7,6 +8,7 @@ function d3graphscript(config = {
   directed: false,
   collision: 0.5
 }) {
+
   // Constants for the SVG
   var width = config.width;
   var height = config.height;
@@ -46,9 +48,7 @@ function d3graphscript(config = {
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .call(d3.zoom().on("zoom", function () {
-      svg.attr("transform", d3.event.transform);
-    }))
+    .call(d3.zoom().on("zoom", function () { svg.attr("transform", d3.event.transform); }))
     .on("dblclick.zoom", null)
     .append("g");
 
@@ -75,8 +75,9 @@ var link = svg.selectAll(".link")
     .attr("marker-end", function(d) {
       if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-    .style("stroke", function(d) {return d.color;});      
+    .style("stroke", function(d) {return d.color;});                    // EDGE-COLORS
 
+  // ADD TEXT ON THE EDGES (PART 1/2)
   var linkText = svg.selectAll(".link-text")
     .data(graph.links)
     .enter().append("text")
@@ -86,6 +87,7 @@ var link = svg.selectAll(".link")
     .style("font-family", "Arial")
     .text(function(d) { return d.label; });
 
+  //Do the same with the circles for the nodes
 var node = svg.selectAll(".node")
     .data(graph.nodes)
     .enter().append("g")
@@ -93,13 +95,15 @@ var node = svg.selectAll(".node")
     .call(drag)
     .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
 
+  {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
+
   node.append("circle")
-    .attr("r", function(d) { return d.node_size; })			            // NODE SIZE
+    .attr("r", function(d) { return d.node_size; })			        // NODE SIZE
     .style("fill", function(d) { return d.node_color; })            // NODE-COLOR
     .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
     .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
-    .style("stroke", function(d) {return d.node_color_edge;})		    // NODE-COLOR-EDGE
-  //  .style("stroke", '#000')										                  // NODE-EDGE-COLOR (all black)
+    .style("stroke", function(d) {return d.node_color_edge;})	    // NODE-COLOR-EDGE
+  //  .style("stroke", '#000')									    // NODE-EDGE-COLOR (all black)
 
   node.append("text")
     .attr("dx", 10)
@@ -189,6 +193,7 @@ var node = svg.selectAll(".node")
 		.attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
 		;}
 
+	
   function connectedNodes() {
     if (toggle == 0) {
       d = d3.select(this).node().__data__;
@@ -206,20 +211,25 @@ var node = svg.selectAll(".node")
     }
   }
 
-  // function restart() {
-  //   force.nodes(graph.nodes);
-  //   force.links(graph.links);
-  //   force.start();
+  //adjust threshold
+  function threshold() {
+    let thresh = this.value;
 
-  //   link = link.data(graph.links);
-  //   link.exit().remove();
-  //   link.enter().insert("line", ".node").attr("class", "link");
-  //   link.style("stroke-width", function(d) { return d.edge_width; })
-  //     .style("stroke", function(d) { return d.color; });
+    // console.log('Setting threshold', thresh)
+    graph.links.splice(0, graph.links.length);
 
-  //   node = node.data(graph.nodes);
-  //   node.enter().append("circle").attr("class", "node").attr("r", 5).call(force.drag);
-  // }
+    for (var i = 0; i < graphRec.links.length; i++) {
+      if (graphRec.links[i].edge_weight > thresh) {
+        graph.links.push(graphRec.links[i]);
+      }
+    }
+    restart();
+  }
+
+  d3.select("#thresholdSlider").on("change", threshold);
+
+
+
   function restart() {
     simulation.nodes(graph.nodes);
     simulation.force("link").links(graph.links);
@@ -228,8 +238,11 @@ var node = svg.selectAll(".node")
     link = link.data(graph.links);
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
-    link.style("stroke-width", function(d) { return d.edge_width; })
-      .style("stroke", function(d) { return d.color; });
+    //link.style('marker-start', function(d){ return 'url(#marker_' + d.marker_start  + ')' })
+    link.style("stroke-width", function(d) { return d.edge_width; }) // LINK-WIDTH AFTER BREAKING WITH SLIDER
+    link.style("stroke", function(d) { return d.color; });           // EDGE-COLOR AFTER BREAKING WITH SLIDER
+    link.style("marker-end", function(d) {                                    // Include the markers.
+		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
 
     node = node.data(graph.nodes);
     node.enter().append("circle").attr("class", "node").attr("r", 5).call(d3.drag()
@@ -237,4 +250,7 @@ var node = svg.selectAll(".node")
       .on("drag", dragged)
       .on("end", dragended));
   }
+
+
+
 }
