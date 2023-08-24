@@ -72,8 +72,8 @@ class d3graph:
     def __init__(self,
                  collision: float = 0.5,
                  charge: int = 450,
-                 slider = None,
-                 support: str ='text',
+                 slider=None,
+                 support: str = 'text',
                  verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None:
@@ -103,13 +103,13 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self,
-             figsize = [1500, 800],
+             figsize=[1500, 800],
              title: str = 'd3graph',
              filepath: str = 'd3graph.html',
              showfig: bool = True,
              overwrite: bool = True,
              show_slider: bool = True,
-             click = {'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
+             click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
              notebook: bool = False) -> None:
         """Build and show the graph.
 
@@ -201,10 +201,10 @@ class d3graph:
                             marker_end='arrow',
                             marker_color='#808080',
                             label: str = None,
-                            label_color = '#808080',
+                            label_color='#808080',
                             label_fontsize: int = 8,
-                            minmax: List[float] = [0.5, 15],
-                            minmax_distance: List[float] = [50, 100],
+                            minmax=[0.5, 15],
+                            minmax_distance=[50, 100],
                             ) -> dict:
         """Edge properties.
 
@@ -296,18 +296,19 @@ class d3graph:
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
     def set_node_properties(self,
-                            label: list[str] = None,
-                            tooltip: list[str] = None,
-                            color: tuple[str, list[str]] = 'cluster',
-                            opacity: tuple[float, list[float]] = 'degree',
-                            size: tuple[int, list[int]] = 15,
-                            edge_color: tuple[str, list[str]] = '#000000',
-                            edge_size: tuple[int, list[int]] = 1,
-                            fontcolor: tuple[str, list[str]] = 'node_color',
-                            fontsize: tuple[int, list[int]] = 12,
+                            label=None,
+                            tooltip=None,
+                            color='cluster',
+                            opacity='degree',
+                            size=15,
+                            edge_color='#000000',
+                            edge_size=1,
+                            fontcolor='node_color',
+                            fontsize=12,
                             cmap: str = 'Set1',
                             scaler: str = 'zscore',
-                            minmax = [8, 13]):
+                            minmax=[8, 13],
+                            ):
         """Node properties.
 
         Parameters
@@ -400,7 +401,7 @@ class d3graph:
         self.config['cmap'] = 'Paired' if cmap is None else cmap
         self.config['node_scaler'] = scaler
 
-        ############# Set node label #############
+        # ############ Set node label #############
         if isinstance(label, list):
             label = np.array(label).astype(str)
         elif 'numpy' in str(type(label)):
@@ -413,7 +414,7 @@ class d3graph:
             label = np.array([''] * nodecount)
         if len(label) != nodecount: raise ValueError("[label] must be of same length as the number of nodes")
 
-        ############# tooltip text #############
+        # ############ tooltip text #############
         if isinstance(tooltip, list):
             tooltip = np.array(tooltip).astype(str)
         elif 'numpy' in str(type(tooltip)):
@@ -426,7 +427,7 @@ class d3graph:
             tooltip = np.array([''] * nodecount)
         if len(tooltip) != nodecount: raise ValueError("[tooltip text] must be of same length as the number of nodes")
 
-        ############# Set node color #############
+        # ############ Set node color #############
         if isinstance(color, list) and len(color) == nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
@@ -447,16 +448,16 @@ class d3graph:
             assert 'Node color not possible'
         if len(color) != nodecount: raise ValueError("[color] must be of same length as the number of nodes")
 
-        ############# Set opacity #############
+        # ############ Set opacity #############
         opacity = _set_opacity(self, opacity, nodecount, node_names)
 
-        ############# Set node text color #############
+        # ############ Set node text color #############
         fontcolor = _set_node_fontcolor(self, fontcolor, color, node_names, nodecount)
 
-        ############# Set node text color #############
+        # ############ Set node text color #############
         fontsize = _set_node_fontsize(self, fontsize, nodecount)
 
-        ########### Set node color edge #############
+        # ########## Set node color edge #############
         if isinstance(edge_color, list):
             edge_color = np.array(edge_color)
         elif 'numpy' in str(type(edge_color)):
@@ -480,10 +481,10 @@ class d3graph:
         # Check length edge color with node count. This should match.
         if len(edge_color) != nodecount: raise ValueError("[edge_color] must be of same length as the number of nodes")
 
-        ############# Set node size #############
+        # ############ Set node size #############
         size = _set_node_size(self, size, minmax, nodecount)
 
-        ############# Set node edge size #############
+        # ############ Set node edge size #############
         if isinstance(edge_size, list):
             edge_size = np.array(edge_size)
         elif 'numpy' in str(type(edge_size)):
@@ -496,11 +497,11 @@ class d3graph:
         else:
             raise ValueError(logger.error("Node edge size not possible"))
 
-        ############# Scale the edge-sizes #############
+        # ############ Scale the edge-sizes #############
         edge_size = _normalize_size(edge_size.reshape(-1, 1), 0.5, 4, scaler=self.config['node_scaler'])
         if len(edge_size) != nodecount: raise ValueError("[edge_size] must be of same length as the number of nodes")
 
-        ############# Store in dict #############
+        # ############ Store in dict #############
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {'name': node,
@@ -585,7 +586,7 @@ class d3graph:
               adjmat,
               color: str = 'cluster',
               opacity: str = 'degree',
-              size = 'degree',
+              size='degree',
               scaler: str = 'zscore',
               cmap: str = 'Set2') -> None:
         """Process the adjacency matrix and set all properties to default.
@@ -1113,10 +1114,7 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 
 
 # %% Normalize.
-def _normalize_size(getsizes,
-                    minscale = 0.5,
-                    maxscale = 4,
-                    scaler: str = 'zscore'):
+def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
 
@@ -1452,6 +1450,7 @@ def _set_node_fontcolor(self, fontcolor, color, node_names, nodecount):
 
 
 def get_support(support):
+    """Support."""
     script=''
     if isinstance(support, bool) and (not support): support = None
     if isinstance(support, bool) and support: support = 'text'
