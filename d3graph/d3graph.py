@@ -72,8 +72,8 @@ class d3graph:
     def __init__(self,
                  collision: float = 0.5,
                  charge: int = 450,
-                 slider: list[int] = None,
-                 support='text',
+                 slider = None,
+                 support: str ='text',
                  verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None:
@@ -103,13 +103,13 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self,
-             figsize: tuple[int, int] = (1500, 800),
+             figsize = [1500, 800],
              title: str = 'd3graph',
              filepath: str = 'd3graph.html',
              showfig: bool = True,
              overwrite: bool = True,
              show_slider: bool = True,
-             click: dict = {'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
+             click = {'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
              notebook: bool = False) -> None:
         """Build and show the graph.
 
@@ -203,8 +203,8 @@ class d3graph:
                             label: str = None,
                             label_color = '#808080',
                             label_fontsize: int = 8,
-                            minmax: list[float, float] = [0.5, 15],
-                            minmax_distance: list[float, float] = [50, 100],
+                            minmax: List[float] = [0.5, 15],
+                            minmax_distance: List[float] = [50, 100],
                             ) -> dict:
         """Edge properties.
 
@@ -1114,8 +1114,8 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 
 # %% Normalize.
 def _normalize_size(getsizes,
-                    minscale: tuple[int, float] = 0.5,
-                    maxscale: tuple[int, float] = 4,
+                    minscale = 0.5,
+                    maxscale = 4,
                     scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
@@ -1226,7 +1226,7 @@ def remove_special_chars(adjmat):
 
 
 # %%  Convert adjacency matrix to vector
-def vec2adjmat(source: list, target: list, weight: list[int] = None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
+def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
     """Convert source and target into adjacency matrix.
 
     Parameters
@@ -1365,7 +1365,7 @@ def _set_opacity(self, opacity, nodecount, node_names):
         opacity = np.array(opacity * nodecount)
     else:
         opacity = np.array([0.99] * nodecount)
-        
+
     if len(opacity) != nodecount: raise ValueError("[opacity] must be of same length as the number of nodes")
 
     # Return
@@ -1406,6 +1406,7 @@ def _set_node_size(self, size, minmax, nodecount):
     if len(size) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
     # Return
     return size
+
 
 def _set_node_fontsize(self, fontsize, nodecount):
     if isinstance(fontsize, list):
