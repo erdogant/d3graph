@@ -9,7 +9,7 @@ else:
     raise RuntimeError(f"Unable to find version string in {VERSIONFILE}.")
 
 # Setup ----------------------------------------------------------------------------------------------------------------
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf8') as fh:
     long_description = fh.read()
 setuptools.setup(
     install_requires=['pandas',
