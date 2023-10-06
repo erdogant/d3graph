@@ -984,7 +984,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
         df['weight_scaled'] = edge_weight
         logger.info('Setting constant edge thickness of %g' %(edge_weight))
     else:
-        df['edge_distance'] = df['weight']
+        df['weight_scaled'] = df['weight']
 
     # Set marker start-end
     if marker_start is None: marker_start=''
