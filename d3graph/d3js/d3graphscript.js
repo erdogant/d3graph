@@ -141,7 +141,7 @@ function d3graphscript(config = {
 
   });
 
-  // --------- MARKER -----------
+  // --------- MARKER FOR EDGE ENDINGS -----------
 
   var data_marker = [
     { id: 0, name: 'circle', path: 'M 0, 0  m -5, 0  a 5,5 0 1,0 10,0  a 5,5 0 1,0 -10,0', viewbox: '-6 -6 12 12' }
