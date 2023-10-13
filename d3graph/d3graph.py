@@ -297,15 +297,16 @@ class d3graph:
 
     def set_node_properties(self,
                             label=None,
+                            marker='circle',
                             tooltip=None,
                             color='cluster',
                             opacity='degree',
-                            size=15,
+                            size='degree',
                             edge_color='#000000',
                             edge_size=1,
                             fontcolor='node_color',
                             fontsize=12,
-                            cmap: str = 'Set1',
+                            cmap: str = 'Set2',
                             scaler: str = 'zscore',
                             minmax=[8, 13],
                             ):
@@ -313,10 +314,13 @@ class d3graph:
 
         Parameters
         ----------
-        label : list of names (default: None)
+        label : list of labels (default: None)
             The text that is shown on the Node.
             If not specified, the label text will be inherited from the adjacency matrix column-names.
             * ['label 1','label 2','label 3', ...]
+        marker : list of markers (default: 'circle')
+            The marker that is used for the Node.
+            * ['circle','rect','rect', ...]
         tooltip : list of names (default: None)
             The text that is shown when hovering over the Node.
             If not specified, the text will inherit from the label.
