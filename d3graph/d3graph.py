@@ -386,6 +386,7 @@ class d3graph:
         node_properties: dict
             key: node_name
                 'label': Label of the node
+                'marker': marker of the node
                 'color': color of the node
                 'opacity': Opacity of the node
                 'size': size of the node
@@ -488,6 +489,9 @@ class d3graph:
         # ############ Set node size #############
         size = _set_node_size(self, size, minmax, nodecount)
 
+        # ############ Set marker size #############
+        marker = _set_marker(self, marker, nodecount)
+
         # ############ Set node edge size #############
         if isinstance(edge_size, list):
             edge_size = np.array(edge_size)
@@ -509,6 +513,7 @@ class d3graph:
         self.node_properties = {}
         for i, node in enumerate(node_names):
             self.node_properties[node] = {'name': node,
+                                          'marker': marker[i],
                                           'label': label[i],
                                           'tooltip': tooltip[i],
                                           'color': color[i].astype(str),
@@ -873,6 +878,7 @@ def json_create(G: nx.Graph) -> str:
     nodes_new = [None] * len(nodes)
     for i, node in enumerate(nodes):
         nodes[i]['node_name'] = nodes[i].pop('label')
+        nodes[i]['node_marker'] = nodes[i].pop('marker')
         # nodes[i]['node_label'] = nodes[i].pop('label')
         nodes[i]['node_tooltip'] = nodes[i].pop('tooltip')
         nodes[i]['node_color'] = nodes[i].pop('color')
@@ -1385,6 +1391,21 @@ def _compute_centrality(adjmat):
     # opacity = opacity[:-2]
     return opacity
 
+def _set_marker(self, marker, nodecount):
+    if isinstance(marker, type(None)):
+        marker = 'circle'
+
+    if isinstance(marker, list) and len(marker)==nodecount:
+        marker = np.array(marker)
+    elif 'numpy' in str(type(marker)) and len(marker)==nodecount:
+        pass
+    elif isinstance(marker, str):
+        marker = np.repeat(marker, nodecount)
+
+    # Make check
+    if len(marker) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
+    # Return
+    return marker
 
 def _set_node_size(self, size, minmax, nodecount):
     node_scaler = self.config['node_scaler']
