@@ -195,6 +195,7 @@ class d3graph:
     def set_edge_properties(self,
                             edge_distance=None,
                             edge_weight=None,
+                            edge_style=0,
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -214,10 +215,14 @@ class d3graph:
             Distance between the edges.
             * None: Distance is based on the weights in the adjacency matrix. Weights are normalized between the minmax
             * 50: Constant edge distance
-        edge_weight : Int (default: 10)
+        edge_weight : Int (default: None)
             Thickness of the edges.
             * None: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
             * 10: Constant edge distance
+        edge_style : float of str (default: 0)
+            Style of the edges.
+            * 0: straight line
+            * 5: dashed line
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
@@ -264,6 +269,7 @@ class d3graph:
         self.config['directed'] = directed
         self.config['edge_weight'] = edge_weight
         self.config['edge_distance'] = edge_distance
+        self.config['edge_style'] = edge_style
         self.config['minmax'] = minmax
         self.config['minmax_distance'] = minmax_distance
         self.config['edge_scaler'] = scaler
@@ -291,6 +297,7 @@ class d3graph:
                                            label_fontsize=self.config['label_fontsize'],
                                            edge_weight=self.config['edge_weight'],
                                            edge_distance=self.config['edge_distance'],
+                                           edge_style=self.config['edge_style'],
                                            )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
@@ -860,6 +867,7 @@ def json_create(G: nx.Graph) -> str:
     for i in range(len(links)):
         links[i]['edge_width'] = links[i].pop('weight_scaled')
         links[i]['edge_distance'] = links[i].pop('edge_distance')
+        links[i]['edge_style'] = links[i].pop('edge_style')
         links[i]['edge_weight'] = links[i]['weight']
         links[i]['source'] = int(source[i])
         links[i]['target'] = int(target[i])
@@ -906,6 +914,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 label_fontsize: int = 8,
                 edge_weight: int = 1,
                 edge_distance: int = 50,
+                edge_style=0,
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 ) -> dict:
@@ -939,6 +948,18 @@ def adjmat2dict(adjmat: pd.DataFrame,
         None : Inherits the color from marker_color.
     label_fontsize : int, (default: 8)
         The fontsize of the label.
+    edge_weight : Int (default: 10)
+        Thickness of the edges.
+        * None: Weighted approach using edge weights in the adjacency matrix. Weights are normalized between the minmax
+        * 10: Constant edge distance
+    edge_distance : Int (default: 50)
+        Distance between the edges.
+        * None: Distance is based on the weights in the adjacency matrix. Weights are normalized between the minmax
+        * 50: Constant edge distance
+    edge_style : float of str (default: 0)
+        Style of the edges.
+        * 0: straight line
+        * 5: dashed line
     minmax : tuple(int,int), (default: [0.5, 15])
         Thickness of the edges are normalized between minimum and maximum
         * [0.5, 15]
@@ -955,6 +976,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
             'weight': weight of the edge.
             'weight_scaled': scaled weight (thickness) of the edge.
             'edge_distance': scaled distance of the edge.
+            'edge_style': style of the edge.
             'color': color of the edge.
             'marker_start': '', 'circle', 'square', 'arrow', 'stub'
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
@@ -997,10 +1019,11 @@ def adjmat2dict(adjmat: pd.DataFrame,
         df['weight_scaled'] = df['weight']
 
     # Set marker start-end
+    if edge_style is None: edge_style=0
     if marker_start is None: marker_start=''
     if marker_end is None: marker_end=''
     if label is None:
-        label=''
+        label = ''
     elif label == 'weight':
         # Remove trailing zeros
         label = list(map(lambda x: ('%f' % x).rstrip('0').rstrip('.'), df['weight'].values))
@@ -1012,6 +1035,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label']=label
     df['label_color']=label_color
     df['label_fontsize']=label_fontsize
+    df['edge_style']=edge_style
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -1019,6 +1043,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     return {edge: {'weight': df['weight'].iloc[i],
                    'weight_scaled': df['weight_scaled'].iloc[i],
                    'edge_distance': df['edge_distance'].iloc[i],
+                   'edge_style': df['edge_style'].iloc[i],
                    'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
@@ -1057,6 +1082,7 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    marker_end=edge_properties[edge]['marker_end'],
                    weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
                    edge_distance=np.abs(edge_properties[edge]['edge_distance']),
+                   edge_style=edge_properties[edge]['edge_style'],
                    weight=np.abs(edge_properties[edge]['weight']),
                    color=edge_properties[edge]['color'],
                    label=edge_properties[edge]['label'],

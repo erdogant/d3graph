@@ -15,19 +15,23 @@ adjmat = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
 
 # We will first set all label properties to None and then we will adjust two of them
-d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
+
 d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
 d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
 d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
 d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+d3.edge_properties['Amy', 'Bernadette']['edge_style']=2
+
 d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
 d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
 d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
+d3.edge_properties['Bernadette', 'Howard']['edge_style']=5
 
 # Set some node properties
 d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 'rect', 'rect'])
 
-d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
+d3.show(filepath=r'c:\temp\\d3graph\circle.html')
 
 
 # %% opacity
