@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Node properties &mdash; d3graph d3graph documentation</title>
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c61b047"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +36,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.7
+                2.4.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -139,7 +139,7 @@
            <div itemprop="articleBody">
              
   <section id="node-properties">
-<h1>Node properties<a class="headerlink" href="#node-properties" title="Permalink to this heading"></a></h1>
+<h1>Node properties<a class="headerlink" href="#node-properties" title="Link to this heading"></a></h1>
 <p>There are various possabilities to customize the network using the node properties function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.set_node_properties" title="d3graph.d3graph.d3graph.set_node_properties"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.set_node_properties()</span></code></a>. Intially, all default node properties are created which can than be customized. The underneath properties can be changed for each node. I will use the <strong>karate</strong> network to demonstrate the working.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -183,7 +183,7 @@
 </ul>
 </div>
 <section id="node-label">
-<h2>Node label<a class="headerlink" href="#node-label" title="Permalink to this heading"></a></h2>
+<h2>Node label<a class="headerlink" href="#node-label" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node labels</strong> from the <em>karate</em> example into something more meaningfull.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
@@ -203,7 +203,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="tooltips">
-<h2>Tooltips<a class="headerlink" href="#tooltips" title="Permalink to this heading"></a></h2>
+<h2>Tooltips<a class="headerlink" href="#tooltips" title="Link to this heading"></a></h2>
 <p>Getting more information when hovering over a node can be easily done using the <code class="docutils literal notranslate"><span class="pre">tooltip</span></code> parameter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
@@ -230,7 +230,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_hover.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-color">
-<h2>Node color<a class="headerlink" href="#node-color" title="Permalink to this heading"></a></h2>
+<h2>Node color<a class="headerlink" href="#node-color" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node colors</strong> from the <em>karate</em> example using the label information. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -241,7 +241,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-color-on-clustering">
-<h2>Node color on clustering<a class="headerlink" href="#node-color-on-clustering" title="Permalink to this heading"></a></h2>
+<h2>Node color on clustering<a class="headerlink" href="#node-color-on-clustering" title="Link to this heading"></a></h2>
 <p>We can also change the node color on the clustering.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
@@ -252,7 +252,7 @@
 </div>
 </section>
 <section id="node-fontcolor">
-<h2>Node fontcolor<a class="headerlink" href="#node-fontcolor" title="Permalink to this heading"></a></h2>
+<h2>Node fontcolor<a class="headerlink" href="#node-fontcolor" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node font colors</strong> and ajust it according to the node color.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;node_color&#39;</span><span class="p">)</span>
@@ -263,7 +263,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_node_text.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-fontsize">
-<h2>Node fontsize<a class="headerlink" href="#node-fontsize" title="Permalink to this heading"></a></h2>
+<h2>Node fontsize<a class="headerlink" href="#node-fontsize" title="Link to this heading"></a></h2>
 <p>Change the <strong>node fontsize</strong> and ajust it according to the node color.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
@@ -277,7 +277,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_nodefontsize.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-edge-color-on-clustering">
-<h2>Node edge color on clustering<a class="headerlink" href="#node-edge-color-on-clustering" title="Permalink to this heading"></a></h2>
+<h2>Node edge color on clustering<a class="headerlink" href="#node-edge-color-on-clustering" title="Link to this heading"></a></h2>
 <p>We can also change the node color on the clustering.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
@@ -288,7 +288,7 @@
 </div>
 </section>
 <section id="node-size">
-<h2>Node size<a class="headerlink" href="#node-size" title="Permalink to this heading"></a></h2>
+<h2>Node size<a class="headerlink" href="#node-size" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -303,7 +303,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-opacity">
-<h2>Node opacity<a class="headerlink" href="#node-opacity" title="Permalink to this heading"></a></h2>
+<h2>Node opacity<a class="headerlink" href="#node-opacity" title="Link to this heading"></a></h2>
 <p>We can change the <strong>node opacity</strong> using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">opacity</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
@@ -314,7 +314,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-edge-size">
-<h2>Node edge size<a class="headerlink" href="#node-edge-size" title="Permalink to this heading"></a></h2>
+<h2>Node edge size<a class="headerlink" href="#node-edge-size" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node edge size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -325,7 +325,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size_edge_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-edge-color">
-<h2>Node edge color<a class="headerlink" href="#node-edge-color" title="Permalink to this heading"></a></h2>
+<h2>Node edge color<a class="headerlink" href="#node-edge-color" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node edge color</strong> from the <em>karate</em> example using a specified color. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#FFF000&#39;</span><span class="p">)</span>
@@ -336,7 +336,7 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size_edge_size_edge_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="customize-the-properties-of-one-specific-node">
-<h2>Customize the properties of one specific node<a class="headerlink" href="#customize-the-properties-of-one-specific-node" title="Permalink to this heading"></a></h2>
+<h2>Customize the properties of one specific node<a class="headerlink" href="#customize-the-properties-of-one-specific-node" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 <span class="c1"># Initialization</span>

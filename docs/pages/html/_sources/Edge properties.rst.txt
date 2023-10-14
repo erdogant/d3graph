@@ -15,6 +15,7 @@ Edge network properties can also be changed for the edges:
 	* 4. color
 	* 5. directed
 	* 6. marker
+	* 7. style
 
 
 .. code:: python
@@ -48,7 +49,7 @@ Edge network properties can also be changed for the edges:
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 
@@ -98,11 +99,11 @@ Each marker can be customized using the ``edge_properties``.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 
@@ -139,15 +140,15 @@ Let's see the differences between the different methods.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 
@@ -180,31 +181,37 @@ Set all edge labels to "test".
 
 	print(d3.edge_properties)
 
-	# {('Amy', 'Bernadette'): {'weight': 2.0,
-	#   'weight_scaled': 2.0,
-	#   'color': '#808080',
-	#   'marker_start': '',
-	#   'marker_end': 'arrow',
-	#   'marker_color': '#808080',
-	#   'label': 'test',
-	#   'label_color': '#808080',
-	#   'label_fontsize': 8},
-	#  ('Bernadette', 'Howard'): {'weight': 5.0,
-	#   'weight_scaled': 5.0,
-	#   'color': '#808080',
-	#   'marker_start': '',
-	#   'marker_end': 'arrow',
-	#   'marker_color': '#808080',
-	#   'label': 'test',
-	#   'label_color': '#808080',
-	#   'label_fontsize': 8},
+    # {('Amy', 'Bernadette'): {
+    #     'weight': 2.0,
+    #     'weight_scaled': 0.5,
+    #     'edge_distance': 50.0,
+    #     'edge_style': 0,
+    #     'color': '#808080',
+    #     'marker_start': '',
+    #     'marker_end': 'arrow',
+    #     'marker_color': '#808080',
+    #     'label': '2',
+    #     'label_color': '#808080',
+    #     'label_fontsize': 8},
+    # ('Bernadette', 'Howard'): {
+    #     'weight': 5.0,
+    #     'weight_scaled': 1.7375,
+    #     'edge_distance': 68.75,
+    #     'edge_style': 0,
+    #     'color': '#808080',
+    #     'marker_start': '',
+    #     'marker_end': 'arrow',
+    #     'marker_color': '#808080',
+    #     'label': '5',
+    #     'label_color': '#808080',
+    #     'label_fontsize': 8}, 
 
 	d3.show()
 
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_labels_1.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_1.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 We will first set all label properties to None and then we will adjust two of them.
@@ -217,19 +224,80 @@ We will first set all label properties to None and then we will adjust two of th
 	d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
 	d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
 	d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+	d3.edge_properties['Amy', 'Bernadette']['edge_style']=5
 
 	# Change the label properties for the second edge
 	d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
 	d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
 	d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
+	d3.edge_properties['Bernadette', 'Howard']['edge_style']=20
 
 	d3.show()
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_labels_2.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_2.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
+Edge style
+************************************
+
+Create straight or dashed lines using the edge_style parameter.
+The value 0 represents a straight line whereas numbers >0 creates a specific dashed line.
+
+.. code:: python
+
+	# Import
+	from d3graph import d3graph
+
+	# intialize to load example dataset
+	d3 = d3graph()
+
+    # Load example
+	adjmat = d3.import_example('bigbang')
+
+	# Initialize with default settings
+	d3.graph(adjmat)
+
+	# Change the edge style for all edges
+	d3.set_edge_properties(directed=True, edge_style=5)
+
+	d3.show()
+
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_7.html" height="400px" width="750px", frameBorder="0"></iframe>
+
+
+.. code:: python
+
+	# Import
+	from d3graph import d3graph
+
+	# intialize to load example dataset
+	d3 = d3graph()
+
+    # Load example
+	adjmat = d3.import_example('bigbang')
+
+	# Initialize with default settings
+	d3.graph(adjmat)
+
+	# Change the edge style for all edges
+	d3.set_edge_properties()
+
+	# Change the edge style for specific edges
+	d3.edge_properties['Amy', 'Bernadette']['edge_style']=5
+	d3.edge_properties['Bernadette', 'Howard']['edge_style']=20
+
+	d3.show()
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_8.html" height="400px" width="750px", frameBorder="0"></iframe>
+
+	
 Set distance
 *************************
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coding quality &mdash; d3graph d3graph documentation</title>
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c61b047"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +36,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.7
+                2.4.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -131,12 +131,12 @@
            <div itemprop="articleBody">
              
   <section id="coding-quality">
-<h1>Coding quality<a class="headerlink" href="#coding-quality" title="Permalink to this heading"></a></h1>
+<h1>Coding quality<a class="headerlink" href="#coding-quality" title="Link to this heading"></a></h1>
 <p>I value software quality. Higher quality software has fewer defects, better security, and better performance, which leads to happier users who can work more effectively.
 Code reviews are an effective method for improving software quality. This library is developed with several techniques, such as coding styling, low complexity, docstrings, reviews, and unit tests.
 Such conventions are helpfull to improve the quality, make the code cleaner and more understandable but alos to trace future bugs, and spot syntax errors.</p>
 <section id="library">
-<h2>library<a class="headerlink" href="#library" title="Permalink to this heading"></a></h2>
+<h2>library<a class="headerlink" href="#library" title="Link to this heading"></a></h2>
 <p>The file structure of the generated package looks like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>path/to/d3graph/
 ├──<span class="w"> </span>.editorconfig
@@ -166,13 +166,13 @@ Such conventions are helpfull to improve the quality, make the code cleaner and 
 </div>
 </section>
 <section id="style">
-<h2>Style<a class="headerlink" href="#style" title="Permalink to this heading"></a></h2>
+<h2>Style<a class="headerlink" href="#style" title="Link to this heading"></a></h2>
 <p>This library is compliant with the PEP-8 standards.
 PEP stands for Python Enhancement Proposal and sets a baseline for the readability of Python code.
 Each public function contains a docstring that is based on numpy standards.</p>
 </section>
 <section id="complexity">
-<h2>Complexity<a class="headerlink" href="#complexity" title="Permalink to this heading"></a></h2>
+<h2>Complexity<a class="headerlink" href="#complexity" title="Link to this heading"></a></h2>
 <p>This library has been developed by using measures that help decreasing technical debt.
 Version 0.1.0 of the <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library scored, according the code analyzer: <strong>VALUE</strong>, for which values &gt; 0 are good and 10 is a maximum score.
 Developing software with low(er) technical dept may take extra development time, but has many advantages:</p>
@@ -184,7 +184,7 @@ Developing software with low(er) technical dept may take extra development time,
 </ul>
 </section>
 <section id="unit-tests">
-<h2>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading"></a></h2>
+<h2>Unit tests<a class="headerlink" href="#unit-tests" title="Link to this heading"></a></h2>
 <p>The use of unit tests is essential to garantee a consistent output of developed functions.
 The following tests are secured using <code class="xref py py-func docutils literal notranslate"><span class="pre">tests.test_d3graph()</span></code>:</p>
 <ul class="simple">

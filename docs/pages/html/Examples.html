@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Big Bang network &mdash; d3graph d3graph documentation</title>
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c61b047"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +36,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.7
+                2.4.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -135,9 +135,9 @@
            <div itemprop="articleBody">
              
   <section id="big-bang-network">
-<h1>Big Bang network<a class="headerlink" href="#big-bang-network" title="Permalink to this heading"></a></h1>
+<h1>Big Bang network<a class="headerlink" href="#big-bang-network" title="Link to this heading"></a></h1>
 <section id="default">
-<h2>Default<a class="headerlink" href="#default" title="Permalink to this heading"></a></h2>
+<h2>Default<a class="headerlink" href="#default" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 
@@ -153,49 +153,49 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-colors">
-<h2>Node colors<a class="headerlink" href="#node-colors" title="Permalink to this heading"></a></h2>
+<h2>Node colors<a class="headerlink" href="#node-colors" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-fontcolors">
-<h2>Node fontcolors<a class="headerlink" href="#node-fontcolors" title="Permalink to this heading"></a></h2>
+<h2>Node fontcolors<a class="headerlink" href="#node-fontcolors" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;node_color&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_text_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-sizes">
-<h2>Node sizes<a class="headerlink" href="#node-sizes" title="Permalink to this heading"></a></h2>
+<h2>Node sizes<a class="headerlink" href="#node-sizes" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="edge-sizes">
-<h2>Edge sizes<a class="headerlink" href="#edge-sizes" title="Permalink to this heading"></a></h2>
+<h2>Edge sizes<a class="headerlink" href="#edge-sizes" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="edge-colors">
-<h2>Edge colors<a class="headerlink" href="#edge-colors" title="Permalink to this heading"></a></h2>
+<h2>Edge colors<a class="headerlink" href="#edge-colors" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#00FFFF&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="colormap">
-<h2>Colormap<a class="headerlink" href="#colormap" title="Permalink to this heading"></a></h2>
+<h2>Colormap<a class="headerlink" href="#colormap" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#00FFFF&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set2&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_cmap.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="directed-arrows">
-<h2>Directed arrows<a class="headerlink" href="#directed-arrows" title="Permalink to this heading"></a></h2>
+<h2>Directed arrows<a class="headerlink" href="#directed-arrows" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#000FFF&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -204,7 +204,7 @@
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_directed.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 </section>
 <section id="karate-club-network">
-<h1>Karate Club network<a class="headerlink" href="#karate-club-network" title="Permalink to this heading"></a></h1>
+<h1>Karate Club network<a class="headerlink" href="#karate-club-network" title="Link to this heading"></a></h1>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 
 <span class="c1"># Initialize</span>

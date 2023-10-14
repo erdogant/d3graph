@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edge properties &mdash; d3graph d3graph documentation</title>
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c61b047"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +36,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.7
+                2.4.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -73,6 +73,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#markers">Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scaling-edges">Scaling edges</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#edge-labels">Edge Labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#edge-style">Edge style</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#set-distance">Set distance</a></li>
 </ul>
 </li>
@@ -132,10 +133,10 @@
            <div itemprop="articleBody">
              
   <section id="edge-properties">
-<h1>Edge properties<a class="headerlink" href="#edge-properties" title="Permalink to this heading"></a></h1>
+<h1>Edge properties<a class="headerlink" href="#edge-properties" title="Link to this heading"></a></h1>
 <p>The <strong>edge properties</strong> can be customized using four options. After creating the <code class="docutils literal notranslate"><span class="pre">d3.graph()</span></code>, the edges are based on the strength of the vertices.</p>
 <section id="general">
-<h2>General<a class="headerlink" href="#general" title="Permalink to this heading"></a></h2>
+<h2>General<a class="headerlink" href="#general" title="Link to this heading"></a></h2>
 <p>Edge network properties can also be changed for the edges:</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -162,6 +163,10 @@
 </li>
 <li><ol class="arabic simple" start="6">
 <li><p>marker</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="7">
+<li><p>style</p></li>
 </ol>
 </li>
 </ul>
@@ -193,9 +198,9 @@
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_1.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="markers">
-<h2>Markers<a class="headerlink" href="#markers" title="Permalink to this heading"></a></h2>
+<h2>Markers<a class="headerlink" href="#markers" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>The <strong>start</strong> and <strong>end</strong> of the edges can be set for the following markers:</dt><dd><ul class="simple">
 <li><p>arrow</p></li>
@@ -238,9 +243,9 @@ Each marker can be customized using the <code class="docutils literal notranslat
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_2.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_3.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="scaling-edges">
-<h2>Scaling edges<a class="headerlink" href="#scaling-edges" title="Permalink to this heading"></a></h2>
+<h2>Scaling edges<a class="headerlink" href="#scaling-edges" title="Link to this heading"></a></h2>
 <p>There are two manners to scale the edges; scaling using the <strong>minmax</strong> or scaling using the <strong>z-score</strong>.
 The default option is the z-score because the results tends to better in most use-cases.
 Let’s see the differences between the different methods.</p>
@@ -266,9 +271,9 @@ Let’s see the differences between the different methods.</p>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_4.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_5.html" height="400px" width="750px", frameBorder="0"></iframe><iframe src="https://erdogant.github.io/docs/d3blocks/edge_properties_6.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="edge-labels">
-<h2>Edge Labels<a class="headerlink" href="#edge-labels" title="Permalink to this heading"></a></h2>
+<h2>Edge Labels<a class="headerlink" href="#edge-labels" title="Link to this heading"></a></h2>
 <p>The labels of the edges can be set per edge in a similar manner as for the other edge properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
@@ -289,47 +294,100 @@ Let’s see the differences between the different methods.</p>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">)</span>
 
-    <span class="c1"># {(&#39;Amy&#39;, &#39;Bernadette&#39;): {&#39;weight&#39;: 2.0,</span>
-    <span class="c1">#   &#39;weight_scaled&#39;: 2.0,</span>
-    <span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
-    <span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
-    <span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
-    <span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
-    <span class="c1">#  (&#39;Bernadette&#39;, &#39;Howard&#39;): {&#39;weight&#39;: 5.0,</span>
-    <span class="c1">#   &#39;weight_scaled&#39;: 5.0,</span>
-    <span class="c1">#   &#39;color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;marker_start&#39;: &#39;&#39;,</span>
-    <span class="c1">#   &#39;marker_end&#39;: &#39;arrow&#39;,</span>
-    <span class="c1">#   &#39;marker_color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;label&#39;: &#39;test&#39;,</span>
-    <span class="c1">#   &#39;label_color&#39;: &#39;#808080&#39;,</span>
-    <span class="c1">#   &#39;label_fontsize&#39;: 8},</span>
+<span class="c1"># {(&#39;Amy&#39;, &#39;Bernadette&#39;): {</span>
+<span class="c1">#     &#39;weight&#39;: 2.0,</span>
+<span class="c1">#     &#39;weight_scaled&#39;: 0.5,</span>
+<span class="c1">#     &#39;edge_distance&#39;: 50.0,</span>
+<span class="c1">#     &#39;edge_style&#39;: 0,</span>
+<span class="c1">#     &#39;color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;marker_start&#39;: &#39;&#39;,</span>
+<span class="c1">#     &#39;marker_end&#39;: &#39;arrow&#39;,</span>
+<span class="c1">#     &#39;marker_color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;label&#39;: &#39;2&#39;,</span>
+<span class="c1">#     &#39;label_color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;label_fontsize&#39;: 8},</span>
+<span class="c1"># (&#39;Bernadette&#39;, &#39;Howard&#39;): {</span>
+<span class="c1">#     &#39;weight&#39;: 5.0,</span>
+<span class="c1">#     &#39;weight_scaled&#39;: 1.7375,</span>
+<span class="c1">#     &#39;edge_distance&#39;: 68.75,</span>
+<span class="c1">#     &#39;edge_style&#39;: 0,</span>
+<span class="c1">#     &#39;color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;marker_start&#39;: &#39;&#39;,</span>
+<span class="c1">#     &#39;marker_end&#39;: &#39;arrow&#39;,</span>
+<span class="c1">#     &#39;marker_color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;label&#39;: &#39;5&#39;,</span>
+<span class="c1">#     &#39;label_color&#39;: &#39;#808080&#39;,</span>
+<span class="c1">#     &#39;label_fontsize&#39;: 8},</span>
 
     <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_labels_1.html" height="400px" width="750px", frameBorder="0"></iframe><p>We will first set all label properties to None and then we will adjust two of them.</p>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_1.html" height="400px" width="750px", frameBorder="0"></iframe><p>We will first set all label properties to None and then we will adjust two of them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change the label properties for the first edge</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;#000FFF&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;weight_scaled&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;amy-bern&#39;</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;label_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000FFF&#39;</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;label_fontsize&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">8</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;edge_style&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
 
 <span class="c1"># Change the label properties for the second edge</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Bernadette&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;bern-how&#39;</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Bernadette&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">][</span><span class="s1">&#39;label_fontsize&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Bernadette&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">][</span><span class="s1">&#39;label_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Bernadette&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">][</span><span class="s1">&#39;edge_style&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
 
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/edge_labels_2.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_2.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<section id="edge-style">
+<h2>Edge style<a class="headerlink" href="#edge-style" title="Link to this heading"></a></h2>
+<p>Create straight or dashed lines using the edge_style parameter.
+The value 0 represents a straight line whereas numbers &gt;0 creates a specific dashed line.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Import</span>
+    <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+
+    <span class="c1"># intialize to load example dataset</span>
+    <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+
+<span class="c1"># Load example</span>
+    <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize with default settings</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+    <span class="c1"># Change the edge style for all edges</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edge_style</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_7.html" height="400px" width="750px", frameBorder="0"></iframe><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Import</span>
+    <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+
+    <span class="c1"># intialize to load example dataset</span>
+    <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+
+<span class="c1"># Load example</span>
+    <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize with default settings</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+    <span class="c1"># Change the edge style for all edges</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">()</span>
+
+    <span class="c1"># Change the edge style for specific edges</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Bernadette&#39;</span><span class="p">][</span><span class="s1">&#39;edge_style&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Bernadette&#39;</span><span class="p">,</span> <span class="s1">&#39;Howard&#39;</span><span class="p">][</span><span class="s1">&#39;edge_style&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
+
+    <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3blocks/edge_labels_8.html" height="400px" width="750px", frameBorder="0"></iframe></section>
 <section id="set-distance">
-<h2>Set distance<a class="headerlink" href="#set-distance" title="Permalink to this heading"></a></h2>
+<h2>Set distance<a class="headerlink" href="#set-distance" title="Link to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set edge properties with a edge distance</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">edge_distance</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Core Functionalities &mdash; d3graph d3graph documentation</title>
@@ -12,11 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=6c61b047"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +36,7 @@
             d3graph
           </a>
               <div class="version">
-                2.4.7
+                2.4.13
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -132,10 +132,10 @@
            <div itemprop="articleBody">
              
   <section id="core-functionalities">
-<h1>Core Functionalities<a class="headerlink" href="#core-functionalities" title="Permalink to this heading"></a></h1>
+<h1>Core Functionalities<a class="headerlink" href="#core-functionalities" title="Link to this heading"></a></h1>
 <p>In order to create, manipulate, and study the structure, dynamics, and functions of complex networks, it is usefull to understand the various functions of <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>. Here I will describe the core functionalities that can help to customize your network. In the following examples I will be using the <strong>karate</strong> network.</p>
 <section id="import">
-<h2>Import<a class="headerlink" href="#import" title="Permalink to this heading"></a></h2>
+<h2>Import<a class="headerlink" href="#import" title="Link to this heading"></a></h2>
 <p>Importing the <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library is the first step after the pip installation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
@@ -143,7 +143,7 @@
 </div>
 </section>
 <section id="initalization">
-<h2>Initalization<a class="headerlink" href="#initalization" title="Permalink to this heading"></a></h2>
+<h2>Initalization<a class="headerlink" href="#initalization" title="Link to this heading"></a></h2>
 <p>The initialization is directly performed after importing the <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library. During the initialization, the following parameters can be set:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">collision</span>     <span class="p">:</span> <span class="mf">0.5</span>           <span class="p">:</span> <span class="n">Response</span> <span class="n">of</span> <span class="n">the</span> <span class="n">network</span><span class="o">.</span> <span class="n">Higher</span> <span class="n">means</span> <span class="n">that</span> <span class="n">more</span> <span class="n">collisions</span> <span class="n">are</span> <span class="n">prevented</span><span class="o">.</span>
 <span class="o">*</span> <span class="n">charge</span>        <span class="p">:</span> <span class="mi">250</span>           <span class="p">:</span> <span class="n">Edge</span> <span class="n">length</span> <span class="n">of</span> <span class="n">the</span> <span class="n">network</span><span class="o">.</span> <span class="n">Towards</span> <span class="n">zero</span> <span class="n">becomes</span> <span class="n">a</span> <span class="n">dense</span> <span class="n">network</span><span class="o">.</span>
@@ -194,11 +194,11 @@
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_charge.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="processing">
-<h2>Processing<a class="headerlink" href="#processing" title="Permalink to this heading"></a></h2>
+<h2>Processing<a class="headerlink" href="#processing" title="Link to this heading"></a></h2>
 <p>The graph function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.graph" title="d3graph.d3graph.d3graph.graph"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.graph()</span></code></a> processes the adjacency matrix to create a network with default <em>node properties</em> and <em>edge properties</em>. The nodes are the column and index names, and a connect edge for vertices with value larger than 0. The strenght of edges are based on the vertices values. The input for <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> is the adjacency matrix.</p>
 </section>
 <section id="show">
-<h2>Show<a class="headerlink" href="#show" title="Permalink to this heading"></a></h2>
+<h2>Show<a class="headerlink" href="#show" title="Link to this heading"></a></h2>
 <p>The show function <a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph.show" title="d3graph.d3graph.d3graph.show"><code class="xref py py-func docutils literal notranslate"><span class="pre">d3graph.d3graph.d3graph.show()</span></code></a> has several tasks.</p>
 <blockquote>
 <div><ul class="simple">
@@ -222,7 +222,7 @@
 </div></blockquote>
 </section>
 <section id="hide-slider">
-<h2>Hide Slider<a class="headerlink" href="#hide-slider" title="Permalink to this heading"></a></h2>
+<h2>Hide Slider<a class="headerlink" href="#hide-slider" title="Link to this heading"></a></h2>
 <p>The slider can be hidden from the output HTML by setting the <code class="docutils literal notranslate"><span class="pre">show_slider=False</span></code> parameter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
 
