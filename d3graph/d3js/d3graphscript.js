@@ -289,6 +289,33 @@ function d3graphscript(config = {
 
   d3.select("#thresholdSlider").on("change", threshold);
 
+
+
+    //Restart the visualisation after any node and link changes
+    function restart() {
+    
+    link = link.data(graph.links, function(d) { return d.source.index + "-" + d.target.index; });
+    link.exit().remove();
+    link.enter().insert("line", ".node").attr("class", "link");
+    link.style("stroke-width", function(d) {return d.edge_width;});           // LINK-WIDTH AFTER BREAKING WITH SLIDER
+    link.style("marker-end", function(d) {                                    // Include the markers.
+      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+    link.style("stroke", function(d) {return d.color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
+    
+    linkText = linkText.data(graph.links, function(d) { return d.source.index + "-" + d.target.index; });
+    linkText.exit().remove();
+    linkText.enter().append("text")
+      .attr("class", "link-text")
+      .attr("font-size", function(d) {return d.label_fontsize + "px";})       // Restore label_fontsize
+      .style("fill", function(d) {return d.label_color;})                     // Restore label_color
+      .text(function(d) { return d.label; });
+    
+    node = node.data(graph.nodes);
+    node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
+    force.start();
+    }
+
+/*
   //Restart the visualisation after any node and link changes
   function restart() {
 
@@ -305,4 +332,6 @@ function d3graphscript(config = {
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     force.start();
   }
+*/
+
 }
