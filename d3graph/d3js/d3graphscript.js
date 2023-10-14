@@ -278,6 +278,8 @@ function d3graphscript(config = {
 
     // console.log('Setting threshold', thresh)
     graph.links.splice(0, graph.links.length);
+    linkText = linkText.data([]);   // CLEAR EDGE-LABELS: Clear the linkText selection
+    linkText.exit().remove();       // CLEAR EDGE-LABELS: Clear the linkText elements from the DOM
 
     for (var i = 0; i < graphRec.links.length; i++) {
       if (graphRec.links[i].edge_weight > thresh) {
@@ -289,36 +291,10 @@ function d3graphscript(config = {
 
   d3.select("#thresholdSlider").on("change", threshold);
 
-
-/*
-    //Restart the visualisation after any node and link changes
-    function restart() {
-    
-    link = link.data(graph.links, function(d) { return d.source.index + "-" + d.target.index; });
-    link.exit().remove();
-    link.enter().insert("line", ".node").attr("class", "link");
-    link.style("stroke-width", function(d) {return d.edge_width;});           // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    link.style("marker-end", function(d) {                                    // Include the markers.
-      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-    link.style("stroke", function(d) {return d.color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
-    
-    linkText = linkText.data(graph.links, function(d) { return d.source.index + "-" + d.target.index; });
-    linkText.exit().remove();
-    linkText.enter().append("text")
-      .attr("class", "link-text")
-      .attr("font-size", function(d) {return d.label_fontsize + "px";})       // Restore label_fontsize
-      .style("fill", function(d) {return d.label_color;})                     // Restore label_color
-      .text(function(d) { return d.label; });
-    
-    node = node.data(graph.nodes);
-    node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
-    force.start();
-    }
-*/
-
   //Restart the visualisation after any node and link changes
   function restart() {
 
+    // Update EDGE-LINKS
     link = link.data(graph.links);
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
@@ -327,6 +303,16 @@ function d3graphscript(config = {
 	link.style("marker-end", function(d) {                                    // Include the markers.
 		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     link.style("stroke", function(d) {return d.color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
+
+    // Update EDGE-LABELS
+    linkText = linkText.data(graph.links);
+    linkText.exit().remove();
+    linkText.enter().append("text")
+      .attr("class", "link-text")
+      .attr("font-size", function(d) {return d.label_fontsize + "px";})
+      .style("fill", function(d) {return d.label_color;})
+      .style("font-family", "Arial")
+      .text(function(d) { return d.label; });
 
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
