@@ -290,7 +290,7 @@ function d3graphscript(config = {
   d3.select("#thresholdSlider").on("change", threshold);
 
 
-
+/*
     //Restart the visualisation after any node and link changes
     function restart() {
     
@@ -314,8 +314,8 @@ function d3graphscript(config = {
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     force.start();
     }
+*/
 
-/*
   //Restart the visualisation after any node and link changes
   function restart() {
 
@@ -332,6 +332,5 @@ function d3graphscript(config = {
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     force.start();
   }
-*/
 
 }
