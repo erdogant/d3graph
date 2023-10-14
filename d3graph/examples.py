@@ -14,7 +14,6 @@ adjmat = d3.import_example('bigbang')
 # Initialize with clustering colors
 d3.graph(adjmat, color='cluster')
 
-
 # We will first set all label properties to None and then we will adjust two of them
 d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
 d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
@@ -28,7 +27,7 @@ d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
 # Set some node properties
 d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 'rect', 'rect'])
 
-d3.show(filepath=r'c:\temp\\d3graph\network_to_square.html')
+d3.show(filepath=r'c:\temp\\d3graph\d3graph.html')
 
 
 # %% opacity
