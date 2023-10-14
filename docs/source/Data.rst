@@ -88,7 +88,7 @@ In the following example we will create the *bigbang* network from scratch:
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/d3graph_data_1.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/d3graph_data_1.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 Output
@@ -116,7 +116,7 @@ The following example will write the final HTML to a custom directory with a cus
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/d3graph_data_2.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/d3graph_data_2.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 
