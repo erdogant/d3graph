@@ -257,10 +257,10 @@ d3 = d3graph(charge=450)
 adjmat, df = d3.import_example('karate')
 d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values, cmap='Set1')
-d3.show()
+d3.show(set_slider=5)
 
 d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color='cluster', cmap='Set1')
-d3.show(filepath='c:\\temp\\network1.html')
+d3.show(filepath='c:\\temp\\network1.html', set_slider=3)
 
 d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
 d3.show(filepath=r'D:/REPOS/erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html', figsize=(800, 600))
