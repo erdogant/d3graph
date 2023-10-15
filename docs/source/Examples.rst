@@ -20,7 +20,7 @@ Default
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Node colors
@@ -33,7 +33,7 @@ Node colors
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Node fontcolors
@@ -46,7 +46,7 @@ Node fontcolors
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_text_color.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_text_color.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 
@@ -60,7 +60,7 @@ Node sizes
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 Edge sizes
 ************************************
@@ -72,7 +72,7 @@ Edge sizes
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Edge colors
@@ -85,7 +85,7 @@ Edge colors
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge_color.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_color_size_edge_color.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Colormap
@@ -98,7 +98,7 @@ Colormap
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_cmap.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_cmap.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Directed arrows
@@ -112,7 +112,7 @@ Directed arrows
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_directed.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_directed.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 Karate Club network

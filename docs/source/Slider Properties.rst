@@ -27,7 +27,7 @@ The slider can be set in a particular state on start-up with the `set_slider` pa
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/set_set_slider.html" height="700px" width="850px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/set_slider.html" height="700px" width="850px", frameBorder="0"></iframe>
 
 
 
