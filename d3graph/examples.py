@@ -10,12 +10,14 @@ from d3graph import d3graph
 # intialize to load example dataset
 d3 = d3graph(support=False)
 adjmat = d3.import_example('bigbang')
-
+# adjmat.columns = df['label']
+# adjmat.index = df['label']
+# adjmat = adjmat.iloc[0:10,0:10]
 # Initialize with clustering colors
 d3.graph(adjmat, color='cluster')
 
 # We will first set all label properties to None and then we will adjust two of them
-d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
+# d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
 
 d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
 d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
@@ -105,14 +107,13 @@ adjmat = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
 
 # Set all edge labels to "test"
-d3.set_edge_properties(directed=True, label='test')
-d3.show(filepath=r'c:\temp\\d3graph\edge_labels_1.html')
+d3.set_edge_properties(directed=True, label='test', label_fontsize=14)
 
-# Set edge labels 
+# Set edge labels
 d3.edge_properties
 
 # We will first set all label properties to None and then we will adjust two of them
-d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
+# d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None)
 d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
 d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
 d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
@@ -258,11 +259,24 @@ d3.graph(adjmat)
 d3.set_node_properties(color=df['label'].values, cmap='Set1')
 d3.show()
 
-d3.set_node_properties(color='cluster', cmap='Set1')
+d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color='cluster', cmap='Set1')
 d3.show(filepath='c:\\temp\\network1.html')
 
 d3.set_node_properties(label=df['label'].values, tooltip=adjmat.columns.values, color=df['label'].values, cmap='Set1')
-d3.show()
+d3.show(filepath=r'D:/REPOS/erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size.html', figsize=(800, 600))
+
+# %%
+from d3graph import d3graph
+size = [10, 20, 10, 10, 15, 10, 5]
+
+# Initialize
+d3 = d3graph()
+# Load example
+adjmat = d3.import_example('bigbang')
+# Process adjmat
+d3.graph(adjmat)
+# Show
+d3.show(filepath=r'D:/REPOS/erdogant.github.io/docs/d3graph/d3graph/bigbang_default.html', figsize=(800, 600))
 
 
 # %% Convert source-target to adjmat
