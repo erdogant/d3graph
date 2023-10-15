@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>D3 Motivation &mdash; d3graph d3graph documentation</title>
+  <title>Slider Properties &mdash; d3graph d3graph documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Quickstart" href="Installation.html" />
-    <link rel="prev" title="Abstract" href="Abstract.html" /> 
+    <link rel="next" title="Big Bang network" href="Examples.html" />
+    <link rel="prev" title="On Click Actions" href="On%20Click%20Actions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,17 +48,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
     
               <p class="caption" role="heading"><span class="caption-text">Background</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Abstract.html">Abstract</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Abstract.html#schematic-overview">Schematic overview</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">D3 Motivation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#four-parts">Four parts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-cascading-style-sheets-css">The Cascading Style Sheets (CSS)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#d3-module">D3 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#javascript-for-the-network">Javascript for the network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
@@ -72,12 +65,16 @@
 <li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Methods</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html">Core Functionalities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Node%20properties.html">Node properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Edge%20properties.html">Edge properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="On%20Click%20Actions.html">On Click Actions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Slider%20Properties.html">Slider Properties</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Slider Properties</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-slider-threshold">Set Slider Threshold</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#remove-slider">Remove Slider</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -123,9 +120,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">D3 Motivation</li>
+      <li class="breadcrumb-item active">Slider Properties</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/D3.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Slider Properties.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -133,53 +130,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="d3-motivation">
-<h1>D3 Motivation<a class="headerlink" href="#d3-motivation" title="Link to this heading"></a></h1>
-<p>D3 is a collection of modules that are designed to work together; you can use the modules independently, or you can use them together as part of the default build. The D3 website provides 168 working charts that allow for performant incremental updates during interaction and supports popular interaction such as dragging, brushing, and zooming. The charts can be used for many purposes, such as quantitative analysis, visualizing hierarchies, creating networks graphs, but also bar plots, line plots, scatter plots, radial plots, geographic projections, and various other interactive visualizations for explorable explanations. Some cherry-picked charts are shown in Figure 1.</p>
-<section id="four-parts">
-<h2>Four parts<a class="headerlink" href="#four-parts" title="Link to this heading"></a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> library is created based on four distinct parts for which each part has its own role in the chart. To pythonize D3, all four parts are connected in an HTML file.</p>
-<blockquote>
-<div><ul class="simple">
-<li><ol class="arabic simple">
-<li><p>The Cascading Style Sheets (CSS).</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="2">
-<li><p>The D3 module contains all required libraries.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="3">
-<li><p>Javascript to build the chart.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="4">
-<li><p>The Data as JSON file.</p></li>
-</ol>
-</li>
-</ul>
-</div></blockquote>
-<p>The schematic overview of our approach is as following:</p>
-<figure class="align-default" id="schematic-overview">
-<img alt="_images/schematic_overview.jpg" src="_images/schematic_overview.jpg" />
-</figure>
-</section>
-<section id="the-cascading-style-sheets-css">
-<h2>The Cascading Style Sheets (CSS)<a class="headerlink" href="#the-cascading-style-sheets-css" title="Link to this heading"></a></h2>
-<p>The CSS file is a simple mechanism for adding style in a structured manner to HTML files. For example, CSS files can define the size, color, font, line spacing, indentation, borders, and location of HTML elements. We are going to create force-directed network graphs, for which we will define the overall font sizes, font family, style, colors but also properties specific for the nodes, and edges. You can change the CSS accordingly, and set the properties as you think is best.</p>
-</section>
-<section id="d3-module">
-<h2>D3 module<a class="headerlink" href="#d3-module" title="Link to this heading"></a></h2>
-<p>The D3 module is the easiest part because it is directly embedded in the final HTML file. The D3 module contains all functions to create any of the charts. No edits in this file are required. The newest version is v7 which can be imported from a local source or the website. However, <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> works with a slightly older version (v3) because many functions were readily created using this version.</p>
-</section>
-<section id="javascript-for-the-network">
-<h2>Javascript for the network<a class="headerlink" href="#javascript-for-the-network" title="Link to this heading"></a></h2>
-<p>The network is build using javascript, and was started with the basic functionality from the D3 website and many functionalities are added to build an interactive force-directed network graph. A slider is included that can break the edges of the network based on the edge value, a double click on a node will highlight the node and its connected edges and many more options to customize the network based on the edge and node properties. The output is a single HTML file that contains the interactive force-directed graph.</p>
-</section>
-<section id="data">
-<h2>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h2>
-<p>It is important to get the data in the right shape for the javascript file. In <code class="docutils literal notranslate"><span class="pre">d3graph</span></code>, the input can be an adjacency matrix for which the columns and indexes are the nodes and the elements with a value of one or larger are considered to be an edge. With <code class="docutils literal notranslate"><span class="pre">d3graph</span></code> I solved the issue that a local .json-file using d3.json(), will not work because importing a local csv or json file with D3 is not considered to be safe. Therefore, all data is directly embedded in the final HTML file. However, depending on the amount of data, it can result in a massive HTML file. Nevertheless, embedding the data directly in the HTML will integrate all scripts and data into a single file which can be very practical.</p>
-<hr>
+  <section id="slider-properties">
+<h1>Slider Properties<a class="headerlink" href="#slider-properties" title="Link to this heading"></a></h1>
+<p>The function of the slider is to break the network on its weights with an interactive slider.</p>
+<section id="set-slider-threshold">
+<h2>Set Slider Threshold<a class="headerlink" href="#set-slider-threshold" title="Link to this heading"></a></h2>
+<p>The slider can be set in a particular state on start-up with the <cite>set_slider</cite> parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Import library</span>
+    <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+
+    <span class="c1"># Initialize</span>
+    <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+    <span class="c1"># Load example data set</span>
+    <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create the graph with default setting</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Show the chat and break the network on threshold value 3.</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">set_slider</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\REPOS\erdogant.github.io\docs\d3graph\d3graph\set_slider.html&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/set_set_slider.html" height="700px" width="850px", frameBorder="0"></iframe></section>
+<section id="remove-slider">
+<h2>Remove Slider<a class="headerlink" href="#remove-slider" title="Link to this heading"></a></h2>
+<p>The slider can be removed from the html.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Import library</span>
+    <span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+
+    <span class="c1"># Initialize</span>
+    <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+    <span class="c1"># Load example data set</span>
+    <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create the graph with default setting</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Show the chat and break the network on threshold value 3.</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">show_slider</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\REPOS\erdogant.github.io\docs\d3graph\d3graph\show_slider.html&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/show_slider.html" height="700px" width="850px", frameBorder="0"></iframe><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->
@@ -193,8 +184,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Abstract.html" class="btn btn-neutral float-left" title="Abstract" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Installation.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="On%20Click%20Actions.html" class="btn btn-neutral float-left" title="On Click Actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples.html" class="btn btn-neutral float-right" title="Big Bang network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

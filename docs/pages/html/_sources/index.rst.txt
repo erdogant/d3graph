@@ -63,6 +63,7 @@ Content
   Node properties
   Edge properties
   On Click Actions
+  Slider Properties
 
 
 .. toctree::
