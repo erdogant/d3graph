@@ -22,7 +22,7 @@ The slider can be set in a particular state on start-up with the `set_slider` pa
 	d3.graph(adjmat)
 
     # Show the chat and break the network on threshold value 3.
-    d3.show(set_slider=3, filepath=r'D:\REPOS\erdogant.github.io\docs\d3graph\d3graph\set_slider.html', figsize=(600, 400))
+    d3.show(set_slider=3)
 
 
 .. raw:: html
@@ -49,7 +49,7 @@ The slider can be removed from the html.
 	d3.graph(adjmat)
 
     # Show the chat and break the network on threshold value 3.
-    d3.show(show_slider=False, filepath=r'D:\REPOS\erdogant.github.io\docs\d3graph\d3graph\show_slider.html', figsize=(600, 400))
+    d3.show(show_slider=False)
 
 
 .. raw:: html
