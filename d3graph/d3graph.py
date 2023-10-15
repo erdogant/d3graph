@@ -284,21 +284,22 @@ class d3graph:
             logger.info('Set directed=True to see the markers!')
 
         # Set the edge properties
-        self.edge_properties = adjmat2dict(self.adjmat,
-                                           filter_weight=0,
-                                           minmax=self.config['minmax'],
-                                           minmax_distance=self.config['minmax_distance'],
-                                           scaler=self.config['edge_scaler'],
-                                           marker_start=self.config['marker_start'],
-                                           marker_end=self.config['marker_end'],
-                                           marker_color=self.config['marker_color'],
-                                           label=self.config['label'],
-                                           label_color=self.config['label_color'],
-                                           label_fontsize=self.config['label_fontsize'],
-                                           edge_weight=self.config['edge_weight'],
-                                           edge_distance=self.config['edge_distance'],
-                                           edge_style=self.config['edge_style'],
-                                           )
+        self.edge_properties, self.adjmat = adjmat2dict(self.adjmat,
+                                                        filter_weight=0,
+                                                        minmax=self.config['minmax'],
+                                                        minmax_distance=self.config['minmax_distance'],
+                                                        scaler=self.config['edge_scaler'],
+                                                        marker_start=self.config['marker_start'],
+                                                        marker_end=self.config['marker_end'],
+                                                        marker_color=self.config['marker_color'],
+                                                        label=self.config['label'],
+                                                        label_color=self.config['label_color'],
+                                                        label_fontsize=self.config['label_fontsize'],
+                                                        edge_weight=self.config['edge_weight'],
+                                                        edge_distance=self.config['edge_distance'],
+                                                        edge_style=self.config['edge_style'],
+                                                        return_adjmat=True,
+                                                        )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
@@ -917,6 +918,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 edge_style=0,
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
+                return_adjmat=True,
                 ) -> dict:
     """Convert adjacency matrix into vector with source and target.
 
@@ -990,6 +992,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df = adjmat.stack().reset_index()
     # Set columns
     df.columns = ['source', 'target', 'weight']
+    # Combine source-target values with weights
+    df = create_unique_dataframe(df)
     # Remove self loops and no-connected edges
     Iloc = df['source'] != df['target']
     # Keep only edges with a minimum edge strength
@@ -1039,8 +1043,10 @@ def adjmat2dict(adjmat: pd.DataFrame,
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
+    if len(source_target)==0:
+        raise Exception('There are no links in the input data set that have unique source-target value with weight > 0')
     # Return
-    return {edge: {'weight': df['weight'].iloc[i],
+    d = {edge: {'weight': df['weight'].iloc[i],
                    'weight_scaled': df['weight_scaled'].iloc[i],
                    'edge_distance': df['edge_distance'].iloc[i],
                    'edge_style': df['edge_style'].iloc[i],
@@ -1052,6 +1058,43 @@ def adjmat2dict(adjmat: pd.DataFrame,
                    'label_fontsize': df['label_fontsize'].iloc[i],
                    } for
             i, edge in enumerate(source_target)}
+
+    if return_adjmat:
+        return d, vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=True)
+    else:
+        return d
+
+
+# %% Create unique dataframe and update weights
+def create_unique_dataframe(X, logger=None):
+    """Combine source-target into adjacency matrix with updated weights.
+
+    Parameters
+    ----------
+    X : DataFrame
+        Data frame containing the columns [source, target, weight].
+    logger : Object, optional
+        Logger object. The default is None.
+
+    Returns
+    -------
+    X : pd.DataFrame
+        Unique adjacency matrix containing with index as source and columns as target labels. Weights are in the matrix.
+
+    References
+    ----------
+    * This function is similar to that of d3blocks.
+
+    """
+    # Check whether labels are unique
+    if isinstance(X, pd.DataFrame):
+        Iloc = ismember(X.columns, ['source', 'target', 'weight'])[0]
+        X = X.loc[:, Iloc]
+        if 'weight' in X.columns: X['weight'] = X['weight'].astype(float)
+        # Groupby values and sum the weights
+        X = X.groupby(by=['source', 'target']).sum()
+        X.reset_index(drop=False, inplace=True)
+    return X
 
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
@@ -1152,14 +1195,16 @@ def make_graph(node_properties: dict, edge_properties: dict) -> dict:
 # %% Normalize.
 def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
-    # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems,
+    # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems.
 
     # Set sizes to 0 if not available
     getsizes[np.isinf(getsizes)]=0
     getsizes[np.isnan(getsizes)]=0
 
     # out-of-scale datapoints.
-    if scaler == 'zscore' and len(np.unique(getsizes)) >= 2:
+    if len(getsizes)==0:
+        pass
+    elif scaler == 'zscore' and len(np.unique(getsizes)) >= 2:
         getsizes = (getsizes.flatten() - np.mean(getsizes)) / np.std(getsizes)
         if minscale is not None: getsizes = getsizes + (minscale - np.min(getsizes))
         if maxscale is not None: getsizes = np.minimum(getsizes, maxscale)
