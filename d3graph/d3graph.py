@@ -109,6 +109,7 @@ class d3graph:
              showfig: bool = True,
              overwrite: bool = True,
              show_slider: bool = True,
+             set_slider: bool = 0,
              click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
              notebook: bool = False) -> None:
         """Build and show the graph.
@@ -129,6 +130,9 @@ class d3graph:
         show_slider : bool, (default: True)
             True: Slider is shown in the HTML.
             False: Slider is not shown in the HTML.
+        set_slider : int, (default: 0)
+            0: Set the the slider with all edges connected
+            1,2,3, etc: Set slider at a threshold with that particular network state.
         click : dict,
             On node click event. The size depicts the multiplication factor.
                 * {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}
@@ -151,6 +155,7 @@ class d3graph:
         self.config['figsize'] = figsize
         self.config['network_title'] = title
         self.config['show_slider'] = show_slider
+        self.config['set_slider'] = set_slider
         self.config['showfig'] = showfig
         self.config['notebook'] = notebook
         self.config['click'] = click
@@ -719,6 +724,7 @@ class d3graph:
                    'CLICK_STROKEW': click_properties['stroke-width'],
                    'slider_comment_start': show_slider[0],
                    'slider_comment_stop': show_slider[1],
+                   'SET_SLIDER': self.config['set_slider'],
                    'SUPPORT': self.config['support'],
                    }
 

@@ -290,6 +290,11 @@ function d3graphscript(config = {
     restart();
   }
 
+  // Set the initial value of the slider to the user-defined threshold
+  document.getElementById('thresholdSlider').value = {{ SET_SLIDER }};
+  // Call the threshold function to set the network state
+  threshold.call(document.getElementById('thresholdSlider'));
+
   d3.select("#thresholdSlider").on("change", threshold);
 
   //Restart the visualisation after any node and link changes
