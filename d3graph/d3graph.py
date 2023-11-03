@@ -1345,6 +1345,8 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
     """
     if len(source) != len(target): raise ValueError('[d3graph] >Source and Target should have equal elements.')
     if weight is None: weight = [1] * len(source)
+    logger.info('Converting source-target into adjacency matrix..')
+
 
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     # Make adjacency matrix
@@ -1355,16 +1357,33 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
 
     # Make the adjacency matrix symmetric
     if symmetric:
+        logger.info('Making the matrix symmetric..')
         # Add missing columns
-        node_columns = np.setdiff1d(nodes, adjmat.columns.values)
-        for node in node_columns:
-            adjmat[node] = 0
+        # node_columns = np.setdiff1d(nodes, adjmat.columns.values)
+        # for node in node_columns:
+        #     adjmat[node] = 0
 
-        # Add missing rows
-        node_rows = np.setdiff1d(nodes, adjmat.index.values)
-        adjmat = adjmat.T
-        for node in node_rows:
-            adjmat[node] = 0
+        # # Add missing rows
+        # node_rows = np.setdiff1d(nodes, adjmat.index.values)
+        # adjmat = adjmat.T
+        # for node in node_rows:
+        #     adjmat[node] = 0
+
+        # Add missing columns
+        IA, _ = ismember(nodes, adjmat.columns.values)
+        node_columns = nodes[~IA]
+        if len(node_columns) > 0:
+            df_new_columns = pd.DataFrame(0, index=adjmat.index, columns=node_columns)
+            adjmat = pd.concat([adjmat, df_new_columns], axis=1)
+
+        # # Add missing rows
+        IA, _ = ismember(nodes, adjmat.index.values)
+        node_rows = nodes[~IA]
+        # node_rows = np.setdiff1d(nodes, adjmat.index.values)
+        if len(node_rows) > 0:
+            df_new_rows = pd.DataFrame(0, index=node_rows, columns=adjmat.columns)
+            adjmat = pd.concat([adjmat, df_new_rows], axis=0)
+
         adjmat = adjmat.T
 
         # Sort to make ordering of columns and rows similar
@@ -1405,6 +1424,7 @@ def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
 
     """
     # Convert adjacency matrix into vector
+    logger.info('Converting adjacency matrix into source-target..')
     adjmat = adjmat.stack().reset_index()
     # Set columns
     adjmat.columns = ['source', 'target', 'weight']
