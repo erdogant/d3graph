@@ -4,11 +4,25 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
 
+# %% issue large datasets
+# Import
+from d3graph import d3graph, vec2adjmat
+
+df = pd.read_csv(r'C:\temp\large_network.csv', header=0)
+del df['id']
+df = df.iloc[0:1000, :]
+adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=True)
+
+d3 = d3graph()
+d3.graph(adjmat, color='cluster')
+d3.show(filepath=r'c:\temp\network_big.html')
+
+
 # %%
 # Import
 from d3graph import d3graph
 # intialize to load example dataset
-d3 = d3graph(support=False)
+d3 = d3graph()
 adjmat = d3.import_example('bigbang')
 # adjmat.columns = df['label']
 # adjmat.index = df['label']
@@ -19,16 +33,16 @@ d3.graph(adjmat, color='cluster')
 # We will first set all label properties to None and then we will adjust two of them
 # d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
 
-d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
-d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
-d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
-d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
-d3.edge_properties['Amy', 'Bernadette']['edge_style']=2
+d3.edge_properties['Bernadette', 'Amy']['weight_scaled']=10
+d3.edge_properties['Bernadette', 'Amy']['label']='amy-bern'
+d3.edge_properties['Bernadette', 'Amy']['label_color']='#000FFF'
+d3.edge_properties['Bernadette', 'Amy']['label_fontsize']=8
+d3.edge_properties['Bernadette', 'Amy']['edge_style']=2
 
-d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
-d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
-d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
-d3.edge_properties['Bernadette', 'Howard']['edge_style']=5
+d3.edge_properties['Howard', 'Bernadette']['label']='bern-how'
+d3.edge_properties['Howard', 'Bernadette']['label_fontsize']=20
+d3.edge_properties['Howard', 'Bernadette']['label_color']='#000000'
+d3.edge_properties['Howard', 'Bernadette']['edge_style']=5
 
 # Set some node properties
 d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 'rect', 'rect'])
