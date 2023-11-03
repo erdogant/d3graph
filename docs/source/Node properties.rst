@@ -273,7 +273,7 @@ Customize the properties of one specific node
 	d3.node_properties['Penny']['edge_color']='#0000ff' # Blue
 
 	# Customize a specific edge property
-	d3.edge_properties['Penny', 'Leonard']['color']='#FF0000' # red
+	d3.edge_properties['Leonard', 'Penny']['color']='#FF0000' # red
 	
 	# Print
 	print(d3.node_properties['Penny'])
