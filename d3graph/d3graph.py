@@ -1347,7 +1347,6 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
     if weight is None: weight = [1] * len(source)
     logger.info('Converting source-target into adjacency matrix..')
 
-
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     # Make adjacency matrix
     adjmat = pd.crosstab(df['source'], df['target'], values=weight, aggfunc=aggfunc).fillna(0)
@@ -1358,7 +1357,7 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
     # Make the adjacency matrix symmetric
     if symmetric:
         logger.info('Making the matrix symmetric..')
-        # Add missing columns
+        # # Add missing columns
         # node_columns = np.setdiff1d(nodes, adjmat.columns.values)
         # for node in node_columns:
         #     adjmat[node] = 0
@@ -1384,7 +1383,7 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
             df_new_rows = pd.DataFrame(0, index=node_rows, columns=adjmat.columns)
             adjmat = pd.concat([adjmat, df_new_rows], axis=0)
 
-        adjmat = adjmat.T
+        # adjmat = adjmat.T
 
         # Sort to make ordering of columns and rows similar
         logger.debug('Order columns and rows.')
