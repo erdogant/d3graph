@@ -3,6 +3,43 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
+# %%
+
+from ismember import ismember
+from d3graph import d3graph
+
+# intialize to load example dataset
+d3 = d3graph()
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Set the min_weight
+X = pd.DataFrame(data=edges, columns=['source', 'target'])
+X['weight'] = 1
+X = vec2adjmat(target=X['target'], source=X['source'], weight=X['weight'])
+
+# Create network using default
+d3.graph(X)
+
+# We will first set all label properties to None and then we will adjust two of them
+d3.set_edge_properties(directed=True,
+                                minmax_distance=[100, 250],
+                                marker_color=['#000000', '#000000', '#000000', '#000000'],
+                               )
+
+# Set some node properties
+d3.set_node_properties(#label=['Cloudy', 'Rain', 'Sprinkler', 'Wet_Grass'],
+                                size=[10, 10, 10, 10],
+                                color=['#1f456e', '#1f456e', '#1f456e', '#1f456e'],
+                                fontcolor=None,
+                               )
+
+# Show the interactive plot
+d3.show(show_slider=True, figsize=(1500, 800))
+
 
 # %% issue large datasets
 # Import
@@ -31,18 +68,18 @@ adjmat = d3.import_example('bigbang')
 d3.graph(adjmat, color='cluster')
 
 # We will first set all label properties to None and then we will adjust two of them
-# d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
+d3.set_edge_properties(directed=True, marker_color='#000FFF', label=None, edge_style=0)
 
-d3.edge_properties['Bernadette', 'Amy']['weight_scaled']=10
-d3.edge_properties['Bernadette', 'Amy']['label']='amy-bern'
-d3.edge_properties['Bernadette', 'Amy']['label_color']='#000FFF'
-d3.edge_properties['Bernadette', 'Amy']['label_fontsize']=8
-d3.edge_properties['Bernadette', 'Amy']['edge_style']=2
+d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
+d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
+d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
+d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+d3.edge_properties['Amy', 'Bernadette']['edge_style']=2
 
-d3.edge_properties['Howard', 'Bernadette']['label']='bern-how'
-d3.edge_properties['Howard', 'Bernadette']['label_fontsize']=20
-d3.edge_properties['Howard', 'Bernadette']['label_color']='#000000'
-d3.edge_properties['Howard', 'Bernadette']['edge_style']=5
+d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
+d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
+d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
+d3.edge_properties['Bernadette', 'Howard']['edge_style']=5
 
 # Set some node properties
 d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 'rect', 'rect'])
