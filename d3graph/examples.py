@@ -3,6 +3,28 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
+
+# %% Check adjmat2vec and vec2adjmat
+
+# Convert the array to a DataFrame for comparison
+edges  = np.array([('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')])
+weight = [1,2,3,4]
+df_edges = pd.DataFrame(edges, columns=['source', 'target'])
+df_edges['weight']=weight
+
+df_edges_c = adjmat2vec(vec2adjmat(source=df_edges['source'], target=df_edges['target'], weight=df_edges['weight']))
+adjmat = vec2adjmat(source=df_edges_c['source'], target=df_edges_c['target'], weight=df_edges_c['weight'])
+df_edges_c = adjmat2vec(adjmat)
+
+df_edges_c = df_edges_c.sort_values(by='weight')
+df_edges_c['isin']=0
+
+for index, edge in df_edges.iterrows():
+    Iloc = np.sum(edge==df_edges_c[df_edges.columns], axis=1)==len(df_edges.columns)
+    df_edges_c['isin'][Iloc]=1
+
+assert df_edges_c['isin'].sum()==df_edges.shape[0]
+
 # %%
 
 from ismember import ismember
