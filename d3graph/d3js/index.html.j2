@@ -13,6 +13,13 @@
 </head>
 <body>
 
+<!-- Create save button -->
+{{ save_button_comment_start }}
+    <div style="max-width:{{ width }}px;">
+        <center><button id="saveButton">Save</button></center>
+    </div>
+{{ save_button_comment_stop }}
+
 
     <script>
         {% include "d3.v3.js" %}
@@ -30,7 +37,21 @@
                 collision: {{ collision }}
             })
         });
+
+        // Save image to svg
+        document.getElementById('saveButton').addEventListener('click', function () {
+            var svgData = document.querySelector('svg').outerHTML;
+            var blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = '{{ title }}.svg';
+            link.click();
+        });
+        
+        
     </script>
+
 
 
 <!-- SLIDER -->

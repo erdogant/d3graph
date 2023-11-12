@@ -76,8 +76,7 @@ class d3graph:
                  support: str = 'text',
                  verbose: int = 20) -> None:
         """Initialize d3graph."""
-        if slider is None:
-            slider = [None, None]
+        if slider is None: slider = [None, None]
         # Cleaning
         self._clean()
         # Some library compatibility checks
@@ -111,7 +110,9 @@ class d3graph:
              show_slider: bool = True,
              set_slider: bool = 0,
              click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
-             notebook: bool = False) -> None:
+             notebook: bool = False,
+             save_button: bool = True,
+             ) -> None:
         """Build and show the graph.
 
         Parameters
@@ -141,6 +142,9 @@ class d3graph:
         notebook : bool
             True: Use IPython to show chart in notebooks.
             False: Do not use IPython.
+        save_button : bool, (default: True)
+            True: Save button is shown in the HTML to save the image in svg.
+            False: No save button is shown in the HTML.
 
         Returns
         -------
@@ -159,6 +163,7 @@ class d3graph:
         self.config['showfig'] = showfig
         self.config['notebook'] = notebook
         self.config['click'] = click
+        self.config['save_button'] = save_button
         # self.config['filepath'] = self.set_path(filepath)
         if self.config.get('filepath', None)!='d3graph.html': self.config['filepath'] = self.set_path(filepath)
 
@@ -703,6 +708,7 @@ class d3graph:
 
         # Hide slider
         show_slider = ['', ''] if self.config['show_slider'] else ['<!--', '-->']
+        show_save_button = ['', ''] if self.config['save_button'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
@@ -724,6 +730,8 @@ class d3graph:
                    'CLICK_STROKEW': click_properties['stroke-width'],
                    'slider_comment_start': show_slider[0],
                    'slider_comment_stop': show_slider[1],
+                   'save_button_comment_start': show_save_button[0],
+                   'save_button_comment_stop': show_save_button[1],
                    'SET_SLIDER': self.config['set_slider'],
                    'SUPPORT': self.config['support'],
                    }

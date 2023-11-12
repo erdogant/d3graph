@@ -60,7 +60,7 @@ d3.set_node_properties(#label=['Cloudy', 'Rain', 'Sprinkler', 'Wet_Grass'],
                                )
 
 # Show the interactive plot
-d3.show(show_slider=True, figsize=(1500, 800))
+d3.show(show_slider=True, figsize=(1500, 800), filepath=r'c:\temp\d3graph\sprinkler_d3graph.html')
 
 
 # %% issue large datasets
@@ -106,7 +106,7 @@ d3.edge_properties['Bernadette', 'Howard']['edge_style']=5
 # Set some node properties
 d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 'rect', 'rect'])
 
-d3.show(filepath=r'c:\temp\\d3graph\circle.html', set_slider=5)
+d3.show(filepath=r'c:\temp\\d3graph\circle.html', set_slider=5, save_button=False)
 
 
 # %% opacity
