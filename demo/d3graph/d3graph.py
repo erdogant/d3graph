@@ -25,14 +25,13 @@ from jinja2 import Environment, PackageLoader
 from packaging import version
 import datazets as dz
 
-logger = logging.getLogger('')
+logger = logging.getLogger(__name__)
 for handler in logger.handlers[:]:
     logger.removeHandler(handler)
 console = logging.StreamHandler()
 formatter = logging.Formatter('[d3graph] %(levelname)s> %(message)s')
 console.setFormatter(formatter)
 logger.addHandler(console)
-logger = logging.getLogger(__name__)
 
 
 # %%
