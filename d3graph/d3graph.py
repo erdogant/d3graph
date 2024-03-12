@@ -823,10 +823,10 @@ class d3graph:
             dirname = os.path.join(gettempdir(), 'd3graph')
         else:
             dirname, filename = os.path.split(filepath)
-    
+
             if filename in (None, ''):
                 filename = 'd3graph.html'
-    
+
             if dirname in (None, ''):
                 dirname = os.path.join(gettempdir(), 'd3graph')
 
@@ -1193,14 +1193,6 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['edge_style']=edge_style
     df['edge_opacity'] = edge_opacity
 
-    # Handle node_source edge color
-    if edge_color == 'node_source' and node_color_map is not None:
-        df['edge_color'] = df['source'].map(node_color_map)
-    elif edge_color == 'node_target' and node_color_map is not None:
-        df['edge_color'] = df['target'].map(node_color_map)
-    else:
-        df['edge_color'] = edge_color
-        
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
     if len(source_target)==0:
