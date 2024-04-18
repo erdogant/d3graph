@@ -19,7 +19,7 @@ setuptools.setup(
                       'ismember',
                       'jinja2',
                       'packaging',
-                      'markupsafe==2.0.1',
+                      'markupsafe==2.1.*',
                       'python-louvain',
                       'datazets @ git+https://github.com/Avatar-Cognition/datazets.git'],
     python_requires='>=3',
