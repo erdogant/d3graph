@@ -19,7 +19,6 @@ setuptools.setup(
                       'ismember',
                       'jinja2',
                       'packaging',
-                      'markupsafe==2.0.1',
                       'python-louvain',
                       'datazets'],
     python_requires='>=3',
