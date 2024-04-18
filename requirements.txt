@@ -1,7 +1,7 @@
-git+https://github.com/Avatar-Cognition/colourmap.git@1.1.16#egg=colourmap
+git+https://github.com/Avatar-Cognition/colourmap.git@1.1.17#egg=colourmap
 ismember
 jinja2
-markupsafe==2.0.1
+markupsafe==2.1.5
 networkx>2
 numpy
 packaging
