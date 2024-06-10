@@ -75,6 +75,8 @@ function d3graphscript(config = {
 //  .style("stroke-width", 1); // WIDTH OF THE LINKS
   ;
 
+  link.append("title").text(function(d) { return d.tooltip; });
+
   // ADD TEXT ON THE EDGES (PART 1/2)
    var linkText = svg.selectAll(".link-text")
      .data(graph.links)
