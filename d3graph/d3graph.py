@@ -1009,6 +1009,7 @@ def json_create(G: nx.Graph) -> str:
         links[i]['label'] = links[i]['label']
         links[i]['label_color'] = links[i]['label_color']
         links[i]['label_fontsize'] = links[i]['label_fontsize']
+        links[i]['tooltip'] = links[i]['tooltip']
         links_new.append(links[i])
 
     # Set node properties
@@ -1125,6 +1126,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
             'label': Text label for the edge.
             'label_color': color of the label.
             'label_fontsize': fontsize of the label.
+            'tooltip': Text that is shown when hovering over the edge.
 
     """
     # Convert adjacency matrix into vector
@@ -1192,6 +1194,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label_fontsize']=label_fontsize
     df['edge_style']=edge_style
     df['edge_opacity'] = edge_opacity
+    df['tooltip'] = df['weight'].astype(str)
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -1210,6 +1213,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                    'label': df['label'].iloc[i],
                    'label_color': df['label_color'].iloc[i],
                    'label_fontsize': df['label_fontsize'].iloc[i],
+                   'tooltip': df['tooltip'].iloc[i]
                    } for
             i, edge in enumerate(source_target)}
 
@@ -1286,6 +1290,7 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    label=edge_properties[edge]['label'],
                    label_color=edge_properties[edge]['label_color'],
                    label_fontsize=edge_properties[edge]['label_fontsize'],
+                   tooltip=edge_properties[edge]['tooltip']
                    )
     return G
 
