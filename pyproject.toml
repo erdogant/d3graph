@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "d3graph"
+dynamic = ["version"]
+authors = [{ name = "Erdogan Taskesen", email = "erdogant@gmail.com" },]
+description = "Python package to create interactive network based on d3js."
+readme = "README.md"
+requires-python = ">=3"
+license = { file = "LICENSE" }
+keywords = ["Python", ""]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    'pandas',
+    'numpy',
+    'colourmap',
+    'networkx>2',
+    'ismember',
+    'jinja2',
+    'packaging',
+    'markupsafe==2.0.1',
+    'python-louvain',
+    'datazets',
+    ]
+
+[project.urls]
+Homepage = "https://erdogant.github.io/d3graph"
+Download = "https://github.com/erdogant/d3graph/archive/{version}.tar.gz"
+
+[tool.setuptools]
+packages = ["d3graph"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "d3graph.__version__" }
