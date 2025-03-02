@@ -4,11 +4,38 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
 
+# %%
+
+import pandas as pd
+from d3graph import d3graph, adjmat2vec
+df = pd.read_csv(r'c:\temp\Afhankelijkheden teams.csv', sep=';', index_col=0)
+# intialize to load example dataset
+d3 = d3graph()
+# df = d3.import_example(data='energy')
+
+df=df>0
+df = df.astype(int)
+d3.graph(df)
+
+d3.set_edge_properties(directed=False, scaler='minmax', 
+                                minmax_distance=[100, 250], 
+                                # marker_color=['#000000', '#000000', '#000000', '#000000'],
+                               )
+
+# Set some node properties
+d3.set_node_properties(color='#000000', edge_color='#000FFF')
+
+
+# d3.set_node_properties(opacity='centrality')
+d3.show(show_slider=True, filepath='c://temp/network4.html')
+
+# %%
+
 # %% Check adjmat2vec and vec2adjmat
 
 # Convert the array to a DataFrame for comparison
 edges  = np.array([('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')])
-weight = [1,2,3,4]
+weight = [1, 2, 3, 4]
 df_edges = pd.DataFrame(edges, columns=['source', 'target'])
 df_edges['weight']=weight
 
@@ -26,7 +53,6 @@ for index, edge in df_edges.iterrows():
 assert df_edges_c['isin'].sum()==df_edges.shape[0]
 
 # %%
-
 from ismember import ismember
 from d3graph import d3graph
 
@@ -264,6 +290,7 @@ d3.graph(adjmat, color='cluster')
 html = d3.show(click={'fill': 'green', 'stroke': 'black', 'size': 2, 'stroke-width': 2}, filepath=r'c:\temp\d3graph\d3graph.html')
 html = d3.show(click=None, filepath=r'c:\temp\d3graph\d3graph.html')
 html = d3.show(filepath=r'c:\temp\d3graph\d3graph.html')
+
 
 # %% notebook examples
 from d3graph import d3graph
