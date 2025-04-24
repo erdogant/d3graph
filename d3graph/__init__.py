@@ -1,6 +1,7 @@
 from d3graph.d3graph import d3graph
 from packaging import version
 from datazets import get as import_example
+import logging
 
 from d3graph.d3graph import (
     vec2adjmat,
@@ -9,12 +10,23 @@ from d3graph.d3graph import (
     json_create,
     adjmat2dict,
     data_checks,
+    check_logger,
     )
 
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.5.0'
+__version__ = '2.5.1'
+
+# Setup root logger
+_logger = logging.getLogger('d3graph')
+_log_handler = logging.StreamHandler()
+_fmt = '[{asctime}] [{name}] [{levelname}] {msg}'
+_formatter = logging.Formatter(fmt=_fmt, style='{', datefmt='%d-%m-%Y %H:%M:%S')
+_log_handler.setFormatter(_formatter)
+_log_handler.setLevel(logging.DEBUG)
+_logger.addHandler(_log_handler)
+_logger.propagate = False
 
 
 # module level doc-string
