@@ -8,6 +8,9 @@
 import numpy as np
 import pandas as pd
 from ismember import ismember
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 #%%  Convert adjacency matrix to vector

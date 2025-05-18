@@ -1,22 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>&lt;no title&gt; &mdash; d3graph d3graph documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=6c61b047"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6c61b047"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +34,6 @@
           <a href="index.html" class="icon icon-home">
             d3graph
           </a>
-              <div class="version">
-                2.4.16
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -85,6 +82,8 @@
 <li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.check_logger"><code class="docutils literal notranslate"><span class="pre">check_logger()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.convert_verbose_to_new"><code class="docutils literal notranslate"><span class="pre">convert_verbose_to_new()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.create_unique_dataframe"><code class="docutils literal notranslate"><span class="pre">create_unique_dataframe()</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="#d3graph.d3graph.d3graph"><code class="docutils literal notranslate"><span class="pre">d3graph</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#d3graph.d3graph.d3graph.display"><code class="docutils literal notranslate"><span class="pre">d3graph.display()</span></code></a></li>
@@ -232,6 +231,18 @@ None : Inherits the color from marker_color.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="d3graph.d3graph.check_logger">
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">check_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose:</span> <span class="pre">[&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;]</span> <span class="pre">=</span> <span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.check_logger" title="Link to this definition"></a></dt>
+<dd><p>Check the logger.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="d3graph.d3graph.convert_verbose_to_new">
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">convert_verbose_to_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.convert_verbose_to_new" title="Link to this definition"></a></dt>
+<dd><p>Convert old verbosity to the new.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.create_unique_dataframe">
 <span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">create_unique_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.create_unique_dataframe" title="Link to this definition"></a></dt>
 <dd><p>Combine source-target into adjacency matrix with updated weights.</p>
@@ -336,7 +347,7 @@ None : No scaler is used.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">d3graph</span> <span class="kn">import</span> <span class="n">d3graph</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
@@ -572,7 +583,7 @@ None : No scaler is used.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="d3graph.d3graph.d3graph.show">
-<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1500,</span> <span class="pre">800]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d3graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d3graph.html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">click</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'fill':</span> <span class="pre">None,</span> <span class="pre">'size':</span> <span class="pre">1.3,</span> <span class="pre">'stroke':</span> <span class="pre">'black',</span> <span class="pre">'stroke-width':</span> <span class="pre">3}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notebook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.show" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1500,</span> <span class="pre">800]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d3graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'d3graph.html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_slider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">click</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'fill':</span> <span class="pre">None,</span> <span class="pre">'size':</span> <span class="pre">1.3,</span> <span class="pre">'stroke':</span> <span class="pre">'black',</span> <span class="pre">'stroke-width':</span> <span class="pre">3}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notebook</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_button</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.d3graph.show" title="Link to this definition"></a></dt>
 <dd><p>Build and show the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -598,6 +609,8 @@ False: Slider is not shown in the HTML.</p></li>
 </p></li>
 <li><p><strong>notebook</strong> (<em>bool</em>) – True: Use IPython to show chart in notebooks.
 False: Do not use IPython.</p></li>
+<li><p><strong>save_button</strong> (<em>bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – True: Save button is shown in the HTML to save the image in svg.
+False: No save button is shown in the HTML.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -612,7 +625,7 @@ False: Do not use IPython.</p></li>
 <dd><p>Write html.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>json_data</strong> (<em>json file</em>) – </p>
+<dd class="field-odd"><p><strong>json_data</strong> (<em>json file</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None.</p>
@@ -740,8 +753,31 @@ False: Do not use IPython.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="d3graph.d3graph.set_logger">
-<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">set_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#d3graph.d3graph.set_logger" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">d3graph.d3graph.</span></span><span class="sig-name descname"><span class="pre">set_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose:</span> <span class="pre">[&lt;class</span> <span class="pre">'str'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;]</span> <span class="pre">=</span> <span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#d3graph.d3graph.set_logger" title="Link to this definition"></a></dt>
 <dd><p>Set the logger for verbosity messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default is 'info'</em><em> or </em><em>20</em>) – Set the verbose messages using string or integer values.
+* [0, 60, None, ‘silent’, ‘off’, ‘no’]: No message.
+* [10, ‘debug’]: Messages from debug level and higher.
+* [20, ‘info’]: Messages from info level and higher.
+* [30, ‘warning’]: Messages from warning level and higher.
+* [50, ‘critical’]: Messages from critical level and higher.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>None.</em></p></li>
+<li><p><em>&gt; # Set the logger to warning</em></p></li>
+<li><p><em>&gt; set_logger(verbose=’warning’)</em></p></li>
+<li><p><em>&gt; # Test with different messages</em></p></li>
+<li><p><em>&gt; logger.debug(“Hello debug”)</em></p></li>
+<li><p><em>&gt; logger.info(“Hello info”)</em></p></li>
+<li><p><em>&gt; logger.warning(“Hello warning”)</em></p></li>
+<li><p><em>&gt; logger.critical(“Hello critical”)</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

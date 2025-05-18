@@ -25,13 +25,6 @@ from jinja2 import Environment, PackageLoader
 from packaging import version
 import datazets as dz
 
-logger = logging.getLogger('')
-for handler in logger.handlers[:]:
-    logger.removeHandler(handler)
-console = logging.StreamHandler()
-formatter = logging.Formatter('[d3graph] %(levelname)s> %(message)s')
-console.setFormatter(formatter)
-logger.addHandler(console)
 logger = logging.getLogger(__name__)
 
 
@@ -849,9 +842,79 @@ class d3graph:
 
 
 # %%
-def set_logger(verbose: int = 20) -> None:
-    """Set the logger for verbosity messages."""
+def set_logger(verbose: [str, int] = 'info'):
+    """Set the logger for verbosity messages.
+
+    Parameters
+    ----------
+    verbose : [str, int], default is 'info' or 20
+        Set the verbose messages using string or integer values.
+        * [0, 60, None, 'silent', 'off', 'no']: No message.
+        * [10, 'debug']: Messages from debug level and higher.
+        * [20, 'info']: Messages from info level and higher.
+        * [30, 'warning']: Messages from warning level and higher.
+        * [50, 'critical']: Messages from critical level and higher.
+
+    Returns
+    -------
+    None.
+
+    > # Set the logger to warning
+    > set_logger(verbose='warning')
+    > # Test with different messages
+    > logger.debug("Hello debug")
+    > logger.info("Hello info")
+    > logger.warning("Hello warning")
+    > logger.critical("Hello critical")
+
+    """
+    # Convert verbose to new
+    verbose = convert_verbose_to_new(verbose)
+    # Set 0 and None as no messages.
+    if (verbose==0) or (verbose is None):
+        verbose=60
+    # Convert str to levels
+    if isinstance(verbose, str):
+        levels = {'silent': 60,
+                  'off': 60,
+                  'no': 60,
+                  'debug': 10,
+                  'info': 20,
+                  'warning': 30,
+                  'error': 50,
+                  'critical': 50}
+        verbose = levels[verbose]
+
+    # Show examples
     logger.setLevel(verbose)
+
+
+def convert_verbose_to_new(verbose):
+    """Convert old verbosity to the new."""
+    # In case the new verbosity is used, convert to the old one.
+    if verbose is None: verbose=0
+    if not isinstance(verbose, str) and verbose<10:
+        status_map = {
+            'None': 'silent',
+            0: 'silent',
+            6: 'silent',
+            1: 'critical',
+            2: 'warning',
+            3: 'info',
+            4: 'debug',
+            5: 'debug'}
+        if verbose>=2: print('[XXX] WARNING use the standardized verbose status. The status [1-6] will be deprecated in future versions.')
+        return status_map.get(verbose, 0)
+    else:
+        return verbose
+
+def check_logger(verbose: [str, int] = 'info'):
+    """Check the logger."""
+    set_logger(verbose)
+    logger.debug('DEBUG')
+    logger.info('INFO')
+    logger.warning('WARNING')
+    logger.critical('CRITICAL')
 
 
 # %% Write network in json file

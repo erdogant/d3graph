@@ -4,6 +4,15 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
 
+#%%
+from d3graph import check_logger
+check_logger(verbose='debug')
+check_logger(verbose='info')
+check_logger(verbose='info')
+check_logger(verbose='warning')
+check_logger(verbose='error')
+check_logger(verbose=None)
+
 # %%
 
 import pandas as pd
