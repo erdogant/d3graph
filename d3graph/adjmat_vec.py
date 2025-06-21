@@ -11,7 +11,8 @@ from ismember import ismember
 import logging
 
 logger = logging.getLogger(__name__)
-
+if not logger.hasHandlers():
+    logging.basicConfig(level=logging.INFO, format='[{asctime}] [{name}] [{levelname}] {msg}', style='{', datefmt='%d-%m-%Y %H:%M:%S')
 
 #%%  Convert adjacency matrix to vector
 def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum', logger=None) -> pd.DataFrame:

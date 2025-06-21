@@ -26,6 +26,8 @@ from packaging import version
 import datazets as dz
 
 logger = logging.getLogger(__name__)
+if not logger.hasHandlers():
+    logging.basicConfig(level=logging.INFO, format='[{asctime}] [{name}] [{levelname}] {msg}', style='{', datefmt='%d-%m-%Y %H:%M:%S')
 
 
 # %%
@@ -705,6 +707,9 @@ class d3graph:
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
+        # Get support
+        support = self.config.get('support')
+        if support is None: support = get_support('text')
 
         content = {'json_data': json_data,
                    'title': self.config['network_title'],
@@ -726,7 +731,7 @@ class d3graph:
                    'save_button_comment_start': show_save_button[0],
                    'save_button_comment_stop': show_save_button[1],
                    'SET_SLIDER': self.config['set_slider'],
-                   'SUPPORT': self.config['support'],
+                   'SUPPORT': support,
                    }
 
         try:
