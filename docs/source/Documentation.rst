@@ -8,9 +8,9 @@ Medium Blog
 ############
 
 .. note::
-	`1. Creating beautiful stand-alone interactive D3 charts with Python. <https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7>`_
+	`1. Creating beautiful stand-alone interactive D3 network charts with Python. <https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86>`_
 
-	`2. D3Blocks: The Python Library to Create Interactive and Standalone D3js Charts. <https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4>`_
+	`2. D3Blocks: The Python Library to Create Interactive and Standalone D3js Charts. <https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86>`_
 
 Github
 ############

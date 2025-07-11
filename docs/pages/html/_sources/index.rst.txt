@@ -4,10 +4,10 @@ D3Graph
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
 
 .. note::
-	`D3Graph: Creating beautiful stand-alone interactive D3 charts with Python. <https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7>`_
+	`D3Graph: Creating beautiful stand-alone interactive D3 network charts with Python. <https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86>`_
 
 .. note::
-	`D3Blocks: The Python Library to Create Interactive and Standalone D3js Charts. <https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4>`_
+	`D3Blocks: The Python Library to Create Interactive and Standalone D3js Charts. <https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86>`_
 
 
 .. raw:: html
