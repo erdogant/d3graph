@@ -206,50 +206,46 @@
 </section>
 <section id="karate-club-network">
 <h1>Karate Club network<a class="headerlink" href="#karate-club-network" title="Link to this heading"></a></h1>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
 
 <span class="c1"># Initialize</span>
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
-<span class="c1"># Load karate example</span>
-<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="c1"># Load energy example</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">)</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
 
-<span class="n">label</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="n">node_size</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
+<span class="c1"># Process adjmat</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">edge_distance</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">(</span><span class="n">charge</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">(</span><span class="n">collision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">(</span><span class="n">collision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#00FFFF&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Set1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;D:\REPOS\erdogant.github.io\docs\d3graph\d3graph/energy_1.html&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<hr>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_1.html" height="800px" width="850px", frameBorder="0"></iframe><div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+
+    <span class="c1"># Initialize</span>
+    <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+    <span class="c1"># Load energy example</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">)</span>
+    <span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Process adjmat</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Change node properties</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">scaler</span><span class="o">=</span><span class="s1">&#39;minmax&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Solar&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">30</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Solar&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#FF0000&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Solar&#39;</span><span class="p">][</span><span class="s1">&#39;edge_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Solar&#39;</span><span class="p">][</span><span class="s1">&#39;edge_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
+
+<span class="c1"># Show</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_2.html" height="800px" width="850px", frameBorder="0"></iframe><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span><span class="o">.</span><span class="n">set_edge_properties</span><span class="p">(</span><span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">marker_end</span><span class="o">=</span><span class="s1">&#39;arrow&#39;</span><span class="p">)</span>
+    <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_3.html" height="800px" width="850px", frameBorder="0"></iframe><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

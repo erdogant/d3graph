@@ -92,10 +92,10 @@ Each marker can be customized using the ``edge_properties``.
 	d3.set_edge_properties(directed=True, marker_end='', label='weight')
 
 	# Set markers for individual edges
-	d3.edge_properties['Leonard', 'Penny']['marker_end']='arrow'
-	d3.edge_properties['Howard', 'Sheldon']['marker_end']='stub'
-	d3.edge_properties['Leonard', 'Sheldon']['marker_end']='circle'
-	d3.edge_properties['Penny', 'Rajesh']['marker_end']='square'
+	d3.edge_properties['Penny','Leonard']['marker_end']='arrow'
+	d3.edge_properties['Sheldon', 'Howard']['marker_end']='stub'
+	d3.edge_properties['Sheldon','Leonard']['marker_end']='circle'
+	d3.edge_properties['Rajesh', 'Penny']['marker_end']='square'
 	d3.show()
 
 .. raw:: html
@@ -220,19 +220,19 @@ We will first set all label properties to None and then we will adjust two of th
 .. code:: python
 
 	# Change the label properties for the first edge
-    d3.edge_properties['Bernadette', 'Amy']['weight_scaled']=10
-    d3.edge_properties['Bernadette', 'Amy']['label']='amy-bern'
-    d3.edge_properties['Bernadette', 'Amy']['label_color']='#000FFF'
-    d3.edge_properties['Bernadette', 'Amy']['label_fontsize']=8
-    d3.edge_properties['Bernadette', 'Amy']['edge_style']=2
+    d3.edge_properties['Amy', 'Bernadette']['weight_scaled']=10
+    d3.edge_properties['Amy', 'Bernadette']['label']='amy-bern'
+    d3.edge_properties['Amy', 'Bernadette']['label_color']='#000FFF'
+    d3.edge_properties['Amy', 'Bernadette']['label_fontsize']=8
+    d3.edge_properties['Amy', 'Bernadette']['edge_style']=2
 
 	# Change the label properties for the second edge
-    d3.edge_properties['Howard', 'Bernadette']['label']='bern-how'
-    d3.edge_properties['Howard', 'Bernadette']['label_fontsize']=20
-    d3.edge_properties['Howard', 'Bernadette']['label_color']='#000000'
-    d3.edge_properties['Howard', 'Bernadette']['edge_style']=5
+    d3.edge_properties['Bernadette', 'Howard']['label']='bern-how'
+    d3.edge_properties['Bernadette', 'Howard']['label_fontsize']=20
+    d3.edge_properties['Bernadette', 'Howard']['label_color']='#000000'
+    d3.edge_properties['Bernadette', 'Howard']['edge_style']=5
 
-	d3.show()
+    d3.show()
 
 .. raw:: html
 

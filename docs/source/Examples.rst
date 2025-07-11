@@ -120,50 +120,63 @@ Karate Club network
 
 .. code:: python
 
-	from d3graph import d3graph
+	from d3graph import d3graph, vec2adjmat
 
 	# Initialize
 	d3 = d3graph()
-	# Load karate example
-	adjmat, df = d3.import_example('karate')
-
-	label = df['label'].values
-	node_size = df['degree'].values
-
+	# Load energy example
+	df = d3.import_example('energy')
+	adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+	
+	# Process adjmat
 	d3.graph(adjmat)
-	d3.set_node_properties(color=df['label'].values, label=label)
-	d3.show()
+	d3.show(filepath=r'D:\REPOS\erdogant.github.io\docs\d3graph\d3graph/energy_1.html')
 
-	d3.set_node_properties(label=label, color=label, cmap='Set1')
-	d3.show()
 
-	d3.set_node_properties(size=node_size)
-	d3.show()
+.. raw:: html
 
-	d3.set_node_properties(color=label, size=node_size, label=label)
-	d3.show()
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_1.html" height="800px" width="850px", frameBorder="0"></iframe>
 
-	d3.set_edge_properties(edge_distance=100)
-	d3.set_node_properties(color=node_size, size=node_size, label=label)
-	d3.show()
 
-	d3 = d3graph(charge=1000)
+
+.. code:: python
+
+	from d3graph import d3graph, vec2adjmat
+
+	# Initialize
+	d3 = d3graph()
+	# Load energy example
+	df = d3.import_example('energy')
+	adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+	
+	# Process adjmat
 	d3.graph(adjmat)
-	d3.set_node_properties(color=node_size, size=node_size, label=label)
+
+    # Change node properties
+    d3.set_node_properties(scaler='minmax', color=None)
+    d3.node_properties['Solar']['size']=30
+    d3.node_properties['Solar']['color']='#FF0000'
+    d3.node_properties['Solar']['edge_color']='#000000'
+    d3.node_properties['Solar']['edge_size']=5
+
+    # Show
+	d3.show()
+    
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_2.html" height="800px" width="850px", frameBorder="0"></iframe>
+
+
+
+.. code:: python
+
+    d3.set_edge_properties(directed=True, marker_end='arrow')
 	d3.show()
 
-	d3 = d3graph(collision=1, charge=250)
-	d3.graph(adjmat)
-	d3.set_node_properties(color=label, size=node_size, edge_size=node_size, cmap='Set1', label=label)
-	d3.show()
+.. raw:: html
 
-	d3 = d3graph(collision=1, charge=250)
-	d3.graph(adjmat)
-	d3.set_node_properties(color=label, size=node_size, edge_size=node_size, edge_color='#00FFFF', cmap='Set1', label=label)
-	d3.show()
-
-
-
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_3.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
 .. include:: add_bottom.add

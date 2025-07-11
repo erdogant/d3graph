@@ -29,7 +29,10 @@ The initialization is directly performed after importing the ``d3graph`` library
 **A run with default initialization.**
 
 .. code:: python
-	
+
+	# Import library
+	from d3graph import d3graph
+
 	# Initialization with default parameters
 	d3 = d3graph()
 	# Load karate example

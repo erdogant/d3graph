@@ -186,18 +186,15 @@
 <section id="node-label">
 <h2>Node label<a class="headerlink" href="#node-label" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node labels</strong> from the <em>karate</em> example into something more meaningfull.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
 <span class="c1"># Initialization</span>
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 <span class="c1"># Load karate example</span>
 <span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
 <span class="c1"># Process the adjacency matrix</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-
 <span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-
 <span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -206,15 +203,13 @@
 <section id="tooltips">
 <h2>Tooltips<a class="headerlink" href="#tooltips" title="Link to this heading"></a></h2>
 <p>Getting more information when hovering over a node can be easily done using the <code class="docutils literal notranslate"><span class="pre">tooltip</span></code> parameter.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
 <span class="c1"># Initialization</span>
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 <span class="c1"># Load karate example</span>
 <span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
 <span class="c1"># Process the adjacency matrix</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-
 <span class="c1"># Set node properties</span>
 <span class="n">tooltip</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Id: &#39;</span> <span class="o">+</span> <span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Degree: &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Label: &#39;</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">tooltip</span> <span class="o">=</span> <span class="n">tooltip</span><span class="o">.</span><span class="n">values</span>
@@ -224,8 +219,8 @@
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="c1"># If you want thinner lines</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
+<span class="c1"># If you need relative thicker nodes</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">minmax</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -233,10 +228,11 @@
 <section id="node-color">
 <h2>Node color<a class="headerlink" href="#node-color" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node colors</strong> from the <em>karate</em> example using the label information. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -244,21 +240,23 @@
 <section id="node-color-on-clustering">
 <h2>Node color on clustering<a class="headerlink" href="#node-color-on-clustering" title="Link to this heading"></a></h2>
 <p>We can also change the node color on the clustering.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_cluster.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="node-fontcolor">
 <h2>Node fontcolor<a class="headerlink" href="#node-fontcolor" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node font colors</strong> and ajust it according to the node color.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;node_color&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -266,13 +264,13 @@
 <section id="node-fontsize">
 <h2>Node fontsize<a class="headerlink" href="#node-fontsize" title="Link to this heading"></a></h2>
 <p>Change the <strong>node fontsize</strong> and ajust it according to the node color.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">adjmat2vec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
 <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
-
-<span class="n">fontsize</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">fontsize</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="n">scaler</span><span class="o">=</span><span class="s1">&#39;minmax&#39;</span><span class="p">,</span> <span class="n">fontcolor</span><span class="o">=</span><span class="s1">&#39;node_color&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -280,10 +278,12 @@
 <section id="node-edge-color-on-clustering">
 <h2>Node edge color on clustering<a class="headerlink" href="#node-edge-color-on-clustering" title="Link to this heading"></a></h2>
 <p>We can also change the node color on the clustering.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">adjmat2vec</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">adjmat2vec</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -291,14 +291,13 @@
 <section id="node-size">
 <h2>Node size<a class="headerlink" href="#node-size" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># Set node properties</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">)</span>
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -306,10 +305,11 @@
 <section id="node-opacity">
 <h2>Node opacity<a class="headerlink" href="#node-opacity" title="Link to this heading"></a></h2>
 <p>We can change the <strong>node opacity</strong> using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">opacity</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;degree&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -317,10 +317,11 @@
 <section id="node-edge-size">
 <h2>Node edge size<a class="headerlink" href="#node-edge-size" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node edge size</strong> from the <em>karate</em> example using the degree of the network. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -328,25 +329,24 @@
 <section id="node-edge-color">
 <h2>Node edge color<a class="headerlink" href="#node-edge-color" title="Link to this heading"></a></h2>
 <p>Lets change the <strong>node edge color</strong> from the <em>karate</em> example using a specified color. We do not need to re-initialize the whole graph but we can simply update the node properties.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set node properties</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="n">adjmat</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;karate&#39;</span><span class="p">)</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">set_node_properties</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_size</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;degree&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s1">&#39;#FFF000&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/karate_label_color_size_edge_size_edge_color.html" height="700px" width="850px", frameBorder="0"></iframe></section>
 <section id="customize-the-properties-of-one-specific-node">
 <h2>Customize the properties of one specific node<a class="headerlink" href="#customize-the-properties-of-one-specific-node" title="Link to this heading"></a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">adjmat2vec</span>
 <span class="c1"># Initialization</span>
 <span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
-<span class="c1"># Load karate example</span>
+<span class="c1"># Load bigbang example</span>
 <span class="n">adjmat</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;bigbang&#39;</span><span class="p">)</span>
 <span class="c1"># Process the adjacency matrix</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
-
 <span class="c1"># Examine the node properties</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">)</span>
 <span class="c1"># {&#39;Amy&#39;: {&#39;label&#39;: &#39;Amy&#39;, &#39;color&#39;: &#39;#000080&#39;, &#39;size&#39;: 10, &#39;edge_size&#39;: 0.1, &#39;edge_color&#39;: &#39;#000000&#39;},</span>
@@ -356,22 +356,17 @@
 <span class="c1"># &#39;Penny&#39;: {&#39;label&#39;: &#39;Penny&#39;, &#39;color&#39;: &#39;#000080&#39;, &#39;size&#39;: 10, &#39;edge_size&#39;: 0.1, &#39;edge_color&#39;: &#39;#000000&#39;},</span>
 <span class="c1"># &#39;Rajesh&#39;: {&#39;label&#39;: &#39;Rajesh&#39;, &#39;color&#39;: &#39;#000080&#39;, &#39;size&#39;: 10, &#39;edge_size&#39;: 0.1, &#39;edge_color&#39;: &#39;#000000&#39;},</span>
 <span class="c1"># &#39;Sheldon&#39;: {&#39;label&#39;: &#39;Sheldon&#39;, &#39;color&#39;: &#39;#000080&#39;, &#39;size&#39;: 10, &#39;edge_size&#39;: 0.1, &#39;edge_color&#39;: &#39;#000000&#39;}}</span>
-
 <span class="c1"># Customize the properties of one specific node</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;Penny Hofstadter&#39;</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#ffc0cb&#39;</span> <span class="c1"># Pink</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">20</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;edge_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">5</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;edge_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#0000ff&#39;</span> <span class="c1"># Blue</span>
-
 <span class="c1"># Customize a specific edge property</span>
-<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Leonard&#39;</span><span class="p">,</span> <span class="s1">&#39;Penny&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#FF0000&#39;</span> <span class="c1"># red</span>
-
+<span class="n">d3</span><span class="o">.</span><span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">,</span><span class="s1">&#39;Leonard&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#FF0000&#39;</span> <span class="c1"># red</span>
 <span class="c1"># Print</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">d3</span><span class="o">.</span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;Penny&#39;</span><span class="p">])</span>
 <span class="c1"># {&#39;label&#39;: &#39;Penny Hofstadter&#39;, &#39;color&#39;: &#39;#ffc0cb&#39;, &#39;size&#39;: 20, &#39;edge_size&#39;: 5, &#39;edge_color&#39;: &#39;#000000&#39;}</span>
-
-<span class="c1"># Plot</span>
 <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
