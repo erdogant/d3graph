@@ -66,47 +66,26 @@ from d3graph import d3graph
 
 ### Examples
 
-Click on the following image to load the interactive **Titanic** network that is created with ``d3graph``. Note that the relations are determined using [HNet. Click here to go to the page with code to make the network.](https://erdogant.github.io/hnet/pages/html/Use%20Cases.html#titanic-dataset)
-
 <p align="left">
   <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">
-     <img src="https://github.com/erdogant/d3graph/blob/master/docs/titanic_example/d3graph.png" width="600"/>
-  </a>
-</p>
-
-
-##### [Example: Changing node properties](https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label)
-
-<p align="left">
-  <a href="https://erdogant.github.io/d3graph/pages/html/Core%20Functionalities.html#node-label">
-     <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph_node_properties.png" width="900"/>
-  </a>
-</p>
-
-#
-
-##### [Example: Convert source-target list to adjacency matrix](https://erdogant.github.io/d3graph/pages/html/Data.html#create-adjacency-matrix)
-
-#
-
-##### [Example: Breaking of networks using slider](https://erdogant.github.io/d3graph/pages/html/Examples.html)
-
-
-<p align="left">
-  <a href="https://erdogant.github.io/d3graph/pages/html/Examples.html">
-    <img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/d3graph example.png" width="600"/>
+     <img src="https://github.com/d3blocks/d3blocks/blob/main/docs/figs/d3graph/d3graph_energy.gif" width="1000"/>
   </a>
 </p>
 
 <hr>
 
-### Contribute
-* All kinds of contributions are welcome!
+### Contributors
+Setting up and maintaining D3graph has been possible thanks to users and contributors. Thanks to:
 
-### Citation
-Please cite d3graph in your publications if this is useful for your research. See column right for citation information.
+<p align="left">
+  <a href="https://github.com/erdogant/d3graph/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=erdogant/d3graph" />
+  </a>
+</p>
 
 ### Maintainer
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
 * Contributions are welcome.
-* If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated :)
+* Yes! This library is entirely **free** but it runs on coffee! :) Feel free to support with a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a>.
+
+[![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy+me+a+coffee&emoji=&slug=erdogant&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/erdogant)
