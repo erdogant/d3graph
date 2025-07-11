@@ -9,9 +9,36 @@
 
     <style type="text/css">
         {% include "style.css" %}
+        .dark-mode {
+            background-color: #222 !important;
+            color: #eee !important;
+        }
+        .dark-mode svg {
+            background-color: #222 !important;
+        }
+        .dark-mode .button-switch {
+            background: #333;
+            color: #eee;
+            border: 1px solid #555;
+        }
+        .button-switch {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background: #fff;
+            color: #222;
+            cursor: pointer;
+        }
     </style>
 </head>
-<body>
+<body style="background-color: {{ background_color }};{% if dark_mode %} color: #eee;{% endif %}"{% if dark_mode %} class="dark-mode"{% endif %}>
+
+<!-- Dark mode switch -->
+<button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
 
 <!-- Create save button -->
 {{ save_button_comment_start }}
@@ -34,8 +61,37 @@
                 charge: {{ charge }},
                 distance: {{ edge_distance }},
                 directed: {{ directed | lower }},
-                collision: {{ collision }}
+                collision: {{ collision }},
+                background_color: '{{ background_color }}'
             })
+        });
+
+        // Dark mode toggle logic
+        const darkSwitch = document.getElementById('darkModeSwitch');
+        let darkMode = {{ 'true' if dark_mode else 'false' }};
+        let originalBg = document.body.style.backgroundColor;
+        function setDarkMode(on) {
+            if (on) {
+                document.body.classList.add('dark-mode');
+                document.body.style.backgroundColor = '#222';
+                document.body.style.color = '#eee';
+                let svg = document.querySelector('svg');
+                if (svg) svg.style.backgroundColor = '#222';
+                darkSwitch.textContent = '☀️ Light Mode';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.body.style.backgroundColor = originalBg;
+                document.body.style.color = '';
+                let svg = document.querySelector('svg');
+                if (svg) svg.style.backgroundColor = originalBg;
+                darkSwitch.textContent = '🌙 Dark Mode';
+            }
+        }
+        // Set initial mode
+        setDarkMode(darkMode);
+        darkSwitch.addEventListener('click', function () {
+            darkMode = !darkMode;
+            setDarkMode(darkMode);
         });
 
         // Save image to svg

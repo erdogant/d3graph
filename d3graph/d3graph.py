@@ -106,6 +106,8 @@ class d3graph:
              show_slider: bool = True,
              set_slider: bool = 0,
              click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
+             background_color = '#FFFFFF',
+             dark_mode = False,
              notebook: bool = False,
              save_button: bool = True,
              ) -> None:
@@ -138,6 +140,10 @@ class d3graph:
                 * {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}
                 * {'fill': None, 'stroke': '#FFF000', 'size': 2, 'stroke-width': 1}
                 * None : No action on click.
+        background_color : str, optional
+            The background color of the HTML page and SVG. Default is '#FFFFFF'.
+        dark_mode : bool, optional
+            If True, enables dark mode for the visualization. Default is False.
         notebook : bool
             True: Use IPython to show chart in notebooks.
             False: Do not use IPython.
@@ -163,6 +169,8 @@ class d3graph:
         self.config['notebook'] = notebook
         self.config['click'] = click
         self.config['save_button'] = save_button
+        self.config['background_color'] = background_color
+        self.config['dark_mode'] = dark_mode
         # if self.config.get('filepath', None) != 'd3graph.html':
         self.config['filepath'] = self.set_path(filepath)
 
@@ -738,6 +746,8 @@ class d3graph:
                    'save_button_comment_stop': show_save_button[1],
                    'SET_SLIDER': self.config['set_slider'],
                    'SUPPORT': support,
+                   'background_color': self.config['background_color'],
+                   'dark_mode': self.config['dark_mode'],
                    }
 
         try:

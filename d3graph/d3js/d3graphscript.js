@@ -6,12 +6,17 @@ function d3graphscript(config = {
     charge: -250,
     distance: 0,
     directed: false,
-    collision: 0.5
+    collision: 0.5,
+    background_color: '#FFFFFF'
     }) {
 
   //Constants for the SVG
   var width = config.width;
   var height = config.height;
+  var background_color = config.background_color || '#FFFFFF';
+
+  // Set the body background color
+  document.body.style.backgroundColor = background_color;
 
   //Set up the colour scale
   var color = d3.scale.category20();
@@ -48,6 +53,7 @@ function d3graphscript(config = {
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .style("background-color", background_color)
     .call(d3.behavior.zoom().on("zoom", function () { svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")") }))
     .on("dblclick.zoom", null)
     .append("g")
