@@ -558,7 +558,9 @@ class d3graph:
         if not isinstance(color, str): color = '#808080'
         if color=='cluster': color = '#808080'
         # Set defaults
-        labx = {key: {'name': key, 'color': color, 'group': '-1'} for i, key in enumerate(node_names)}
+        labx = {
+            key: {'name': key, 'color': color, 'group': '-1'} for key in node_names
+        }
 
         df = adjmat2vec(self.adjmat.copy())
         G = nx.from_pandas_edgelist(df, edge_attr=True, create_using=nx.MultiGraph)
