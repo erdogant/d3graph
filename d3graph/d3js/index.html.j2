@@ -22,31 +22,95 @@
             border: 1px solid #555;
         }
         .button-switch {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
+            display: inline-block;
+            margin: 8px 4px;
             padding: 6px 16px;
             border-radius: 6px;
             border: 1px solid #ccc;
             background: #fff;
             color: #222;
             cursor: pointer;
+            font-size: 1em;
+            font-family: inherit, Arial, sans-serif;
+            transition: background 0.2s, color 0.2s;
+        }
+        .top-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        .slider-label {
+            margin: 0 8px;
+            font-size: 1em;
+            font-family: inherit, Arial, sans-serif;
+        }
+        .styled-slider {
+            -webkit-appearance: none;
+            width: 180px;
+            height: 8px;
+            background: #eee;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.2s;
+            margin: 0 8px;
+        }
+        .styled-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #888;
+            cursor: pointer;
+            box-shadow: 0 0 2px #888;
+        }
+        .styled-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #888;
+            cursor: pointer;
+            box-shadow: 0 0 2px #888;
+        }
+        .styled-slider:focus {
+            background: #ddd;
+        }
+        .dark-mode .styled-slider {
+            background: #444;
+        }
+        .dark-mode .styled-slider::-webkit-slider-thumb {
+            background: #222;
+            border: 2px solid #eee;
+        }
+        .dark-mode .styled-slider::-moz-range-thumb {
+            background: #222;
+            border: 2px solid #eee;
         }
     </style>
 </head>
 <body style="background-color: {{ background_color }};{% if dark_mode %} color: #eee;{% endif %}"{% if dark_mode %} class="dark-mode"{% endif %}>
 
-<!-- Dark mode switch -->
-<button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
+<!-- Top right panel with dark mode and save buttons -->
+<div class="top-panel">
+    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
+    <button id="saveButton" class="button-switch">Save</button>
+</div>
 
-<!-- Create save button -->
+<!-- Create save button (removed old location) -->
 {{ save_button_comment_start }}
-    <div style="max-width:{{ width }}px;">
-        <center><button id="saveButton">Save</button></center>
-    </div>
+    <!-- Save button now in top-panel -->
 {{ save_button_comment_stop }}
-
 
     <script>
         {% include "d3.v3.js" %}
@@ -114,14 +178,12 @@
 {{ slider_comment_start }}
 
     {% if max_slider > min_slider %}
-	<div style="max-width:{{ width }}px;">
-        <form>
-            <h3>
-                Edge Threshold
-                {{ min_slider }}
-                <input type="range" autocomplete="off" id="thresholdSlider" value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}">
-                {{ max_slider }}
-            </h3>
+	<div style="max-width:{{ width }}px;" class="slider-container">
+        <form style="margin:0;">
+            <span class="slider-label">Edge Threshold</span>
+            <span class="slider-label">{{ min_slider }}</span>
+            <input type="range" autocomplete="off" id="thresholdSlider" value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}" class="styled-slider">
+            <span class="slider-label">{{ max_slider }}</span>
         </form>
 	</div>
     {% endif %}
