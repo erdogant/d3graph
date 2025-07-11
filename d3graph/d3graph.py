@@ -12,8 +12,9 @@ import webbrowser
 from json import dumps
 from pathlib import Path
 from sys import platform
-from tempfile import TemporaryDirectory
+from tempfile import TemporaryDirectory, gettempdir
 from unicodedata import normalize
+import uuid
 
 from community import community_louvain
 import colourmap as cm
@@ -99,7 +100,7 @@ class d3graph:
     def show(self,
              figsize=[1500, 800],
              title: str = 'd3graph',
-             filepath: str = 'd3graph.html',
+             filepath: str = None,
              showfig: bool = True,
              overwrite: bool = True,
              show_slider: bool = True,
@@ -119,6 +120,9 @@ class d3graph:
             Title of the figure.
         filepath : String, (Default: user temp directory)
             File path to save the output
+            'd3graph.html': Write to the tempdir with d3graph.html
+            None: Write to tempdir with random html name
+            'c:/temp/my_d3graph.html': Writes to specific location.
         showfig : bool, (default: True)
             Open the window to show the network.
         overwrite : bool, (default: True)
@@ -159,8 +163,8 @@ class d3graph:
         self.config['notebook'] = notebook
         self.config['click'] = click
         self.config['save_button'] = save_button
-        # self.config['filepath'] = self.set_path(filepath)
-        if self.config.get('filepath', None)!='d3graph.html': self.config['filepath'] = self.set_path(filepath)
+        # if self.config.get('filepath', None) != 'd3graph.html':
+        self.config['filepath'] = self.set_path(filepath)
 
         # Create dataframe from co-occurrence matrix
         self.G = make_graph(self.node_properties, self.edge_properties)
@@ -757,13 +761,14 @@ class d3graph:
         # Return html
         return html
 
-    def set_path(self, filepath='d3graph.html') -> str:
+    def set_path(self, filepath=None) -> str:
         """Set the file path.
 
         Parameters
         ----------
         filepath : str
             filename and or full pathname.
+            * None → random HTML filename in /tmp/d3graph/
             * 'd3graph.html'
             * 'c://temp/'
             * 'c://temp/d3graph.html'
@@ -775,15 +780,17 @@ class d3graph:
 
         """
         if filepath is None:
-            return None
-
-        dirname, filename = os.path.split(filepath)
-
-        if filename in (None, ''):
-            filename = 'd3graph.html'
-
-        if dirname in (None, ''):
-            dirname = TemporaryDirectory().name
+            # return None
+            filename = f"{uuid.uuid4().hex[:8]}.html"
+            dirname = os.path.join(gettempdir(), 'd3graph')
+        else:
+            dirname, filename = os.path.split(filepath)
+    
+            if filename in (None, ''):
+                filename = 'd3graph.html'
+    
+            if dirname in (None, ''):
+                dirname = os.path.join(gettempdir(), 'd3graph')
 
         os.makedirs(dirname, exist_ok=True)
         filepath = os.path.abspath(os.path.join(dirname, filename))
