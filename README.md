@@ -1,4 +1,4 @@
-# Interactive force-directed network creator (d3graph)
+# d3graph: Interactive force-directed networks
 
 [![Python](https://img.shields.io/pypi/pyversions/d3graph)](https://img.shields.io/pypi/pyversions/d3graph)
 [![Pypi](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
@@ -17,44 +17,50 @@
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
 
 
+### 
+
+<div>
+
+<a href="https://erdogant.github.io/d3graph/"><img src="https://github.com/erdogant/d3graph/blob/master/docs/figs/logo.png" width="175" align="left" /></a>
 ``d3graph`` is a python package that simplifies the task of creating **interactive** and **stand-alone** networks in **d3 javascript** using **python**.
-For this package I was inspired by d3 javascript examples but there was no python package that could create such interactive networks. Here it is; a library that automatically creates D3 javascript and HTML code based on an input adjacency matrix in python! This library does not require you any additional installation, downloads or setting paths to your systems environments. You just need python and this library. All other is taken care off. Huray!
+For this package, I was inspired by d3 JavaScript, but there was no Python package that could create such interactive networks. Here it is: a library that automatically creates D3 JavaScript and HTML code based on an input adjacency matrix in Python! This library does not require any additional installation, downloads, or setting paths to your system's environments. You just need Python and this library. All other is taken care of. Huray! Navigate to [API documentations](https://erdogant.github.io/d3graph/) for more detailed information. **⭐️ Star it if you like it ⭐️**
+</div>
 
-This library will create an interactive and stand-alone network that is build on d3 javascript. ``d3graph`` only requirs an adjacency matrix in the form of an pandas dataframe. Each column and index name represents a node whereas values >0 in the matrix represents an edge. Node links are build from rows to columns. Building the edges from row to columns only matters in directed cases. The network nodes and edges can be adjusted in weight, color etc, based on user defined paramters. 
+---
 
+### Key Pipelines
 
+| Feature | Description |
+|--------|-------------|
+| [**Graph**](https://erdogant.github.io/d3graph/pages/html/Core_Functionalities.html) | Create the network Graph. |
+| [**set_node_properties**](https://erdogant.github.io/d3graph/pages/html/Node%20properties.html) | Set the node properties for the network graph |
+| [**set_edge_properties**](https://erdogant.github.io/d3graph/pages/html/Edge%20properties.html) | Set the edge properties for the network graph |
 
-# 
-**⭐️ Star this repo if you like it ⭐️**
-#
+---
 
-### Blogs
+### Resources and Links
+- **Blog Posts:** [Medium](https://erdogant.medium.com/)
+- **Documentation:** [Website](https://erdogant.github.io/d3graph)
+- **Bug Reports and Feature Requests:** [GitHub Issues](https://github.com/erdogant/d3graph/issues)
 
-Read the blog [Creating beautiful stand-alone interactive D3 charts with Python](https://erdogant.github.io/d3graph/pages/html/Documentation.html#medium-blog) to get a structured overview and usage of ``d3graph``.
-
-
-
-# 
-
-### [Documentation pages](https://erdogant.github.io/d3graph/)
-
-On the [documentation pages](https://erdogant.github.io/d3graph/) you can find detailed information about the working of the ``d3graph`` with many examples. 
-
-# 
+---
 
 ### Installation
 
-##### Install from PyPI
-
+##### Install d3graph from PyPI
 ```bash
 pip install d3graph
 ```
-
-##### Import package
-
+##### Install d3graph from GitHub source
+```bash
+pip install git+https://github.com/erdogant/d3graph
+```
+##### Load library
 ```python
+# Import library
 from d3graph import d3graph
 ```
+---
 
 # 
 
