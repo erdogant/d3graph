@@ -1,4 +1,4 @@
-# d3graph: Interactive force-directed networks
+# D3graph: Interactive force-directed networks
 
 [![Python](https://img.shields.io/pypi/pyversions/d3graph)](https://img.shields.io/pypi/pyversions/d3graph)
 [![Pypi](https://img.shields.io/pypi/v/d3graph)](https://pypi.org/project/d3graph/)
