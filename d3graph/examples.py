@@ -13,34 +13,6 @@ check_logger(verbose='warning')
 check_logger(verbose='error')
 check_logger(verbose=None)
 
-# %%
-
-import pandas as pd
-from d3graph import d3graph, adjmat2vec
-df = pd.read_csv(r'c:\temp\Afhankelijkheden teams.csv', sep=';', index_col=0)
-# intialize to load example dataset
-d3 = d3graph()
-# df = d3.import_example(data='energy')
-
-df=df>0
-df = df.astype(int)
-d3.graph(df)
-
-d3.set_edge_properties(directed=False, scaler='minmax', 
-                                minmax_distance=[100, 250], 
-                                # marker_color=['#000000', '#000000', '#000000', '#000000'],
-                               )
-
-# Set some node properties
-d3.set_node_properties(color='#000000', edge_color='#000FFF')
-
-
-# d3.set_node_properties(opacity='centrality')
-d3.show(show_slider=True, filepath='c://temp/network4.html')
-
-# %%
-
-# %% Check adjmat2vec and vec2adjmat
 
 # Convert the array to a DataFrame for comparison
 edges  = np.array([('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')])
@@ -101,16 +73,15 @@ d3.show(show_slider=True, figsize=(1500, 800), filepath=r'c:\temp\d3graph\sprink
 # %% issue large datasets
 # Import
 from d3graph import d3graph, vec2adjmat
-
-df = pd.read_csv(r'C:\temp\large_network.csv', header=0)
-del df['id']
-df = df.iloc[0:1000, :]
+df = d3.import_example('energy')
 adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=True)
-
-d3 = d3graph()
 d3.graph(adjmat, color='cluster')
-d3.show(filepath=r'c:\temp\network_big.html')
+# d3.show(filepath=r'c:\temp\network_big.html', figsize=[750, 400])
+d3.show(filepath=r'c:\temp\network_big_dark.html', background_color='#000000')
+d3.show(filepath=r'c:\temp\network_big_light.html', background_color='#FFFFFF')
 
+d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=True)
+d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=False)
 
 # %%
 # Import
