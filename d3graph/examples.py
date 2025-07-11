@@ -79,11 +79,11 @@ adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=T
 d3.graph(adjmat, color='cluster')
 
 # d3.show(filepath=r'c:\temp\network_big.html', figsize=[750, 400])
-d3.show(filepath=r'c:\temp\network_big_light.html', background_color='#FFFFFF')
-d3.show(filepath=r'c:\temp\network_big_dark.html', background_color='#000000')
+d3.show(filepath=r'c:\temp\network_big_light.html', background_color='#FFFFFF', set_slider=300)
+# d3.show(filepath=r'c:\temp\network_big_dark.html', background_color='#000000')
 
-d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=True)
-d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=False)
+# d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=True)
+# d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=False)
 
 # %%
 # Import
