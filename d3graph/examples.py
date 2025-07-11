@@ -73,9 +73,11 @@ d3.show(show_slider=True, figsize=(1500, 800), filepath=r'c:\temp\d3graph\sprink
 # %% issue large datasets
 # Import
 from d3graph import d3graph, vec2adjmat
+d3 = d3graph()
 df = d3.import_example('energy')
 adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=True)
 d3.graph(adjmat, color='cluster')
+
 # d3.show(filepath=r'c:\temp\network_big.html', figsize=[750, 400])
 d3.show(filepath=r'c:\temp\network_big_light.html', background_color='#FFFFFF')
 d3.show(filepath=r'c:\temp\network_big_dark.html', background_color='#000000')

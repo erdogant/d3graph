@@ -39,19 +39,20 @@ The ouput is a html file that is interactive and stand alone.
 
 Examples
 --------
->>> from d3graph import d3graph
+>>> from d3graph import d3graph, vec2adjmat
 >>>
 >>> # Initialize
 >>> d3 = d3graph()
 >>>
 >>> # Load karate example
->>> adjmat, df = d3.import_example('karate')
+>>> df = d3.import_example('energy')
+>>> adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 >>>
 >>> # Initialize
 >>> d3.graph(adjmat)
 >>>
 >>> # Node properties
->>> d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
+>>> d3.set_node_properties(cmap='Set1')
 >>>
 >>> # Edge properties
 >>> d3.set_edge_properties(directed=True)
@@ -61,8 +62,8 @@ Examples
 
 References
 ----------
-* D3Graph: https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7
-* D3Blocks: https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4
+* D3Graph: erdogant.medium.com
+* D3Blocks: https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86
 * Github : https://github.com/erdogant/d3graph
 * Documentation: https://erdogant.github.io/d3graph/
 
