@@ -496,8 +496,8 @@ d3.graph(adjmat)
 d3.set_node_properties(color='cluster', size=size, edge_size=size, edge_color='cluster', cmap='Set2')
 # d3.show()
 
-d3.edge_properties['Penny', 'Leonard']['color'] = '#ff0000'
-d3.edge_properties['Bernadette', 'Howard']['color'] = '#0000ff'
+d3.edge_properties['Penny', 'Leonard']['edge_color'] = '#ff0000'
+d3.edge_properties['Bernadette', 'Howard']['edge_color'] = '#0000ff'
 d3.show()
 
 color, cluster_label, node_names = d3.get_cluster_color()
