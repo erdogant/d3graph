@@ -1,3 +1,48 @@
+# Import library
+from d3graph import d3graph, vec2adjmat
+
+# Initialize with default settings
+d3 = d3graph(support=None)
+
+# Load example data
+df = d3.import_example('stormofswords')
+
+# Convert df to adjmat
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# adjmat = np.exp(adjmat)
+# adjmat = adjmat-1
+
+# Create the network
+d3.graph(adjmat)
+
+# Set Node properties
+d3.set_node_properties(edge_color='#000000', cmap='Blues', minmax=[5, 13], fontcolor='#808080')
+# Show the graph
+# d3.show()
+
+# d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='#ff0000', edge_opacity=[0.1, 0.2])
+
+# Set edge properties
+d3.set_edge_properties(directed=True, marker_end='arrow')
+d3.show()
+
+d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='node_source', edge_opacity='weight')
+d3.show()
+d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='node_target', edge_opacity='weight')
+d3.show()
+
+d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='#ff0000')
+d3.show()
+
+d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='#ff0000', edge_opacity=0.1)
+d3.show()
+# d3.set_edge_properties(directed=False, marker_end='arrow')
+
+d3.edge_properties
+# Show the graph
+# d3.show()
+
+#%%
 # %% Libraries
 import networkx as nx
 import pandas as pd
@@ -470,7 +515,7 @@ from d3graph import d3graph
 size = [10, 20, 10, 10, 15, 10, 5]
 
 # Initialize
-d3 = d3graph()
+d3 = d3graph(support=None)
 # Load example
 adjmat = d3.import_example('bigbang')
 # Process adjmat
