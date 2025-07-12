@@ -20,7 +20,7 @@ The schematic overview of our approach is as following:
 
 .. _schematic_overview:
 
-.. figure:: ../figs/schematic_overview.jpg
+.. figure:: ../figs/schematic_overview.png
 
 
 

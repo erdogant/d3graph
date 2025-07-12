@@ -385,6 +385,7 @@ class d3graph:
         edge_color : list of strings (default: '#000080')
             Edge color of the node.
             * 'cluster' : Colours are based on the community distance clusters.
+            * 'node_color' : Colours are inherited from the node color
             * ['#377eb8','#ffffff','#000000',...]: Hex colors are directly used.
             * ['A']: All nodes will have the same color. Color is generated on CMAP and the unique labels.
             * ['A','A','B',...]:  Colors are generated using cmap and the unique labels recordingly colored.
@@ -499,7 +500,9 @@ class d3graph:
                 edge_color, group, _ = self.get_cluster_color(node_names=node_names)
             else:
                 edge_color = color
-        elif isinstance(edge_color, str):
+        elif isinstance(edge_color, str) and edge_color == 'node_color':
+            edge_color = color
+        elif isinstance(edge_color, str) and edge_color != 'node_color' and edge_color != 'cluster':
             edge_color = np.array([edge_color] * nodecount)
         elif isinstance(edge_color, type(None)):
             edge_color = np.array(['#000000'] * nodecount)
