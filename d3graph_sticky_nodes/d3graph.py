@@ -195,6 +195,9 @@ class d3graph:
     def set_edge_properties(self,
                             edge_distance=None,
                             edge_weight=None,
+                            edge_style=0,
+                            edge_color='#808080',
+                            edge_opacity=1.0,
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -291,6 +294,9 @@ class d3graph:
                                            label_fontsize=self.config['label_fontsize'],
                                            edge_weight=self.config['edge_weight'],
                                            edge_distance=self.config['edge_distance'],
+                                           edge_style=self.config['edge_style'],
+                                           edge_color=self.config['edge_color'],
+                                           edge_opacity=self.config['edge_opacity'],
                                            )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
@@ -895,6 +901,9 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 label_fontsize: int = 8,
                 edge_weight: int = 1,
                 edge_distance: int = 50,
+                edge_style=0,
+                edge_color='#808080',
+                edge_opacity: float = 1.0,
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 ) -> dict:
@@ -1001,6 +1010,9 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label']=label
     df['label_color']=label_color
     df['label_fontsize']=label_fontsize
+    df['edge_style']=edge_style
+    df['edge_color']=edge_color
+    df['edge_opacity']=edge_opacity
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -1008,7 +1020,10 @@ def adjmat2dict(adjmat: pd.DataFrame,
     return {edge: {'weight': df['weight'].iloc[i],
                    'weight_scaled': df['weight_scaled'].iloc[i],
                    'edge_distance': df['edge_distance'].iloc[i],
-                   'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
+                   'edge_style': df['edge_style'].iloc[i],
+                   'edge_color': df['edge_color'].iloc[i],
+                   'edge_opacity': df['edge_opacity'].iloc[i],
+                   'color': df['edge_color'].iloc[i], 'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
                    'label': df['label'].iloc[i],
@@ -1046,6 +1061,9 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    marker_end=edge_properties[edge]['marker_end'],
                    weight_scaled=np.abs(edge_properties[edge]['weight_scaled']),
                    edge_distance=np.abs(edge_properties[edge]['edge_distance']),
+                   edge_style=edge_properties[edge]['edge_style'],
+                   edge_color=edge_properties[edge]['edge_color'],
+                   edge_opacity=edge_properties[edge]['edge_opacity'],
                    weight=np.abs(edge_properties[edge]['weight']),
                    color=edge_properties[edge]['color'],
                    label=edge_properties[edge]['label'],

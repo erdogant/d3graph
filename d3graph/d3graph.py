@@ -214,6 +214,7 @@ class d3graph:
                             edge_weight=None,
                             edge_style=0,
                             edge_color = '#808080',
+                            edge_opacity = 1.0,
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -241,9 +242,10 @@ class d3graph:
             Style of the edges.
             * 0: straight line
             * 5: dashed line
-    edge_color : str, (default: '#808080')
+        edge_color : str, (default: '#808080')
             '#808080' The edge color in hex.
-            None : Inherits the color from marker_color.
+        edge_opacity : float, (default: 1.0)
+            Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
@@ -408,7 +410,7 @@ class d3graph:
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
-            'minmax' : The sklearn scaler will shrink the distribution between minmax.
+            'minmax' : The sklearn scaler will shrink the distribution.
             None : No scaler is used.
         minmax : tuple, (default: [0.5, 15])
             Scale the node size in the range of a minimum and maximum [5, 50] using the following scaler:
@@ -1030,6 +1032,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 edge_distance: int = 50,
                 edge_style=0,
                 edge_color='#808080',
+                edge_opacity: float = 1.0,
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 return_adjmat=True,
@@ -1079,6 +1082,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
     edge_color : str, (default: None)
         The edge color in hex.
         None : Inherits the color from marker_color.
+    edge_opacity : float, (default: 1.0)
+        Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
     minmax : tuple(int,int), (default: [0.5, 15])
         Thickness of the edges are normalized between minimum and maximum
         * [0.5, 15]
@@ -1096,7 +1101,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
             'weight_scaled': scaled weight (thickness) of the edge.
             'edge_distance': scaled distance of the edge.
             'edge_style': style of the edge.
-            'color': color of the edge.
+            'edge_color': color of the edge.
+            'edge_opacity': opacity of the edge.
             'marker_start': '', 'circle', 'square', 'arrow', 'stub'
             'marker_end': '', 'circle', 'square', 'arrow', 'stub'
             'marker_color': hex color of the marker.
@@ -1158,6 +1164,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label_fontsize']=label_fontsize
     df['edge_style']=edge_style
     df['edge_color']=edge_color
+    df['edge_opacity'] = edge_opacity
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -1169,6 +1176,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                    'edge_distance': df['edge_distance'].iloc[i],
                    'edge_style': df['edge_style'].iloc[i],
                    'edge_color': df['edge_color'].iloc[i],
+                   'edge_opacity': df['edge_opacity'].iloc[i],
                    'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
@@ -1246,6 +1254,7 @@ def edges2G(edge_properties: dict, G: nx.Graph = None) -> nx.Graph:
                    edge_distance=np.abs(edge_properties[edge]['edge_distance']),
                    edge_style=edge_properties[edge]['edge_style'],
                    edge_color=edge_properties[edge]['edge_color'],
+                   edge_opacity=edge_properties[edge]['edge_opacity'],
                    weight=np.abs(edge_properties[edge]['weight']),
                    label=edge_properties[edge]['label'],
                    label_color=edge_properties[edge]['label_color'],

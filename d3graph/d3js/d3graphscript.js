@@ -78,6 +78,7 @@ function d3graphscript(config = {
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
     .style("stroke", function(d) {return d.edge_color;})                 // EDGE-COLORS
     .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
+    .style("opacity", function(d) {return d.edge_opacity;})             // EDGE-OPACITY
 //  .style("stroke-width", 1); // WIDTH OF THE LINKS
   ;
 
@@ -316,6 +317,7 @@ function d3graphscript(config = {
 		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     link.style("stroke", function(d) {return d.edge_color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
     link.style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
+    link.style("opacity", function(d) {return d.edge_opacity;});             // EDGE-OPACITY AFTER BREAKING WITH SLIDER
 
     // Update EDGE-LABELS
     linkText = linkText.data(graph.links);

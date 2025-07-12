@@ -77,7 +77,9 @@ var link = svg.selectAll(".link")
     .attr("marker-end", function(d) {
       if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-    .style("stroke", function(d) {return d.color;});                    // EDGE-COLORS
+    .style("stroke", function(d) {return d.edge_color;});                    // EDGE-COLORS
+    .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
+    .style("opacity", function(d) {return d.edge_opacity;});             // EDGE-OPACITY
 
   // ADD TEXT ON THE EDGES (PART 1/2)
   var linkText = svg.selectAll(".link-text")
@@ -241,9 +243,10 @@ var node = svg.selectAll(".node")
     link.enter().insert("line", ".node").attr("class", "link");
     //link.style('marker-start', function(d){ return 'url(#marker_' + d.marker_start  + ')' })
     link.style("stroke-width", function(d) { return d.edge_width; }) // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    link.style("stroke", function(d) { return d.color; });           // EDGE-COLOR AFTER BREAKING WITH SLIDER
+    link.style("stroke", function(d) { return d.edge_color; });           // EDGE-COLOR AFTER BREAKING WITH SLIDER
     link.style("marker-end", function(d) {                                    // Include the markers.
 		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+    link.style("opacity", function(d) { return d.edge_opacity; }); // EDGE-OPACITY AFTER BREAKING WITH SLIDER
 
     node = node.data(graph.nodes);
     node.enter().append("circle").attr("class", "node").attr("r", 5).call(d3.drag()
