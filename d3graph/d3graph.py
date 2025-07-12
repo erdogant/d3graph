@@ -43,7 +43,7 @@ class d3graph:
     ----------
     collision : float, (default: 0.5)
         Response of the network. Higher means that more collisions are prevented.
-    charge : int, (default: 250)
+    charge : int, (default: 600)
         Edge length of the network. Towards zero becomes a dense network. Higher make edges longer.
     slider : list [min: int, max: int]:, (default: [None, None])
         [None, None] : Slider is automatically set to the min-max range using the edge weights.
@@ -67,7 +67,7 @@ class d3graph:
 
     def __init__(self,
                  collision: float = 0.5,
-                 charge: int = 450,
+                 charge: int = 600,
                  slider=None,
                  support: str = 'text',
                  verbose: int = 20) -> None:
@@ -214,7 +214,7 @@ class d3graph:
                             edge_weight=None,
                             edge_style=0,
                             edge_color = '#808080',
-                            edge_opacity = 1.0,
+                            edge_opacity: (float, str, list) = 'weight',
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -243,34 +243,35 @@ class d3graph:
             * 0: straight line
             * 5: dashed line
         edge_color : str, (default: '#808080')
-            '#808080' The edge color in hex.
-        edge_opacity : float, (default: 1.0)
-            Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
+            * '#808080' The edge color in hex.
+        edge_opacity : (float, str, list), (default: 1.0)
+            * 0.8 : Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
+            * 'weight' : Set opacity based on the weight of the edge and the scaler
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
-            'zscore' : Scale values to Z-scores.
-            'minmax' : The sklearn scaler will shrink the distribution between minmax.
-            None : No scaler is used.
+            * 'zscore' : Scale values to Z-scores.
+            * 'minmax' : The sklearn scaler will shrink the distribution between minmax.
+            * None : No scaler is used.
         directed : Bool, (default: False)
-            True: Edges are shown with an marker (e.g. arrow)
-            False: Edges do not show markers.
+            * True: Edges are shown with an marker (e.g. arrow)
+            * False: Edges do not show markers.
         marker_start : (list of) str, (default: 'arrow')
-            The start of the edge can be one of the following markers:
-            'arrow','square','circle','stub',None or ''
+            * The start of the edge can be one of the following markers:
+            * 'arrow','square','circle','stub',None or ''
         marker_end : (list of) str, (default: 'arrow')
-            The end of the edge can be one of the following markers:
-            'arrow','square','circle','stub',None or ''
+            * The end of the edge can be one of the following markers:
+            * 'arrow','square','circle','stub',None or ''
         marker_color : str, (default: '#808080')
-            The label color in hex.
+            * The label color in hex.
         label : str, (default: '')
-            None : No labels
-            'weight' : This will add the weights on each edge.
-            list : The edge label.
+            * None : No labels
+            * 'weight' : This will add the weights on each edge.
+            * list : The edge label.
         label_color : str, (default: None)
-            The label color in hex.
-            None : Inherits the color from marker_color.
+            * '#808080' : The label color in hex.
+            * None : Inherits the color from marker_color.
         label_fontsize : int, (default: 8)
-            The fontsize of the label.
+            * 8 : The fontsize of the label.
         minmax : tuple(float, float), (default: [0.5, 15.0])
             Edge thickness is normalized between minimum and maximum
             * [0.5, 15]
@@ -1032,7 +1033,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 edge_distance: int = 50,
                 edge_style=0,
                 edge_color='#808080',
-                edge_opacity: float = 1.0,
+                edge_opacity: (float, str, list) = 'weight',
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 return_adjmat=True,
@@ -1060,7 +1061,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
         The label color in hex.
     label : str, (default: None)
         None : No label
-        'weight' : Weight of the edge
+        'weight' : Show the weight of the edge
         list : The edge label.
     label_color : str, (default: None)
         The label color in hex.
@@ -1078,12 +1079,14 @@ def adjmat2dict(adjmat: pd.DataFrame,
     edge_style : float of str (default: 0)
         Style of the edges.
         * 0: straight line
+        * 1-4: broken line
         * 5: dashed line
     edge_color : str, (default: None)
-        The edge color in hex.
+        '#808080': The edge color in hex.
         None : Inherits the color from marker_color.
-    edge_opacity : float, (default: 1.0)
-        Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
+    edge_opacity : (float, str, list), (default: 1.0)
+        * 0.8 : Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
+        * 'weight' : Set opacity based on the weight of the edge and the scaler
     minmax : tuple(int,int), (default: [0.5, 15])
         Thickness of the edges are normalized between minimum and maximum
         * [0.5, 15]
@@ -1145,10 +1148,19 @@ def adjmat2dict(adjmat: pd.DataFrame,
     else:
         df['weight_scaled'] = df['weight']
 
+    # Compute the edge opacity based on the weight values
+    if isinstance(edge_opacity, str) and edge_opacity == 'weight':
+        edge_opacity = _normalize_size(df['weight'].values.reshape(-1, 1), 0.2, 1, scaler=scaler)
+    if isinstance(edge_opacity, list) and df.shape[0] != len(edge_opacity):
+        msg = f'The length of edge opacity in edge properties is invalid. Expected: n={df.shape[0]} but got instead n={len(edge_opacity)}'
+        logger.error(msg)
+        assert msg
+
     # Set marker start-end
     if edge_style is None: edge_style=0
     if marker_start is None: marker_start=''
     if marker_end is None: marker_end=''
+    # Set the label
     if label is None:
         label = ''
     elif label == 'weight':
