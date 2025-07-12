@@ -213,6 +213,7 @@ class d3graph:
                             edge_distance=None,
                             edge_weight=None,
                             edge_style=0,
+                            edge_color = '#808080',
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -240,6 +241,9 @@ class d3graph:
             Style of the edges.
             * 0: straight line
             * 5: dashed line
+    edge_color : str, (default: '#808080')
+            '#808080' The edge color in hex.
+            None : Inherits the color from marker_color.
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             'zscore' : Scale values to Z-scores.
@@ -287,6 +291,7 @@ class d3graph:
         self.config['edge_weight'] = edge_weight
         self.config['edge_distance'] = edge_distance
         self.config['edge_style'] = edge_style
+        self.config['edge_color'] = edge_color
         self.config['minmax'] = minmax
         self.config['minmax_distance'] = minmax_distance
         self.config['edge_scaler'] = scaler
@@ -315,6 +320,7 @@ class d3graph:
                                                         edge_weight=self.config['edge_weight'],
                                                         edge_distance=self.config['edge_distance'],
                                                         edge_style=self.config['edge_style'],
+                                                        edge_color=self.config['edge_color'],
                                                         return_adjmat=True,
                                                         )
 
@@ -1020,6 +1026,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 edge_weight: int = 1,
                 edge_distance: int = 50,
                 edge_style=0,
+                edge_color='#808080',
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 return_adjmat=True,
@@ -1066,6 +1073,9 @@ def adjmat2dict(adjmat: pd.DataFrame,
         Style of the edges.
         * 0: straight line
         * 5: dashed line
+    edge_color : str, (default: None)
+        The edge color in hex.
+        None : Inherits the color from marker_color.
     minmax : tuple(int,int), (default: [0.5, 15])
         Thickness of the edges are normalized between minimum and maximum
         * [0.5, 15]
@@ -1144,6 +1154,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label_color']=label_color
     df['label_fontsize']=label_fontsize
     df['edge_style']=edge_style
+    df['color']=edge_color
 
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
@@ -1154,7 +1165,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
                    'weight_scaled': df['weight_scaled'].iloc[i],
                    'edge_distance': df['edge_distance'].iloc[i],
                    'edge_style': df['edge_style'].iloc[i],
-                   'color': '#808080', 'marker_start': df['marker_start'].iloc[i],
+                   'color': df['color'].iloc[i],
+                   'marker_start': df['marker_start'].iloc[i],
                    'marker_end': df['marker_end'].iloc[i],
                    'marker_color': df['marker_color'].iloc[i],
                    'label': df['label'].iloc[i],
