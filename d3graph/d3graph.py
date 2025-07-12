@@ -58,8 +58,8 @@ class d3graph:
 
     References
     ----------
-    * D3Graph: https://towardsdatascience.com/creating-beautiful-stand-alone-interactive-d3-charts-with-python-804117cb95a7
-    * D3Blocks: https://towardsdatascience.com/d3blocks-the-python-library-to-create-interactive-and-standalone-d3js-charts-3dda98ce97d4
+    * D3Graph: https://erdogant.medium.com/
+    * D3Blocks: https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86
     * Github : https://github.com/erdogant/d3graph
     * Documentation: https://erdogant.github.io/d3graph/
 
@@ -213,7 +213,7 @@ class d3graph:
                             edge_distance=None,
                             edge_weight=None,
                             edge_style=0,
-                            edge_color = '#808080',
+                            edge_color: (str, list) = '#808080',
                             edge_opacity: (float, str, list) = 'weight',
                             scaler: str = 'zscore',
                             directed: bool = False,
@@ -244,6 +244,8 @@ class d3graph:
             * 5: dashed line
         edge_color : str, (default: '#808080')
             * '#808080' The edge color in hex.
+            * 'node_source': Set edge color based on the node source color.
+            * 'node_target': Set edge color based on the node target color.
         edge_opacity : (float, str, list), (default: 1.0)
             * 0.8 : Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
             * 'weight' : Set opacity based on the weight of the edge and the scaler
@@ -310,25 +312,36 @@ class d3graph:
         if (not directed) and (marker_end is not None) or (marker_start is not None):
             logger.info('Set directed=True to see the markers!')
 
+        # Get node color properties which is required to set the edge color
+        node_color_map = None
+        if edge_color == 'node_source' or edge_color == 'node_target':
+            if hasattr(self, 'node_properties'):
+                node_color_map = {k: v['color'] for k, v in self.node_properties.items()}
+            else:
+                logger.warning("The parameter edge_color='node_source' inherits the values from the nodes. You need to execute set_node_properties first. Edge color is now set to default hex color: #808080")
+                self.config['edge_color'] = '#808080'
+
         # Set the edge properties
-        self.edge_properties, self.adjmat = adjmat2dict(self.adjmat,
-                                                        filter_weight=0,
-                                                        minmax=self.config['minmax'],
-                                                        minmax_distance=self.config['minmax_distance'],
-                                                        scaler=self.config['edge_scaler'],
-                                                        marker_start=self.config['marker_start'],
-                                                        marker_end=self.config['marker_end'],
-                                                        marker_color=self.config['marker_color'],
-                                                        label=self.config['label'],
-                                                        label_color=self.config['label_color'],
-                                                        label_fontsize=self.config['label_fontsize'],
-                                                        edge_weight=self.config['edge_weight'],
-                                                        edge_distance=self.config['edge_distance'],
-                                                        edge_style=self.config['edge_style'],
-                                                        edge_color=self.config['edge_color'],
-                                                        edge_opacity=self.config['edge_opacity'],
-                                                        return_adjmat=True,
-                                                        )
+        self.edge_properties, self.adjmat = adjmat2dict(
+            self.adjmat,
+            filter_weight=0,
+            minmax=self.config['minmax'],
+            minmax_distance=self.config['minmax_distance'],
+            scaler=self.config['edge_scaler'],
+            marker_start=self.config['marker_start'],
+            marker_end=self.config['marker_end'],
+            marker_color=self.config['marker_color'],
+            label=self.config['label'],
+            label_color=self.config['label_color'],
+            label_fontsize=self.config['label_fontsize'],
+            edge_weight=self.config['edge_weight'],
+            edge_distance=self.config['edge_distance'],
+            edge_style=self.config['edge_style'],
+            edge_color=self.config['edge_color'],
+            edge_opacity=self.config['edge_opacity'],
+            return_adjmat=True,
+            node_color_map=node_color_map,
+        )
 
         logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
 
@@ -1032,11 +1045,12 @@ def adjmat2dict(adjmat: pd.DataFrame,
                 edge_weight: int = 1,
                 edge_distance: int = 50,
                 edge_style=0,
-                edge_color='#808080',
+                edge_color: (str, list) = '#808080',
                 edge_opacity: (float, str, list) = 'weight',
                 minmax: list = [0.5, 15],
                 minmax_distance: list = [50, 100],
                 return_adjmat=True,
+                node_color_map=None,
                 ) -> dict:
     """Convert adjacency matrix into vector with source and target.
 
@@ -1081,9 +1095,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
         * 0: straight line
         * 1-4: broken line
         * 5: dashed line
-    edge_color : str, (default: None)
-        '#808080': The edge color in hex.
-        None : Inherits the color from marker_color.
+    edge_color : (str, list), (default: None)
+        * '#808080': The edge color in hex.
     edge_opacity : (float, str, list), (default: 1.0)
         * 0.8 : Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
         * 'weight' : Set opacity based on the weight of the edge and the scaler
@@ -1156,6 +1169,9 @@ def adjmat2dict(adjmat: pd.DataFrame,
         logger.error(msg)
         assert msg
 
+    if isinstance(edge_color, list) and df.shape[0] != len(edge_color):
+        raise ValueError(logger.error(f'The length of edge color in edge properties is invalid. Expected: n={df.shape[0]} but got instead n={len(edge_color)}'))
+
     # Set marker start-end
     if edge_style is None: edge_style=0
     if marker_start is None: marker_start=''
@@ -1175,9 +1191,16 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label_color']=label_color
     df['label_fontsize']=label_fontsize
     df['edge_style']=edge_style
-    df['edge_color']=edge_color
     df['edge_opacity'] = edge_opacity
 
+    # Handle node_source edge color
+    if edge_color == 'node_source' and node_color_map is not None:
+        df['edge_color'] = df['source'].map(node_color_map)
+    elif edge_color == 'node_target' and node_color_map is not None:
+        df['edge_color'] = df['target'].map(node_color_map)
+    else:
+        df['edge_color'] = edge_color
+        
     # Creation dictionary
     source_target = list(zip(df['source'], df['target']))
     if len(source_target)==0:
