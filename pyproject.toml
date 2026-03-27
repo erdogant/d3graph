@@ -9,12 +9,29 @@ authors = [{ name = "Erdogan Taskesen", email = "erdogant@gmail.com" },]
 description = "Python package to create interactive network based on d3js."
 readme = "README.md"
 requires-python = ">=3"
-license = { file = "LICENSE" }
-keywords = ["Python", ""]
+license = "BSD-3-Clause"
+keywords = [
+    "Python",
+    "network",
+    "graph",
+    "network analysis",
+    "visualization",
+    "interactive",
+    "d3js",
+    "d3graph",
+    "data visualization",
+    "web",
+    "modular",
+    "customizable"
+]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
 ]
 dependencies = [
     'pandas',
