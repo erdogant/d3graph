@@ -29,7 +29,7 @@ d3.show()
 from d3graph import d3graph, vec2adjmat
 
 # Initialize with default settings
-d3 = d3graph(sticky=True, link_tension=0.2)
+d3 = d3graph(sticky=True, link_tension=0.2, collision=1)
 
 # Load example data
 df = d3.import_example('stormofswords')

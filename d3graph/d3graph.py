@@ -66,7 +66,7 @@ class d3graph:
                  charge: int = 600,
                  slider=None,
                  support: str = 'text',
-                 link_tension: float = 0.5,
+                 link_tension: float = 1,
                  sticky: bool = True,
                  verbose: int = 20) -> None:
         """Initialize d3graph.
