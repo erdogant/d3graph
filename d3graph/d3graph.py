@@ -55,8 +55,7 @@ class d3graph:
 
     References
     ----------
-    * D3Graph: https://erdogant.medium.com/
-    * D3Blocks: https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86
+    * Medium: https://erdogant.medium.com/
     * Github : https://github.com/erdogant/d3graph
     * Documentation: https://erdogant.github.io/d3graph/
 
