@@ -3,5 +3,5 @@ pytest
 rst2pdf
 sphinx
 sphinx_rtd_theme
-spyder-kernels==2.2.1
+spyder-kernels
 tabulate
