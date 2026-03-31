@@ -1,14 +1,26 @@
-# from d3graph import d3graph
-# size = [10, 20, 10, 10, 15, 10, 5]
+# Import library
+from d3graph import d3graph, vec2adjmat
 
-# # Initialize
-# d3 = d3graph()
-# # Load example
-# adjmat = d3.import_example('bigbang')
-# # Process adjmat
-# d3.graph(adjmat)
-# # Show
-# d3.show()
+# Initialize with default settings
+d3 = d3graph(link_tension=0.2)
+
+# Load example data
+df = d3.import_example('stormofswords')
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+
+
+# sticky=True (default) — drag to pin, right-click to release
+d3 = d3graph(adjmat, sticky=True)
+d3.show()
+
+# sticky=False — classic spring-back behaviour
+d3 = d3graph(adjmat, sticky=False)
+d3.show()
+
+# Can also be overridden per-render:
+d3.show(adjmat, sticky=False)
+d3.show()
+
 
 # %%
 
@@ -17,7 +29,7 @@
 from d3graph import d3graph, vec2adjmat
 
 # Initialize with default settings
-d3 = d3graph(link_tension=0.2)
+d3 = d3graph(sticky=True, link_tension=0.2)
 
 # Load example data
 df = d3.import_example('stormofswords')

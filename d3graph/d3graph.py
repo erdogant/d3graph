@@ -66,9 +66,17 @@ class d3graph:
                  charge: int = 600,
                  slider=None,
                  support: str = 'text',
-                 link_tension: float = 1.0,
+                 link_tension: float = 0.5,
+                 sticky: bool = True,
                  verbose: int = 20) -> None:
-        """Initialize d3graph."""
+        """Initialize d3graph.
+
+        Parameters (additional to existing)
+        ------------------------------------
+        sticky : bool, (default: False)
+            When True, nodes stay fixed in place after being dragged.
+            Right-click a fixed node to release it back into the simulation.
+        """
         if slider is None: slider = [None, None]
         # Cleaning
         self._clean()
@@ -83,6 +91,7 @@ class d3graph:
         self.config['slider'] = slider
         self.config['support'] = get_support(support)
         self.config['link_tension'] = link_tension
+        self.config['sticky'] = sticky
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
         self.config['d3_library'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3.v3.js'))
@@ -109,6 +118,7 @@ class d3graph:
              notebook: bool = False,
              save_button: bool = True,
              link_tension: float = None,
+             sticky: bool = None,
              ) -> None:
         """Build and show the graph.
 
@@ -149,6 +159,11 @@ class d3graph:
         save_button : bool, (default: True)
             True: Save button is shown in the HTML to save the image in svg.
             False: No save button is shown in the HTML.
+        sticky : bool, (default: None)
+            When True, nodes stay fixed in place after being dragged (overrides the value set in __init__).
+            When False, nodes are released after dragging (default simulation behaviour).
+            When None, the value set in __init__ is used.
+            Right-click a fixed node to release it back into the simulation.
 
         Returns
         -------
@@ -173,6 +188,9 @@ class d3graph:
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
             self.config['link_tension'] = link_tension
+        # Override sticky only when explicitly passed
+        if sticky is not None:
+            self.config['sticky'] = sticky
         # if self.config.get('filepath', None) != 'd3graph.html':
         self.config['filepath'] = self.set_path(filepath)
 
@@ -774,6 +792,7 @@ class d3graph:
                    'directed': self.config['directed'],
                    'collision': self.config['collision'],
                    'link_tension': self.config.get('link_tension', 1.0),
+                   'sticky': self.config.get('sticky', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
                    'CLICK_STROKE': click_properties['stroke'],

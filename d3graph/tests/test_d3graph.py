@@ -33,7 +33,7 @@ def test_adjmat2vec_and_back() -> None:
 
     for index, edge in df_edges.iterrows():
         Iloc = np.sum(edge==df_edges_c[df_edges.columns], axis=1)==len(df_edges.columns)
-        df_edges_c['isin'][Iloc]=1
+        df_edges_c.loc[Iloc, 'isin'] = 1
 
     assert df_edges_c['isin'].sum()==df_edges.shape[0]
 

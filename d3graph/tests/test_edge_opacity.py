@@ -39,7 +39,7 @@ def test_edge_opacity():
     d3.set_node_properties(color='cluster', size='degree')
 
     # Show the graph
-    d3.show()
+    d3.show(showfig=False)
     
     print("Test completed. Check test_edge_opacity.html to verify edge opacity is 0.5 (50% transparent).")
 

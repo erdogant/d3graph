@@ -7,6 +7,7 @@ function d3graphscript(config = {
     directed: false,
     collision: 0.5,
     link_tension: 1,
+    sticky: false,
     background_color: '#FFFFFF'
     }) {
 
@@ -14,6 +15,7 @@ function d3graphscript(config = {
   var width = config.width;
   var height = config.height;
   var background_color = config.background_color || '#FFFFFF';
+  var sticky = config.sticky || false;
 
   // Set the body background color
   document.body.style.backgroundColor = background_color;
@@ -28,18 +30,39 @@ function d3graphscript(config = {
     .linkStrength(config.link_tension !== undefined ? config.link_tension : 1)
     .size([width, height]);
 
-  // DRAGGING START
+  // ---- DRAGGING ----
+  // Sticky mode: dragstart fixes the node so the simulation stops pulling it.
+  //   dragend keeps it pinned (dashed stroke indicator).
+  //   Right-click a pinned node to release it back into the simulation.
+  // Normal mode: standard free-drag behaviour is preserved.
+
   function dragstarted(d) {
     d3.event.sourceEvent.stopPropagation();
     d3.select(this).classed("dragging", true);
+    if (sticky) {
+      d.fixed = true;
+      force.start();
+    }
   }
 
   function dragged(d) {
-    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    if (sticky) {
+      d.x = d.px = d3.event.x;
+      d.y = d.py = d3.event.y;
+    } else {
+      d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    }
   }
 
   function dragended(d) {
     d3.select(this).classed("dragging", false);
+    if (sticky) {
+      // Keep the node fixed and apply a visual "pinned" cue (dashed border)
+      d.fixed = true;
+      d3.select(this).select("circle")
+        .style("stroke-dasharray", "4,2")
+        .style("stroke-width", function(d) { return Math.max(parseFloat(d.node_size_edge) || 1, 2); });
+    }
   }
 
   var drag = force.drag()
@@ -48,7 +71,7 @@ function d3graphscript(config = {
     .on("drag", dragged)
     .on("dragend", dragended);
 
-  // DRAGGING STOP
+  // ---- END DRAGGING ----
 
   //Append a SVG to the body of the html page. Assign this SVG as an object to svg
   var svg = d3.select("body").append("svg")
@@ -59,8 +82,6 @@ function d3graphscript(config = {
     .on("dblclick.zoom", null)
     .append("g")
 
-  //.on("dblclick", threshold); // EXPLODE ALL CONNECTED POINTS
-
   graphRec = JSON.parse(JSON.stringify(graph));
 
   //Creates the graph data structure out of the json data
@@ -68,33 +89,31 @@ function d3graphscript(config = {
     .links(graph.links)
     .start();
 
- // Create all the line svgs but without locations yet
+  // Create all the line svgs but without locations yet
   var link = svg.selectAll(".link")
     .data(graph.links)
     .enter().append("line")
     .attr("class", "link")
     .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
-	.attr("marker-end", function(d) {
-    	if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+    .attr("marker-end", function(d) {
+      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
     .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
     .style("stroke", function(d) {return d.edge_color;})                 // EDGE-COLORS
     .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
     .style("opacity", function(d) {return d.edge_opacity;})             // EDGE-OPACITY
-//  .style("stroke-width", 1); // WIDTH OF THE LINKS
   ;
 
   link.append("title").text(function(d) { return d.tooltip; });
 
   // ADD TEXT ON THE EDGES (PART 1/2)
-   var linkText = svg.selectAll(".link-text")
-     .data(graph.links)
-     .enter().append("text")
-     .attr("class", "link-text")
-     .attr("font-size", function(d) {return d.label_fontsize + "px";})
-     .style("fill", function(d) {return d.label_color;})
-     .style("font-family", "Arial")
-     //.attr("transform", "rotate(90)")
-     .text(function(d) { return d.label; });
+  var linkText = svg.selectAll(".link-text")
+    .data(graph.links)
+    .enter().append("text")
+    .attr("class", "link-text")
+    .attr("font-size", function(d) {return d.label_fontsize + "px";})
+    .style("fill", function(d) {return d.label_color;})
+    .style("font-family", "Arial")
+    .text(function(d) { return d.label; });
 
   //Do the same with the circles for the nodes
   var node = svg.selectAll(".node")
@@ -104,26 +123,37 @@ function d3graphscript(config = {
     .call(drag)
     .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
 
+  // Right-click handler: release a pinned node back into the simulation (sticky mode only)
+  if (sticky) {
+    node.on('contextmenu', function(d) {
+      d3.event.preventDefault();
+      d.fixed = false;
+      // Remove pinned visual cue
+      d3.select(this).select("circle")
+        .style("stroke-dasharray", null)
+        .style("stroke-width", function(d) { return d.node_size_edge; });
+      force.resume();
+    });
+  }
+
   {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
 
 
   node.append("circle")
-    .attr("r", function(d) { return d.node_size; })					// NODE SIZE
-    .style("fill", function(d) {return d.node_color;})				// NODE-COLOR
-    .style("opacity", function(d) {return d.node_opacity;}) 	    // NODE-OPACITY
-    .style("stroke-width", function(d) {return d.node_size_edge;})	// NODE-EDGE-SIZE
-    .style("stroke", function(d) {return d.node_color_edge;})		// NODE-COLOR-EDGE
-  //  .style("stroke", '#000')										// NODE-EDGE-COLOR (all black)
+    .attr("r", function(d) { return d.node_size; })                 // NODE SIZE
+    .style("fill", function(d) {return d.node_color;})              // NODE-COLOR
+    .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
+    .style("stroke-width", function(d) {return d.node_size_edge;})  // NODE-EDGE-SIZE
+    .style("stroke", function(d) {return d.node_color_edge;})       // NODE-COLOR-EDGE
 
   // Text in nodes
   node.append("text")
     .attr("dx", 10)
     .attr("dy", ".35em")
-    .text(function(d) {return d.node_name}) // NODE-TEXT
-    .style("font-size", function(d) {return d.node_fontsize + "px";}) // set font size equal to node edge size
-	.style("fill", function(d) {return d.node_fontcolor;}) // set the text fill color to the same as node color
-	.style("font-family", "monospace");
-//  .style("stroke", "gray");
+    .text(function(d) {return d.node_name})                               // NODE-TEXT
+    .style("font-size", function(d) {return d.node_fontsize + "px";})     // NODE FONT SIZE
+    .style("fill", function(d) {return d.node_fontcolor;})                // NODE FONT COLOR
+    .style("font-family", "monospace");
 
   let showInHover = ["node_tooltip"]; // Tooltip
   node.append("title")
@@ -143,10 +173,9 @@ function d3graphscript(config = {
       .attr("cy", function(d) { return d.y; });
     d3.selectAll("text").attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; })
-	linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
+    linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
       .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
       .attr("text-anchor", "middle");
-      ;
 
     node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 
@@ -161,8 +190,6 @@ function d3graphscript(config = {
   , { id: 3, name: 'stub', path: 'M 0,0 m -1,-5 L 1,-5 L 1,5 L -1,5 Z', viewbox: '-1 -5 2 10' }
   ]
 
-  //console.log(JSON.stringify(link))
-
   svg.append("defs").selectAll("marker")
     .data(data_marker)
     .enter()
@@ -170,17 +197,13 @@ function d3graphscript(config = {
       .attr('id', function(d){ return 'marker_' + d.name})
       .attr('markerHeight', 10)
       .attr('markerWidth', 10)
-      //.attr('markerUnits', 'strokeWidth')
       .attr("markerUnits", "userSpaceOnUse")                   // Fix marker width
       .attr('orient', 'auto')
-      //.attr('refX', -15)                                     // Offset marker-start
       .attr('refX', 15)                                        // Offset marker-end
       .attr('refY', 0)
       .attr('viewBox', function(d){ return d.viewbox })
       .append('svg:path')
-	    //.attr("transform", "rotate(180)")                    // Marker-start mirrored
         .attr('d', function(d){ return d.path })               // Marker type
-        //.style("fill", function(d) {return d.marker_color;}) // Marker color
         .style("fill", '#808080')                              // Marker color
         .style("stroke", '#808080')                            // Marker edge-color
         .style("opacity", 0.95)                                // Marker opacity
@@ -222,7 +245,7 @@ function d3graphscript(config = {
   // collision detection end
 
 
-  //Toggle stores whether the highlighting is on **********************
+  //Toggle stores whether the highlighting is on
   var toggle = 0;
   //Create an array logging what is connected to what
   var linkedByIndex = {};
@@ -238,25 +261,27 @@ function d3graphscript(config = {
   }
 
 
-    // COLOR ON CLICK
-	function color_on_click() {
-		// Give the original color back
-		d3.selectAll(".node")
-		.select("circle")
-		.style("fill", function(d) {return d.node_color;})
-		.style("opacity", function(d) {return d.node_opacity;})
-		.style("stroke", function(d) {return d.node_color_edge;})
-		.style("stroke-width", function(d) {return d.edge_width;})
-		.attr("r", function(d) { return d.node_size; })
-		;
+  // COLOR ON CLICK
+  function color_on_click() {
+    // Give the original color back to all nodes
+    d3.selectAll(".node")
+    .select("circle")
+    .style("fill", function(d) {return d.node_color;})
+    .style("opacity", function(d) {return d.node_opacity;})
+    .style("stroke", function(d) {return d.node_color_edge;})
+    .style("stroke-width", function(d) {return d.node_size_edge;})
+    // Restore pinned cue on still-fixed nodes
+    .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; })
+    .attr("r", function(d) { return d.node_size; })
+    ;
 
-		// Set the color on click
-		d3.select(this).select("circle")
-		.style("fill", {{ CLICK_FILL }})
-		.style("stroke", "{{ CLICK_STROKE }}")
-		.style("stroke-width", {{ CLICK_STROKEW }})
-		.attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
-		;}
+    // Set the color on the clicked node
+    d3.select(this).select("circle")
+    .style("fill", {{ CLICK_FILL }})
+    .style("stroke", "{{ CLICK_STROKE }}")
+    .style("stroke-width", {{ CLICK_STROKEW }})
+    .attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
+    ;}
 
 
 
@@ -270,7 +295,6 @@ function d3graphscript(config = {
       link.style("opacity", function(o) {
         return d.index == o.source.index | d.index == o.target.index ? 1 : 0.1;
       });
-      //Reduce the op
       toggle = 1;
     } else {
       //Put them back to opacity=1
@@ -280,14 +304,12 @@ function d3graphscript(config = {
       toggle = 0;
     }
   }
-  //*************************************************************
 
 
   //adjust threshold
   function threshold() {
     let thresh = this.value;
 
-    // console.log('Setting threshold', thresh)
     graph.links.splice(0, graph.links.length);
     linkText = linkText.data([]);   // CLEAR EDGE-LABELS: Clear the linkText selection
     linkText.exit().remove();       // CLEAR EDGE-LABELS: Clear the linkText elements from the DOM
@@ -315,12 +337,11 @@ function d3graphscript(config = {
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
     link.style("stroke-width", function(d) {return d.edge_width;});           // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    //link.style('marker-start', function(d){ return 'url(#marker_' + d.marker_start  + ')' })
-	link.style("marker-end", function(d) {                                    // Include the markers.
-		if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-    link.style("stroke", function(d) {return d.edge_color;});                      // EDGE-COLOR AFTER BREAKING WITH SLIDER
-    link.style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
-    link.style("opacity", function(d) {return d.edge_opacity;});             // EDGE-OPACITY AFTER BREAKING WITH SLIDER
+    link.style("marker-end", function(d) {                                    // Include the markers.
+      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+    link.style("stroke", function(d) {return d.edge_color;});                 // EDGE-COLOR AFTER BREAKING WITH SLIDER
+    link.style("stroke-dasharray", function(d) {return d.edge_style;})        // EDGE-STYLE
+    link.style("opacity", function(d) {return d.edge_opacity;});              // EDGE-OPACITY AFTER BREAKING WITH SLIDER
 
     // Update EDGE-LABELS
     linkText = linkText.data(graph.links);
