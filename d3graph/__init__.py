@@ -15,7 +15,7 @@ from d3graph.d3graph import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.6.2'
+__version__ = '2.7.0'
 
 # Setup root logger
 _logger = logging.getLogger('d3graph')
@@ -63,7 +63,6 @@ Examples
 References
 ----------
 * D3Graph: erdogant.medium.com
-* D3Blocks: https://medium.com/data-science-collective/d3blocks-the-python-library-to-create-interactive-standalone-and-beautiful-d3-js-charts-ef8c65286e86
 * Github : https://github.com/erdogant/d3graph
 * Documentation: https://erdogant.github.io/d3graph/
 
