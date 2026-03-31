@@ -1,3 +1,93 @@
+# from d3graph import d3graph
+# size = [10, 20, 10, 10, 15, 10, 5]
+
+# # Initialize
+# d3 = d3graph()
+# # Load example
+# adjmat = d3.import_example('bigbang')
+# # Process adjmat
+# d3.graph(adjmat)
+# # Show
+# d3.show()
+
+# %%
+
+
+# Import library
+from d3graph import d3graph, vec2adjmat
+
+# Initialize with default settings
+d3 = d3graph(support=None)
+
+# Load example data
+df = d3.import_example('stormofswords')
+
+# Convert df to adjmat
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# adjmat = np.exp(adjmat)
+# adjmat = adjmat-1
+
+# Create the network
+d3.graph(adjmat)
+
+# Set Node properties
+d3.set_node_properties(edge_color='#000000', cmap='Blues', minmax=[5, 13], fontcolor='#808080')
+# Show the graph
+# d3.show()
+
+# d3.set_edge_properties(directed=False, marker_end='arrow', edge_color='#ff0000', edge_opacity=[0.1, 0.2])
+
+# Set edge properties
+d3.set_edge_properties(directed=True, marker_end='arrow')
+d3.show()
+
+
+
+
+# Import library
+# from d3graph import d3graph, vec2adjmat
+
+# Initialize with default settings
+# d3 = d3graph(support=None)
+
+# Load example data
+# df = d3.import_example('stormofswords')
+
+# Convert df to adjmat
+# adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# adjmat = np.exp(adjmat)
+# adjmat = adjmat-1
+
+# Create the network
+# d3.graph(adjmat)
+
+# # Set Node properties
+# # d3.set_node_properties(edge_color='#000000', cmap='Blues', minmax=[5, 13], fontcolor='#808080')
+# d3.set_edge_properties(edge_color='#FF0000')
+
+# # Show the graph
+# d3.show()
+
+# # %%
+
+
+# %% opacity
+from d3graph import d3graph, adjmat2vec, vec2adjmat
+# intialize to load example dataset
+d3 = d3graph()
+# 
+df = d3.import_example(data='energy')
+df=vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# d3.graph(df, size='degree', opacity='degree', color='cluster', scaler='zscore')
+d3.graph(df)
+
+# d3.set_node_properties(opacity='centrality')
+d3.show(filepath='c://temp/network.html')
+
+
+# %%
+
+
 # Import library
 from d3graph import d3graph, vec2adjmat
 
@@ -74,7 +164,7 @@ df_edges_c['isin']=0
 
 for index, edge in df_edges.iterrows():
     Iloc = np.sum(edge==df_edges_c[df_edges.columns], axis=1)==len(df_edges.columns)
-    df_edges_c['isin'][Iloc]=1
+    df_edges_c.loc[Iloc, 'isin'] = 1
 
 assert df_edges_c['isin'].sum()==df_edges.shape[0]
 
@@ -161,19 +251,6 @@ d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 're
 
 d3.show(filepath=r'c:\temp\\d3graph\circle.html', set_slider=5, save_button=False)
 
-
-# %% opacity
-from d3graph import d3graph, adjmat2vec
-# intialize to load example dataset
-d3 = d3graph()
-# 
-df = d3.import_example(data='energy')
-df=vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
-# d3.graph(df, size='degree', opacity='degree', color='cluster', scaler='zscore')
-d3.graph(df)
-
-# d3.set_node_properties(opacity='centrality')
-d3.show(filepath='c://temp/network.html')
 
 
 # %% Edge distance
