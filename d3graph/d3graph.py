@@ -12,7 +12,7 @@ import webbrowser
 from json import dumps
 from pathlib import Path
 from sys import platform
-from tempfile import TemporaryDirectory, gettempdir
+from tempfile import gettempdir
 from unicodedata import normalize
 import uuid
 
@@ -27,9 +27,6 @@ from packaging import version
 import datazets as dz
 
 logger = logging.getLogger(__name__)
-if not logger.hasHandlers():
-    logging.basicConfig(level=logging.INFO, format='[{asctime}] [{name}] [{levelname}] {msg}', style='{', datefmt='%d-%m-%Y %H:%M:%S')
-
 
 # %%
 class d3graph:
@@ -308,6 +305,10 @@ class d3graph:
         self.config['label'] = label
         self.config['label_color'] = label_color
         self.config['label_fontsize'] = label_fontsize
+        
+        if not hasattr(self, 'adjmat'):
+            logger.error('adjmat is missing. Initialize first with d3 = d3graph(adjmat)')
+            return
 
         if (not directed) and (marker_end is not None) or (marker_start is not None):
             logger.info('Set directed=True to see the markers!')
@@ -447,6 +448,10 @@ class d3graph:
                 'edge_color': edge_color of the node
 
         """
+        if not hasattr(self, 'adjmat'):
+            logger.error('adjmat is missing. Initialize first with d3 = d3graph(adjmat)')
+            return
+
         if minmax is None: minmax = [8, 13]
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
@@ -1193,6 +1198,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     df['label_color']=label_color
     df['label_fontsize']=label_fontsize
     df['edge_style']=edge_style
+    df['edge_color']=edge_color
     df['edge_opacity'] = edge_opacity
     df['tooltip'] = df['weight'].astype(str)
 
@@ -1357,6 +1363,7 @@ def _normalize_size(getsizes, minscale=0.5, maxscale=4, scaler: str = 'zscore'):
     # Instead of Min-Max scaling, that shrinks any distribution in the [0, 1] interval, scaling the variables to
     # Z-scores is better. Min-Max Scaling is too sensitive to outlier observations and generates unseen problems.
 
+    getsizes = getsizes.copy()
     # Set sizes to 0 if not available
     getsizes[np.isinf(getsizes)]=0
     getsizes[np.isnan(getsizes)]=0
