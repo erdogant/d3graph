@@ -1,4 +1,3 @@
-
 function d3graphscript(config = {
     // Default values
     width: 800,
@@ -7,6 +6,7 @@ function d3graphscript(config = {
     distance: 0,
     directed: false,
     collision: 0.5,
+    link_tension: 1,
     background_color: '#FFFFFF'
     }) {
 
@@ -25,6 +25,7 @@ function d3graphscript(config = {
     .charge(config.charge)
     .linkDistance((d) => d.edge_distance || config.distance)
     //.linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
+    .linkStrength(config.link_tension !== undefined ? config.link_tension : 1)
     .size([width, height]);
 
   // DRAGGING START

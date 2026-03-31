@@ -67,6 +67,7 @@ class d3graph:
                  charge: int = 600,
                  slider=None,
                  support: str = 'text',
+                 link_tension: float = 1.0,
                  verbose: int = 20) -> None:
         """Initialize d3graph."""
         if slider is None: slider = [None, None]
@@ -82,6 +83,7 @@ class d3graph:
         self.config['charge'] = -abs(charge)
         self.config['slider'] = slider
         self.config['support'] = get_support(support)
+        self.config['link_tension'] = link_tension
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
         self.config['d3_library'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3.v3.js'))
@@ -107,6 +109,7 @@ class d3graph:
              dark_mode = False,
              notebook: bool = False,
              save_button: bool = True,
+             link_tension: float = None,
              ) -> None:
         """Build and show the graph.
 
@@ -168,6 +171,9 @@ class d3graph:
         self.config['save_button'] = save_button
         self.config['background_color'] = background_color
         self.config['dark_mode'] = dark_mode
+        # Allow show() to override the link_tension set at __init__ time
+        if link_tension is not None:
+            self.config['link_tension'] = link_tension
         # if self.config.get('filepath', None) != 'd3graph.html':
         self.config['filepath'] = self.set_path(filepath)
 
@@ -768,6 +774,7 @@ class d3graph:
                    'max_slider': self.config['slider'][1],
                    'directed': self.config['directed'],
                    'collision': self.config['collision'],
+                   'link_tension': self.config.get('link_tension', 1.0),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
                    'CLICK_STROKE': click_properties['stroke'],

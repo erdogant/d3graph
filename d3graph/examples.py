@@ -17,7 +17,7 @@
 from d3graph import d3graph, vec2adjmat
 
 # Initialize with default settings
-d3 = d3graph(support=None)
+d3 = d3graph(link_tension=0.2)
 
 # Load example data
 df = d3.import_example('stormofswords')
