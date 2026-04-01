@@ -41,7 +41,7 @@ dependencies = [
     'ismember',
     'jinja2',
     'packaging',
-    'markupsafe==2.0.1',
+    'markupsafe',
     'python-louvain',
     'datazets',
     ]

@@ -1,7 +1,7 @@
 colourmap
 ismember
 jinja2
-markupsafe==2.0.1
+markupsafe
 networkx>2
 numpy
 packaging
