@@ -1,4 +1,4 @@
-from d3graph import d3graph, import_example
+from d3graph import d3graph, import_example, get_hex_color
 
 # Initialize
 d3 = d3graph()
@@ -10,6 +10,10 @@ d3.graph(adjmat)
 
 # Node properties
 d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
+
+colors, labels = get_hex_color(df['label'].values)
+colors=df['label'].values
+d3.set_node_properties(label=df['label'].values, color=colors, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
 
 # Edge properties
 d3.set_edge_properties(directed=True)

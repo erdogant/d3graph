@@ -21,6 +21,7 @@ import colourmap as cm
 import networkx as nx
 import numpy as np
 import pandas as pd
+from pandas.arrays import StringArray
 from ismember import ismember
 from jinja2 import Environment, PackageLoader
 from packaging import version
@@ -481,13 +482,13 @@ class d3graph:
         nodecount = self.adjmat.shape[0]
         group = np.zeros_like(node_names).astype(int)
         # Check validity of color.
-        _check_hex_color(color, nodecount)
+        color = _check_hex_color(color, nodecount, cmap=cmap)
         # Store in config
         self.config['cmap'] = 'Paired' if cmap is None else cmap
         self.config['node_scaler'] = scaler
 
         # ############ Set node label #############
-        if isinstance(label, list):
+        if isinstance(label, (list, np.ndarray, pd.Series, pd.Series, StringArray)):
             label = np.array(label).astype(str)
         elif 'numpy' in str(type(label)):
             pass
@@ -500,7 +501,7 @@ class d3graph:
         if len(label) != nodecount: raise ValueError("[label] must be of same length as the number of nodes")
 
         # ############ tooltip text #############
-        if isinstance(tooltip, list):
+        if isinstance(tooltip, (list, np.ndarray, pd.Series, StringArray)):
             tooltip = np.array(tooltip).astype(str)
         elif 'numpy' in str(type(tooltip)):
             pass
@@ -513,7 +514,7 @@ class d3graph:
         if len(tooltip) != nodecount: raise ValueError("[tooltip text] must be of same length as the number of nodes")
 
         # ############ Set node color #############
-        if isinstance(color, list) and len(color) == nodecount:
+        if isinstance(color, (list, np.ndarray, pd.Series, StringArray)) and len(color) == nodecount:
             color = np.array(color)
         elif 'numpy' in str(type(color)):
             color = _get_hexcolor(color, cmap=self.config['cmap'])
@@ -543,7 +544,7 @@ class d3graph:
         fontsize = _set_node_fontsize(self, fontsize, nodecount)
 
         # ########## Set node color edge #############
-        if isinstance(edge_color, list):
+        if isinstance(edge_color, (list, np.ndarray, pd.Series, StringArray)):
             edge_color = np.array(edge_color)
         elif 'numpy' in str(type(edge_color)):
             pass
@@ -575,7 +576,7 @@ class d3graph:
         marker = _set_marker(self, marker, nodecount)
 
         # ############ Set node edge size #############
-        if isinstance(edge_size, list):
+        if isinstance(edge_size, (list, np.ndarray, pd.Series, StringArray)):
             edge_size = np.array(edge_size)
         elif 'numpy' in str(type(edge_size)):
             pass
@@ -1398,6 +1399,8 @@ def _get_hexcolor(label, cmap: str = 'Paired'):
 
     return label
 
+def get_hex_color(labels, cmap='Set1', opaque_type='per_class', gradient=None):
+    return cm.fromlist(labels, scheme='hex', opaque_type=opaque_type, gradient=gradient)
 
 # %% Do checks
 def library_compatibility_checks() -> None:
@@ -1594,15 +1597,21 @@ def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
     return adjmat
 
 
-def _check_hex_color(color, n=None):
-    if isinstance(color, str) and len(color) != 7: raise ValueError(
-        'Input parameter [color] has wrong format. Must be like color="#000000"')
-    if isinstance(color, list) and len(color) == 0: raise ValueError(
-        'Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"]')
-    if isinstance(color, list) and (not np.all(list(map(lambda x: len(x) == 7, color)))): raise ValueError(
-        '[color] contains incorrect length of hex-color! Hex must be of length 7: ["#000000", "#000000", etc]')
-    if (n is not None) and isinstance(color, list) and len(color) != n:
-        raise ValueError(f'Input parameter [color] has wrong length. Must be of length: {str(n)}')
+def _check_hex_color(color, n=None, cmap='Set1'):
+    if isinstance(color, str) and len(color) != 7:
+        logger.warning('Input parameter [color] has wrong format. Must be like color="#000000" <auto-fixing>')
+        return get_hex_color(color, cmap=cmap)[0]
+    if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) == 0:
+        logger.warning('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"] <auto-fixing>')
+        return get_hex_color(color, cmap=cmap)[0]
+    if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and (not np.all(list(map(lambda x: len(x) == 7, color)))):
+        logger.warning('[color] contains incorrect hex-colors. Hex must be of length 7: ["#000000", "#000000", etc] <auto-fixing>')
+        return get_hex_color(color, cmap=cmap)[0]
+    if (n is not None) and isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) != n:
+        logger.warning(f'Input parameter [color] has wrong length. Must be of length: {str(n)} <auto-fixing>')
+        return get_hex_color(color, cmap=cmap)[0]
+    # Return original input
+    return color
 
 
 def _set_opacity(self, opacity, nodecount, node_names):

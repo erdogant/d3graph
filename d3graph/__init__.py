@@ -11,6 +11,7 @@ from d3graph.d3graph import (
     adjmat2dict,
     data_checks,
     check_logger,
+    get_hex_color,
     import_example,
     )
 
