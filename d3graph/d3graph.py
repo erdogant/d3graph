@@ -192,7 +192,8 @@ class d3graph:
         if sticky is not None:
             self.config['sticky'] = sticky
         # if self.config.get('filepath', None) != 'd3graph.html':
-        self.config['filepath'] = self.set_path(filepath)
+        if filepath is not None or self.config.get('filepath') is None:
+            self.set_path(filepath)
 
         # Create dataframe from co-occurrence matrix
         self.G = make_graph(self.node_properties, self.edge_properties)
@@ -863,7 +864,8 @@ class d3graph:
         os.makedirs(dirname, exist_ok=True)
         filepath = os.path.abspath(os.path.join(dirname, filename))
         logger.debug(f'filepath is set to [{filepath}]')
-        return Path(filepath)
+        # Set to config
+        self.config['filepath'] = Path(filepath)
 
     def import_example(self, data='energy', url=None, sep=','):
         """Import example dataset from github source.
