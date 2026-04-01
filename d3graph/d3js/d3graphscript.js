@@ -10,174 +10,174 @@ function d3graphscript(config = {
     sticky: false,
     background_color: '#FFFFFF'
     }) {
-
-  //Constants for the SVG
-  var width = config.width;
-  var height = config.height;
-  var background_color = config.background_color || '#FFFFFF';
-  var sticky = config.sticky || false;
-
-  // Set the body background color
-  document.body.style.backgroundColor = background_color;
-
-  //Set up the colour scale
-  var color = d3.scale.category20();
-
-  var force = d3.layout.force()
-    .charge(config.charge)
-    .linkDistance((d) => d.edge_distance || config.distance)
-    //.linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
-    .linkStrength(config.link_tension !== undefined ? config.link_tension : 1)
-    .size([width, height]);
-
-  // ---- DRAGGING ----
-  // Sticky mode: dragstart fixes the node so the simulation stops pulling it.
-  //   dragend keeps it pinned (dashed stroke indicator).
-  //   Right-click a pinned node to release it back into the simulation.
-  // Normal mode: standard free-drag behaviour is preserved.
-
-  function dragstarted(d) {
-    d3.event.sourceEvent.stopPropagation();
-    d3.select(this).classed("dragging", true);
-    if (sticky) {
-      d.fixed = true;
-      force.start();
+    
+    //Constants for the SVG
+    var width = config.width;
+    var height = config.height;
+    var background_color = config.background_color || '#FFFFFF';
+    var sticky = config.sticky || false;
+    
+    // Set the body background color
+    document.body.style.backgroundColor = background_color;
+    
+    //Set up the colour scale
+    var color = d3.scale.category20();
+    
+    var force = d3.layout.force()
+      .charge(config.charge)
+      .linkDistance((d) => d.edge_distance || config.distance)
+      //.linkDistance((d) => config.distance > 0 ? config.distance : d.edge_weight)
+      .linkStrength(config.link_tension !== undefined ? config.link_tension : 1)
+      .size([width, height]);
+    
+    // ---- DRAGGING ----
+    // Sticky mode: dragstart fixes the node so the simulation stops pulling it.
+    //   dragend keeps it pinned (dashed stroke indicator).
+    //   Right-click a pinned node to release it back into the simulation.
+    // Normal mode: standard free-drag behaviour is preserved.
+    
+    function dragstarted(d) {
+      d3.event.sourceEvent.stopPropagation();
+      d3.select(this).classed("dragging", true);
+      if (sticky) {
+        d.fixed = true;
+        force.start();
+      }
     }
-  }
-
-  function dragged(d) {
-    if (sticky) {
-      d.x = d.px = d3.event.x;
-      d.y = d.py = d3.event.y;
-    } else {
-      d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    
+    function dragged(d) {
+      if (sticky) {
+        d.x = d.px = d3.event.x;
+        d.y = d.py = d3.event.y;
+      } else {
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+      }
     }
-  }
-
-  function dragended(d) {
-    d3.select(this).classed("dragging", false);
-    if (sticky) {
-      // Keep the node fixed and apply a visual "pinned" cue (dashed border)
-      d.fixed = true;
-      d3.select(this).select("circle")
-        .style("stroke-dasharray", "4,2")
-        .style("stroke-width", function(d) { return Math.max(parseFloat(d.node_size_edge) || 1, 2); });
+    
+    function dragended(d) {
+      d3.select(this).classed("dragging", false);
+      if (sticky) {
+        // Keep the node fixed and apply a visual "pinned" cue (dashed border)
+        d.fixed = true;
+        d3.select(this).select("circle")
+          .style("stroke-dasharray", "4,2")
+          .style("stroke-width", function(d) { return Math.max(parseFloat(d.node_size_edge) || 1, 2); });
+      }
     }
-  }
-
-  var drag = force.drag()
-    .origin(function(d) { return d; })
-    .on("dragstart", dragstarted)
-    .on("drag", dragged)
-    .on("dragend", dragended);
-
-  // ---- END DRAGGING ----
-
-  //Append a SVG to the body of the html page. Assign this SVG as an object to svg
-  var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .style("background-color", background_color)
-    .call(d3.behavior.zoom().on("zoom", function () { svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")") }))
-    .on("dblclick.zoom", null)
-    .append("g")
-
-  graphRec = JSON.parse(JSON.stringify(graph));
-
-  //Creates the graph data structure out of the json data
-  force.nodes(graph.nodes)
-    .links(graph.links)
-    .start();
-
-  // Create all the line svgs but without locations yet
-  var link = svg.selectAll(".link")
-    .data(graph.links)
-    .enter().append("line")
-    .attr("class", "link")
-    .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
-    .attr("marker-end", function(d) {
-      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-    .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-    .style("stroke", function(d) {return d.edge_color;})                 // EDGE-COLORS
-    .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
-    .style("opacity", function(d) {return d.edge_opacity;})             // EDGE-OPACITY
-  ;
-
-  link.append("title").text(function(d) { return d.tooltip; });
-
-  // ADD TEXT ON THE EDGES (PART 1/2)
-  var linkText = svg.selectAll(".link-text")
-    .data(graph.links)
-    .enter().append("text")
-    .attr("class", "link-text")
-    .attr("font-size", function(d) {return d.label_fontsize + "px";})
-    .style("fill", function(d) {return d.label_color;})
-    .style("font-family", "Arial")
-    .text(function(d) { return d.label; });
-
-  //Do the same with the circles for the nodes
-  var node = svg.selectAll(".node")
-    .data(graph.nodes)
-    .enter().append("g")
-    .attr("class", "node")
-    .call(drag)
-    .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
-
-  // Right-click handler: release a pinned node back into the simulation (sticky mode only)
-  if (sticky) {
-    node.on('contextmenu', function(d) {
-      d3.event.preventDefault();
-      d.fixed = false;
-      // Remove pinned visual cue
-      d3.select(this).select("circle")
-        .style("stroke-dasharray", null)
-        .style("stroke-width", function(d) { return d.node_size_edge; });
-      force.resume();
-    });
-  }
-
-  {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
-
-
-  node.append("circle")
-    .attr("r", function(d) { return d.node_size; })                 // NODE SIZE
-    .style("fill", function(d) {return d.node_color;})              // NODE-COLOR
-    .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
-    .style("stroke-width", function(d) {return d.node_size_edge;})  // NODE-EDGE-SIZE
-    .style("stroke", function(d) {return d.node_color_edge;})       // NODE-COLOR-EDGE
-
-  // Text in nodes
-  node.append("text")
-    .attr("dx", 10)
-    .attr("dy", ".35em")
-    .text(function(d) {return d.node_name})                               // NODE-TEXT
-    .style("font-size", function(d) {return d.node_fontsize + "px";})     // NODE FONT SIZE
-    .style("fill", function(d) {return d.node_fontcolor;})                // NODE FONT COLOR
-    .style("font-family", "monospace");
-
-  let showInHover = ["node_tooltip"]; // Tooltip
-  node.append("title")
-      .text((d) => Object.keys(d)
-          .filter((key) => showInHover.indexOf(key) !== -1)
-          .map((key) => `${d[key]}`)
-          .join('\n')
-      )
-
-  //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
-  force.on("tick", function() {
-    link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
-    d3.selectAll("circle").attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; });
-    d3.selectAll("text").attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; })
-    linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
-      .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
-      .attr("text-anchor", "middle");
-
-    node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
+    
+    var drag = force.drag()
+      .origin(function(d) { return d; })
+      .on("dragstart", dragstarted)
+      .on("drag", dragged)
+      .on("dragend", dragended);
+    
+    // ---- END DRAGGING ----
+    
+    //Append a SVG to the body of the html page. Assign this SVG as an object to svg
+    var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("background-color", background_color)
+      .call(d3.behavior.zoom().on("zoom", function () { svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")") }))
+      .on("dblclick.zoom", null)
+      .append("g")
+    
+    graphRec = JSON.parse(JSON.stringify(graph));
+    
+    //Creates the graph data structure out of the json data
+    force.nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+    
+    // Create all the line svgs but without locations yet
+    var link = svg.selectAll(".link")
+      .data(graph.links)
+      .enter().append("line")
+      .attr("class", "link")
+      .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
+      .attr("marker-end", function(d) {
+        if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
+      .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
+      .style("stroke", function(d) {return d.edge_color;})                 // EDGE-COLORS
+      .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
+      .style("opacity", function(d) {return d.edge_opacity;})             // EDGE-OPACITY
+    ;
+    
+    link.append("title").text(function(d) { return d.tooltip; });
+    
+    // ADD TEXT ON THE EDGES (PART 1/2)
+    var linkText = svg.selectAll(".link-text")
+      .data(graph.links)
+      .enter().append("text")
+      .attr("class", "link-text")
+      .attr("font-size", function(d) {return d.label_fontsize + "px";})
+      .style("fill", function(d) {return d.label_color;})
+      .style("font-family", "Arial")
+      .text(function(d) { return d.label; });
+    
+    //Do the same with the circles for the nodes
+    var node = svg.selectAll(".node")
+      .data(graph.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .call(drag)
+      .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
+    
+    // Right-click handler: release a pinned node back into the simulation (sticky mode only)
+    if (sticky) {
+      node.on('contextmenu', function(d) {
+        d3.event.preventDefault();
+        d.fixed = false;
+        // Remove pinned visual cue
+        d3.select(this).select("circle")
+          .style("stroke-dasharray", null)
+          .style("stroke-width", function(d) { return d.node_size_edge; });
+        force.resume();
+      });
+    }
+    
+    {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
+    
+    
+    node.append("circle")
+      .attr("r", function(d) { return d.node_size; })                 // NODE SIZE
+      .style("fill", function(d) {return d.node_color;})              // NODE-COLOR
+      .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
+      .style("stroke-width", function(d) {return d.node_size_edge;})  // NODE-EDGE-SIZE
+      .style("stroke", function(d) {return d.node_color_edge;})       // NODE-COLOR-EDGE
+    
+    // Text in nodes
+    node.append("text")
+      .attr("dx", 10)
+      .attr("dy", ".35em")
+      .text(function(d) {return d.node_name})                               // NODE-TEXT
+      .style("font-size", function(d) {return d.node_fontsize + "px";})     // NODE FONT SIZE
+      .style("fill", function(d) {return d.node_fontcolor;})                // NODE FONT COLOR
+      .style("font-family", "monospace");
+    
+    let showInHover = ["node_tooltip"]; // Tooltip
+    node.append("title")
+        .text((d) => Object.keys(d)
+            .filter((key) => showInHover.indexOf(key) !== -1)
+            .map((key) => `${d[key]}`)
+            .join('\n')
+        )
+    
+    //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+      d3.selectAll("circle").attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+      d3.selectAll("text").attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+      linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
+        .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
+        .attr("text-anchor", "middle");
+    
+      node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 
   });
 
