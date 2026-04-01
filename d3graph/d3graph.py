@@ -1411,7 +1411,7 @@ def library_compatibility_checks() -> None:
     None.
 
     """
-    if not version.parse(nx.__version__) >= version.parse('2.5'):
+    if not version.parse(nx.__version__) >= version.parse('2.5.0'):
         logger.error('Networkx version should be >= 2.5')
         logger.info('Hint: pip install -U networkx')
 
