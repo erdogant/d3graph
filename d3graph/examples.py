@@ -1,3 +1,53 @@
+from d3graph import d3graph, import_example
+
+# Initialize
+d3 = d3graph()
+
+# Load karate example
+adjmat, df = import_example('karate')
+
+d3.graph(adjmat)
+
+# Node properties
+d3.set_node_properties(label=df['label'].values, color=df['label'].values, size=df['degree'].values, edge_size=df['degree'].values, cmap='Set1')
+
+# Edge properties
+d3.set_edge_properties(directed=True)
+
+# Plot
+d3.show()
+
+
+# %% SET PATH ISSUE https://github.com/erdogant/d3graph/issues/42
+from pathlib import Path
+from d3graph import d3graph, vec2adjmat, import_example
+output_path = Path.cwd() / 'd3graph.html'
+
+# Load example data
+df = import_example('stormofswords')
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+
+
+# sticky=True (default) — drag to pin, right-click to release
+d3 = d3graph(sticky=True)
+d3.set_path(output_path)
+d3.config['filepath']
+
+d3.graph(adjmat)
+d3.show()
+
+# sticky=False — classic spring-back behaviour
+d3 = d3graph(adjmat, sticky=False)
+d3.show()
+
+# %%
+
+
+
+
+# %%
+
+
 # Import library
 from d3graph import d3graph, vec2adjmat
 
@@ -463,6 +513,7 @@ d3.set_node_properties(color=adjmat.columns.values, size=[10, 20, 10, 10, 15, 10
 
 d3.node_properties['Penny']['tooltip']='test\ntest2'
 d3.show(filepath='c:\\temp\\network3.html')
+
 
 # %% Checks with cluster label
 from d3graph import d3graph

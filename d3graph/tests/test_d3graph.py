@@ -1,9 +1,27 @@
 from copy import deepcopy
 import numpy as np
 import pandas as pd
-from d3graph import d3graph, adjmat2vec, vec2adjmat
+from d3graph import d3graph, adjmat2vec, vec2adjmat, import_example
+from pathlib import Path
 
+def test_filepath():
+    df = import_example('stormofswords')
+    adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+    output_path = Path.cwd() / 'd3graph.html'
+    d3 = d3graph()
+    d3.graph(adjmat)
+    d3.set_path(output_path)
+    d3.show(showfig=False)
+    assert d3.config['filepath']==output_path
+    
+    output_path = Path.cwd() / 'd3graph1.html'
+    d3 = d3graph()
+    d3.graph(adjmat)
+    d3.show(showfig=False, filepath=output_path)
+    assert d3.config['filepath']==output_path
+    
 
+    
 def test_instantiate_d3graph_no_args() -> None:
     """Test instantiation works with defaults"""
     d3 = d3graph()

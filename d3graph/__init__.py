@@ -11,6 +11,7 @@ from d3graph.d3graph import (
     adjmat2dict,
     data_checks,
     check_logger,
+    import_example,
     )
 
 __author__ = 'Erdogan Tasksen'
@@ -39,13 +40,13 @@ The ouput is a html file that is interactive and stand alone.
 
 Examples
 --------
->>> from d3graph import d3graph, vec2adjmat
+>>> from d3graph import d3graph, vec2adjmat, import_example
 >>>
 >>> # Initialize
 >>> d3 = d3graph()
 >>>
 >>> # Load karate example
->>> df = d3.import_example('energy')
+>>> df = import_example('energy')
 >>> adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 >>>
 >>> # Initialize

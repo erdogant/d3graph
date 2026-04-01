@@ -598,16 +598,16 @@ class d3graph:
                                           'marker': marker[i],
                                           'label': label[i],
                                           'tooltip': tooltip[i],
-                                          'color': color[i].astype(str),
-                                          'opacity': opacity[i].astype(str),
-                                          'fontcolor': fontcolor[i].astype(str),
-                                          'fontsize': fontsize[i].astype(int),
+                                          'color': str(color[i]),
+                                          'opacity': str(opacity[i]),
+                                          'fontcolor': str(fontcolor[i]),
+                                          'fontsize': str(fontsize[i]),
                                           'size': size[i],
                                           'edge_size': edge_size[i],
                                           'edge_color': edge_color[i],
                                           'group': group[i]}
 
-        logger.info('Number of unique nodes: %.0d', len(self.node_properties.keys()))
+        logger.info(f'Number of unique nodes: {len(self.node_properties.keys())}')
 
     # compute clusters
     def get_cluster_color(self, node_names: list = None, color: str = '#000080') -> tuple:
@@ -714,13 +714,13 @@ class d3graph:
 
         Examples
         --------
-        >>> from d3graph import d3graph
+        >>> from d3graph import d3graph, import_example
         >>>
         >>> # Initialize
         >>> d3 = d3graph()
         >>>
         >>> # Load karate example
-        >>> adjmat, df = d3.import_example('karate')
+        >>> adjmat, df = import_example('karate')
         >>>
         >>> # Initialize
         >>> d3.graph(adjmat)
@@ -889,38 +889,7 @@ class d3graph:
             * https://github.com/erdogant/datazets
 
         """
-        if data == 'small':
-            source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
-            target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
-            weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
-            adjmat = vec2adjmat(source, target, weight=weight)
-            return adjmat, None
-        elif data == 'bigbang':
-            df = dz.get(data=data)
-            adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'])
-            return adjmat
-        elif data == 'karate':
-            import scipy
-            if version.parse(scipy.__version__) < version.parse('1.8.0'):
-                raise ImportError(
-                    '[d3graph] >Error: This release requires scipy version >= 1.8.0. Try: pip install -U scipy>=1.8.0')
-
-            G = nx.karate_club_graph()
-            adjmat = nx.adjacency_matrix(G).todense()
-            adjmat = pd.DataFrame(index=range(adjmat.shape[0]), data=adjmat, columns=range(adjmat.shape[0]))
-            adjmat.columns = adjmat.columns.astype(str)
-            adjmat.index = adjmat.index.astype(str)
-            adjmat.iloc[3, 4] = 5
-            adjmat.iloc[4, 5] = 6
-            adjmat.iloc[5, 6] = 7
-
-            df = pd.DataFrame(index=adjmat.index)
-            df['degree'] = np.array([*G.degree()])[:, 1]
-            df['label'] = [G.nodes[i]['club'] for i in range(len(G.nodes))]
-
-            return adjmat, df
-        else:
-            return dz.get(data=data, url=url, sep=sep)
+        return import_example(data=data, url=url, sep=sep)
 
 
 # %%
@@ -1756,6 +1725,61 @@ def _set_node_fontcolor(self, fontcolor, color, node_names, nodecount):
     if len(fontcolor) != nodecount: raise ValueError("[fontcolor] must be of same length as the number of nodes")
     # return
     return fontcolor
+
+def import_example(data='energy', url=None, sep=','):
+    """Import example dataset from github source.
+
+    Import one of the few datasets from github source or specify your own download url link.
+
+    Parameters
+    ----------
+    data : str
+        Name of datasets: 'sprinkler', 'titanic', 'student', 'fifa', 'cancer', 'waterpump', 'retail'
+    url : str
+        url link to to dataset.
+
+    Returns
+    -------
+    pd.DataFrame()
+        Dataset containing mixed features.
+
+    References
+    ----------
+        * https://github.com/erdogant/datazets
+
+    """
+    if data == 'small':
+        source = ['node A', 'node F', 'node B', 'node B', 'node B', 'node A', 'node C', 'node Z']
+        target = ['node F', 'node B', 'node J', 'node F', 'node F', 'node M', 'node M', 'node A']
+        weight = [5.56, 0.5, 0.64, 0.23, 0.9, 3.28, 0.5, 0.45]
+        adjmat = vec2adjmat(source, target, weight=weight)
+        return adjmat, None
+    elif data == 'bigbang':
+        df = dz.get(data=data)
+        adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'])
+        return adjmat
+    elif data == 'karate':
+        import scipy
+        if version.parse(scipy.__version__) < version.parse('1.8.0'):
+            raise ImportError(
+                '[d3graph] >Error: This release requires scipy version >= 1.8.0. Try: pip install -U scipy>=1.8.0')
+
+        G = nx.karate_club_graph()
+        adjmat = nx.adjacency_matrix(G).todense()
+        adjmat = pd.DataFrame(index=range(adjmat.shape[0]), data=adjmat, columns=range(adjmat.shape[0]))
+        adjmat.columns = adjmat.columns.astype(str)
+        adjmat.index = adjmat.index.astype(str)
+        adjmat.iloc[3, 4] = 5
+        adjmat.iloc[4, 5] = 6
+        adjmat.iloc[5, 6] = 7
+
+        df = pd.DataFrame(index=adjmat.index)
+        df['degree'] = np.array([*G.degree()])[:, 1]
+        df['label'] = [G.nodes[i]['club'] for i in range(len(G.nodes))]
+
+        return adjmat, df
+    else:
+        return dz.get(data=data, url=url, sep=sep)
 
 
 def get_support(support):
