@@ -93,7 +93,7 @@ adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'
 d3.graph(adjmat)
 
 # Set Node properties
-d3.set_node_properties(edge_color='#000000', cmap='Blues', minmax=[5, 13], fontcolor='#808080')
+d3.set_node_properties(marker='square', edge_color='#000000', cmap='Blues', minmax=[5, 13], fontcolor='#808080')
 # Show the graph
 # d3.show()
 
@@ -102,6 +102,7 @@ d3.set_node_properties(edge_color='#000000', cmap='Blues', minmax=[5, 13], fontc
 # Set edge properties
 d3.set_edge_properties(directed=True, marker_end='arrow')
 d3.show()
+d3.show(node_text_inside=True)
 
 
 
@@ -203,6 +204,9 @@ from d3graph import d3graph, adjmat2vec, vec2adjmat
 
 #%%
 from d3graph import check_logger
+import numpy as np
+import pandas as pd
+
 check_logger(verbose='debug')
 check_logger(verbose='info')
 check_logger(verbose='info')
