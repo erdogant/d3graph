@@ -44,10 +44,6 @@ d3.show()
 d3 = d3graph(adjmat, sticky=False)
 d3.show()
 
-# %%
-
-
-
 
 # %%
 

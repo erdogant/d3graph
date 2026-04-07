@@ -120,6 +120,7 @@ class d3graph:
              save_button: bool = True,
              link_tension: float = None,
              sticky: bool = None,
+             node_text_inside: bool = False,
              ) -> None:
         """Build and show the graph.
 
@@ -186,6 +187,8 @@ class d3graph:
         self.config['save_button'] = save_button
         self.config['background_color'] = background_color
         self.config['dark_mode'] = dark_mode
+        self.config['node_text_inside'] = node_text_inside
+
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
             self.config['link_tension'] = link_tension
@@ -795,6 +798,7 @@ class d3graph:
                    'collision': self.config['collision'],
                    'link_tension': self.config.get('link_tension', 1.0),
                    'sticky': self.config.get('sticky', False),
+                   'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
                    'CLICK_STROKE': click_properties['stroke'],

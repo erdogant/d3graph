@@ -8,7 +8,8 @@ function d3graphscript(config = {
     collision: 0.5,
     link_tension: 1,
     sticky: false,
-    background_color: '#FFFFFF'
+    background_color: '#FFFFFF',
+    node_text_inside: false,
     }) {
     
     //Constants for the SVG
@@ -148,12 +149,25 @@ function d3graphscript(config = {
     
     // Text in nodes
     node.append("text")
-      .attr("dx", 10)
+      .attr("dx",  function(d) { return config.node_text_inside ? 0 : 10; })
       .attr("dy", ".35em")
-      .text(function(d) {return d.node_name})                               // NODE-TEXT
-      .style("font-size", function(d) {return d.node_fontsize + "px";})     // NODE FONT SIZE
-      .style("fill", function(d) {return d.node_fontcolor;})                // NODE FONT COLOR
-      .style("font-family", "monospace");
+      .attr("text-anchor", function(d) { return config.node_text_inside ? "middle" : "start"; })
+      .text(function(d) { return d.node_name; }) // NODE-TEXT
+      .style("font-size", function(d) {
+        if (config.node_text_inside) {
+          // Auto-shrink font so the label fits within the circle diameter
+          var r = parseFloat(d.node_size) || 8;
+          var label = d.node_name || "";
+          // Approximate: 0.6 * fontsize ≈ char width; fit label in 2*r with some padding
+          var maxFontSize = parseFloat(d.node_fontsize) || 12;
+          var fitSize = Math.min(maxFontSize, (1.8 * r) / Math.max(label.length * 0.6, 1));
+          return Math.max(fitSize, 6) + "px";
+        }
+        return d.node_fontsize + "px"; // NODE FONT SIZE
+      })
+      .style("fill", function(d) {return d.node_fontcolor;}) // NODE FONT COLOR
+      .style("font-family", "monospace")
+      .style("pointer-events", "none");
     
     let showInHover = ["node_tooltip"]; // Tooltip
     node.append("title")

@@ -115,6 +115,29 @@ Directed arrows
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_directed.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
+Node text inside
+************************************
+
+.. code:: python
+
+	from d3graph import d3graph
+	size = [10, 20, 10, 10, 15, 10, 5]
+
+	# Initialize
+	d3 = d3graph()
+	# Load example
+	adjmat = d3.import_example('bigbang')
+	# Process adjmat
+	d3.graph(adjmat)
+	# Show
+	d3.set_node_properties(fontcolor='#000000')
+	d3.show(node_text_inside=True)
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bigbang_node_text_inside.html" height="800px" width="850px", frameBorder="0"></iframe>
+
+
 Karate Club network
 ####################
 
