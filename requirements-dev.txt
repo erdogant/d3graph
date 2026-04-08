@@ -1,7 +1,16 @@
-irelease
-pytest
-rst2pdf
-sphinx
+#glob
+numpy
 sphinx_rtd_theme
-spyder-kernels
+rst2pdf
+pytest
+irelease
 tabulate
+python-louvain
+
+#spyder-kernels==3.0.*
+
+sphinx
+sphinxcontrib-fulltoc
+#git+https://github.com/SuperKogito/sphinxcontrib-pdfembed.git
+#nbconvert # jupyter nbconvert --to html notebook.ipynb
+

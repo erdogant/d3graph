@@ -7,7 +7,7 @@ d3.graph(adjmat)
 # Mix shapes per node
 markers = ['circle', 'star', 'diamond', 'square', 'pentagon', 'hexagon', 'rectangle', 'triangle-down', 'triangle'] * 8
 d3.set_node_properties(marker=markers[:len(adjmat.columns)], color=df['label'].values, cmap='Set1')
-d3.show()
+d3.show(filepath="d:/repos/erdogant.github.io/docs/d3graph/d3graph/node_shapes.html")
 
 # %%
 from d3graph import d3graph, import_example
@@ -18,7 +18,7 @@ d3.graph(adjmat)
 
 # Set shape for node
 d3.set_node_properties(marker='hexagon', color=df['label'].values, cmap='Set1')
-d3.show()
+d3.show(filepath="d:/repos/erdogant.github.io/docs/d3graph/d3graph/node_shape.html")
 
 # %%
 
