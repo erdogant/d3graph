@@ -60,7 +60,7 @@ function d3graphscript(config = {
       if (sticky) {
         // Keep the node fixed and apply a visual "pinned" cue (dashed border)
         d.fixed = true;
-        d3.select(this).select("circle")
+        d3.select(this).select(".node-shape")
           .style("stroke-dasharray", "4,2")
           .style("stroke-width", function(d) { return Math.max(parseFloat(d.node_size_edge) || 1, 2); });
       }
@@ -73,7 +73,142 @@ function d3graphscript(config = {
       .on("dragend", dragended);
     
     // ---- END DRAGGING ----
-    
+
+    // =====================================================================
+    // ---- SHAPE RENDERING ------------------------------------------------
+    // Supported node_marker values:
+    //   'circle'                        – SVG <circle>  (default)
+    //   'ellipse'                       – SVG <ellipse> (wider than tall)
+    //   'square'                        – square via <path>
+    //   'rectangle'                     – wide rectangle via <path>
+    //   'triangle' / 'triangle-up'      – upward equilateral triangle
+    //   'triangle-down'                 – downward triangle
+    //   'diamond'                       – rotated square
+    //   'star'                          – 5-pointed star
+    //   'hexagon'                       – regular hexagon
+    //   'pentagon'                      – regular pentagon
+    // =====================================================================
+
+    /**
+     * Returns an SVG path `d` string for polygon/star shapes, centred at (0,0).
+     * Returns null for 'circle' and 'ellipse' (handled as native SVG elements).
+     */
+    function shapePathD(marker, r) {
+      r = parseFloat(r) || 8;
+      var m = (marker || 'circle').toLowerCase();
+      switch (m) {
+
+        case 'triangle':
+        case 'triangle-up': {
+          var h = r * Math.sqrt(3);
+          return 'M 0,' + (-r) +
+                 ' L ' + (h / 2) + ',' + (r / 2) +
+                 ' L ' + (-h / 2) + ',' + (r / 2) + ' Z';
+        }
+
+        case 'triangle-down': {
+          var h = r * Math.sqrt(3);
+          return 'M 0,' + r +
+                 ' L ' + (h / 2) + ',' + (-r / 2) +
+                 ' L ' + (-h / 2) + ',' + (-r / 2) + ' Z';
+        }
+
+        case 'square': {
+          var s = r * 1.4;
+          return 'M ' + (-s) + ',' + (-s) +
+                 ' L ' +   s + ',' + (-s) +
+                 ' L ' +   s + ',' +   s  +
+                 ' L ' + (-s) + ',' +   s  + ' Z';
+        }
+
+        case 'rect':
+        case 'rectangle': {
+          var w = r * 2.0, h = r * 1.0;
+          return 'M ' + (-w) + ',' + (-h) +
+                 ' L ' +   w + ',' + (-h) +
+                 ' L ' +   w + ',' +   h  +
+                 ' L ' + (-w) + ',' +   h  + ' Z';
+        }
+
+        case 'diamond': {
+          var rx = r * 1.0, ry = r * 1.4;
+          return 'M 0,' + (-ry) +
+                 ' L '  + rx + ',0' +
+                 ' L 0,' + ry +
+                 ' L ' + (-rx) + ',0 Z';
+        }
+
+        case 'star': {
+          var outerR = r * 1.3, innerR = r * 0.5, pts = [];
+          for (var i = 0; i < 10; i++) {
+            var angle = (Math.PI / 5) * i - Math.PI / 2;
+            var rad   = (i % 2 === 0) ? outerR : innerR;
+            pts.push(+(rad * Math.cos(angle)).toFixed(3) + ',' + +(rad * Math.sin(angle)).toFixed(3));
+          }
+          return 'M ' + pts.join(' L ') + ' Z';
+        }
+
+        case 'hexagon': {
+          var pts = [];
+          for (var i = 0; i < 6; i++) {
+            var angle = (Math.PI / 3) * i - Math.PI / 6;
+            pts.push(+(r * 1.1 * Math.cos(angle)).toFixed(3) + ',' + +(r * 1.1 * Math.sin(angle)).toFixed(3));
+          }
+          return 'M ' + pts.join(' L ') + ' Z';
+        }
+
+        case 'pentagon': {
+          var pts = [];
+          for (var i = 0; i < 5; i++) {
+            var angle = (2 * Math.PI / 5) * i - Math.PI / 2;
+            pts.push(+(r * 1.15 * Math.cos(angle)).toFixed(3) + ',' + +(r * 1.15 * Math.sin(angle)).toFixed(3));
+          }
+          return 'M ' + pts.join(' L ') + ' Z';
+        }
+
+        default:
+          return null; // circle or ellipse — caller uses native SVG element
+      }
+    }
+
+    /**
+     * Appends the correct SVG shape child to every node <g>.
+     * All shapes receive the CSS class "node-shape" for uniform selection.
+     *   circle / ellipse  →  native SVG elements positioned via cx/cy in tick
+     *   everything else   →  <path> positioned via transform="translate()" in tick
+     */
+    function appendShape(nodeSelection) {
+      nodeSelection.each(function(d) {
+        var g      = d3.select(this);
+        var marker = (d.node_marker || 'circle').toLowerCase();
+        var r      = parseFloat(d.node_size) || 8;
+        var shape;
+
+        if (marker === 'ellipse') {
+          shape = g.append('ellipse')
+            .attr('class', 'node-shape')
+            .attr('rx', r * 1.6)
+            .attr('ry', r);
+        } else if (marker === 'circle' || shapePathD(marker, r) === null) {
+          shape = g.append('circle')
+            .attr('class', 'node-shape')
+            .attr('r', r);
+        } else {
+          shape = g.append('path')
+            .attr('class', 'node-shape')
+            .attr('d', shapePathD(marker, r));
+        }
+
+        shape
+          .style('fill',         d.node_color)
+          .style('opacity',      d.node_opacity)
+          .style('stroke-width', d.node_size_edge)
+          .style('stroke',       d.node_color_edge);
+      });
+    }
+
+    // ---- END SHAPE RENDERING ----
+
     //Append a SVG to the body of the html page. Assign this SVG as an object to svg
     var svg = d3.select("body").append("svg")
       .attr("width", width)
@@ -130,7 +265,7 @@ function d3graphscript(config = {
         d3.event.preventDefault();
         d.fixed = false;
         // Remove pinned visual cue
-        d3.select(this).select("circle")
+        d3.select(this).select(".node-shape")
           .style("stroke-dasharray", null)
           .style("stroke-width", function(d) { return d.node_size_edge; });
         force.resume();
@@ -138,14 +273,9 @@ function d3graphscript(config = {
     }
     
     {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
-    
-    
-    node.append("circle")
-      .attr("r", function(d) { return d.node_size; })                 // NODE SIZE
-      .style("fill", function(d) {return d.node_color;})              // NODE-COLOR
-      .style("opacity", function(d) {return d.node_opacity;})         // NODE-OPACITY
-      .style("stroke-width", function(d) {return d.node_size_edge;})  // NODE-EDGE-SIZE
-      .style("stroke", function(d) {return d.node_color_edge;})       // NODE-COLOR-EDGE
+
+    // Append the correct shape per node (circle, ellipse, rect, triangle, etc.)
+    appendShape(node);
     
     // Text in nodes
     node.append("text")
@@ -183,8 +313,20 @@ function d3graphscript(config = {
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
-      d3.selectAll("circle").attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
+
+      // Position each shape according to its SVG element type:
+      //   circle / ellipse  →  cx / cy attributes
+      //   path              →  transform translate(x, y)
+      d3.selectAll(".node-shape").each(function(d) {
+        var el  = d3.select(this);
+        var tag = this.tagName.toLowerCase();
+        if (tag === 'circle' || tag === 'ellipse') {
+          el.attr("cx", d.x).attr("cy", d.y);
+        } else {
+          el.attr("transform", "translate(" + d.x + "," + d.y + ")");
+        }
+      });
+
       d3.selectAll("text").attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
       linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
@@ -277,25 +419,48 @@ function d3graphscript(config = {
 
   // COLOR ON CLICK
   function color_on_click() {
-    // Give the original color back to all nodes
+    // Reset all nodes to their original styles
     d3.selectAll(".node")
-    .select("circle")
+    .select(".node-shape")
     .style("fill", function(d) {return d.node_color;})
     .style("opacity", function(d) {return d.node_opacity;})
     .style("stroke", function(d) {return d.node_color_edge;})
     .style("stroke-width", function(d) {return d.node_size_edge;})
     // Restore pinned cue on still-fixed nodes
-    .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; })
-    .attr("r", function(d) { return d.node_size; })
-    ;
+    .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; });
 
-    // Set the color on the clicked node
-    d3.select(this).select("circle")
-    .style("fill", {{ CLICK_FILL }})
-    .style("stroke", "{{ CLICK_STROKE }}")
-    .style("stroke-width", {{ CLICK_STROKEW }})
-    .attr("r", function(d) { return d.node_size*{{ CLICK_SIZE }}; })
-    ;}
+    // Reset circle radii
+    d3.selectAll(".node").select("circle.node-shape")
+      .attr("r", function(d) { return d.node_size; });
+
+    // Apply click styling to the selected node's shape
+    var clickedShape = d3.select(this).select(".node-shape");
+    clickedShape
+      .style("fill", {{ CLICK_FILL }})
+      .style("stroke", "{{ CLICK_STROKE }}")
+      .style("stroke-width", {{ CLICK_STROKEW }});
+
+    // Scale up the shape — strategy depends on element type
+    var shapeNode = clickedShape.node();
+    if (!shapeNode) return;
+    var tag = shapeNode.tagName.toLowerCase();
+    if (tag === 'circle') {
+      clickedShape.attr("r", function(d) { return d.node_size * {{ CLICK_SIZE }}; });
+    } else if (tag === 'ellipse') {
+      clickedShape.each(function(d) {
+        var r = parseFloat(d.node_size) || 8;
+        d3.select(this)
+          .attr("rx", r * 1.6 * {{ CLICK_SIZE }})
+          .attr("ry", r * {{ CLICK_SIZE }});
+      });
+    } else {
+      // <path>: re-compute path with a scaled radius
+      clickedShape.each(function(d) {
+        var r = (parseFloat(d.node_size) || 8) * {{ CLICK_SIZE }};
+        d3.select(this).attr("d", shapePathD(d.node_marker, r));
+      });
+    }
+  }
 
 
 

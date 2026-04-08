@@ -1,3 +1,27 @@
+from d3graph import d3graph, import_example, vec2adjmat
+
+d3 = d3graph()
+adjmat, df = import_example('karate')
+d3.graph(adjmat)
+
+# Mix shapes per node
+markers = ['circle', 'star', 'diamond', 'square', 'pentagon', 'hexagon', 'rectangle', 'triangle-down', 'triangle'] * 8
+d3.set_node_properties(marker=markers[:len(adjmat.columns)], color=df['label'].values, cmap='Set1')
+d3.show()
+
+# %%
+from d3graph import d3graph, import_example
+
+d3 = d3graph()
+adjmat, df = import_example('karate')
+d3.graph(adjmat)
+
+# Set shape for node
+d3.set_node_properties(marker='hexagon', color=df['label'].values, cmap='Set1')
+d3.show()
+
+# %%
+
 from d3graph import d3graph, import_example, get_hex_color
 
 # Initialize

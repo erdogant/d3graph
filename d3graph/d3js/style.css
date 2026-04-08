@@ -18,8 +18,13 @@ h3 {
   font-family: "Helvetica";
 }
 
-/* Sticky / fixed node indicator: dashed outline ring */
-circle.node-fixed {
+/* Sticky / fixed node indicator: dashed outline ring — works for all shape types */
+.node .node-shape.node-fixed {
   stroke-dasharray: 4, 2;
   stroke-width: 2.5px;
+}
+
+/* Shared pointer cursor for all node shapes */
+.node .node-shape {
+  cursor: pointer;
 }

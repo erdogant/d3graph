@@ -399,7 +399,8 @@ class d3graph:
             * ['label 1','label 2','label 3', ...]
         marker : list of markers (default: 'circle')
             The marker that is used for the Node.
-            * ['circle','rect','rect', ...]
+            * 'circle' or 'hexagon' etc
+            * ['circle', 'star', 'diamond', 'square', 'pentagon', 'hexagon', 'rectangle', 'triangle-down', 'triangle']
         tooltip : list of names (default: None)
             The text that is shown when hovering over the Node.
             If not specified, the text will inherit from the label.
@@ -1657,20 +1658,63 @@ def _compute_centrality(adjmat):
     # opacity = opacity[:-2]
     return opacity
 
+MARKERS_SUPPORTED = {
+    'circle',
+    'ellipse',
+    'rect', 'rectangle', 'square',
+    'rect-wide', 'rectangle-wide',
+    'triangle', 'triangle-up', 'triangle-down',
+    'diamond',
+    'star',
+    'hexagon',
+    'pentagon',
+}
+
+
 def _set_marker(self, marker, nodecount):
-    if isinstance(marker, type(None)):
+    """Validate and broadcast the node marker/shape.
+
+    Supported shapes
+    ----------------
+    'circle'                         : Circle (default)
+    'ellipse'                        : Ellipse (wider than tall)
+    'rect' / 'rectangle' / 'square' : Square
+    'rect-wide' / 'rectangle-wide'  : Wide rectangle
+    'triangle' / 'triangle-up'      : Triangle pointing up
+    'triangle-down'                  : Triangle pointing down
+    'diamond'                        : Diamond (rotated square)
+    'star'                           : 5-pointed star
+    'hexagon'                        : Regular hexagon
+    'pentagon'                       : Regular pentagon
+    """
+    if marker is None:
         marker = 'circle'
 
-    if isinstance(marker, list) and len(marker)==nodecount:
-        marker = np.array(marker)
-    elif 'numpy' in str(type(marker)) and len(marker)==nodecount:
+    if isinstance(marker, (list, np.ndarray, pd.Series)) and len(marker) == nodecount:
+        marker = np.array([str(m).lower() for m in marker])
+        invalid = set(marker) - MARKERS_SUPPORTED
+        if invalid:
+            logger.warning(
+                'Unknown marker(s) %s. Supported: %s. Falling back to "circle" for those.',
+                sorted(invalid), sorted(MARKERS_SUPPORTED)
+            )
+            marker = np.where(np.isin(marker, list(MARKERS_SUPPORTED)), marker, 'circle')
+    elif 'numpy' in str(type(marker)) and len(marker) == nodecount:
         pass
     elif isinstance(marker, str):
+        marker = marker.lower()
+        if marker not in MARKERS_SUPPORTED:
+            logger.warning(
+                'Unknown marker "%s". Supported: %s. Falling back to "circle".',
+                marker, sorted(MARKERS_SUPPORTED)
+            )
+            marker = 'circle'
         marker = np.repeat(marker, nodecount)
+    else:
+        marker = np.repeat('circle', nodecount)
 
-    # Make check
-    if len(marker) != nodecount: raise ValueError("Node size must be of same length as the number of nodes")
-    # Return
+    if len(marker) != nodecount:
+        raise ValueError("Node marker must be of same length as the number of nodes")
     return marker
 
 def _set_node_size(self, size, minmax, nodecount):

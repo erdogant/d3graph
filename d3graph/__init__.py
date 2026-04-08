@@ -17,7 +17,7 @@ from d3graph.d3graph import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.7.2'
+__version__ = '2.8.0'
 
 # Setup root logger
 _logger = logging.getLogger('d3graph')
@@ -60,7 +60,7 @@ Examples
 >>> d3.set_edge_properties(directed=True)
 >>>
 >>> # Plot
->>> d3.show()
+>>> d3.show(node_text_inside=True)
 
 References
 ----------
