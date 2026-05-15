@@ -1602,20 +1602,52 @@ def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
     return adjmat
 
 
+# def _check_hex_color(color, n=None, cmap='Set1'):
+#     if isinstance(color, str) and len(color) != 7:
+#         logger.warning('Input parameter [color] has wrong format. Must be like color="#000000" <auto-fixing>')
+#         return get_hex_color(color, cmap=cmap)[0]
+#     if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) == 0:
+#         logger.warning('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"] <auto-fixing>')
+#         return get_hex_color(color, cmap=cmap)[0]
+#     if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and (not np.all(list(map(lambda x: len(x) == 7, color)))):
+#         logger.warning('[color] contains incorrect hex-colors. Hex must be of length 7: ["#000000", "#000000", etc] <auto-fixing>')
+#         return get_hex_color(color, cmap=cmap)[0]
+#     if (n is not None) and isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) != n:
+#         logger.warning(f'Input parameter [color] has wrong length. Must be of length: {str(n)} <auto-fixing>')
+#         return get_hex_color(color, cmap=cmap)[0]
+#     # Return original input
+#     return color
+
 def _check_hex_color(color, n=None, cmap='Set1'):
-    if isinstance(color, str) and len(color) != 7:
-        logger.warning('Input parameter [color] has wrong format. Must be like color="#000000" <auto-fixing>')
-        return get_hex_color(color, cmap=cmap)[0]
-    if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) == 0:
-        logger.warning('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"] <auto-fixing>')
-        return get_hex_color(color, cmap=cmap)[0]
-    if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and (not np.all(list(map(lambda x: len(x) == 7, color)))):
-        logger.warning('[color] contains incorrect hex-colors. Hex must be of length 7: ["#000000", "#000000", etc] <auto-fixing>')
-        return get_hex_color(color, cmap=cmap)[0]
-    if (n is not None) and isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) != n:
-        logger.warning(f'Input parameter [color] has wrong length. Must be of length: {str(n)} <auto-fixing>')
-        return get_hex_color(color, cmap=cmap)[0]
-    # Return original input
+    seq_types = (list, np.ndarray, pd.Series, StringArray)
+
+    # Single string
+    if isinstance(color, str):
+        if len(color) != 7 or not color.startswith('#'):
+            logger.warning('Invalid [color] format. Expected "#000000" <auto-fixing>')
+            return get_hex_color(color, cmap=cmap)[0]
+        return color
+
+    # Sequence input
+    if isinstance(color, seq_types):
+
+        if len(color) == 0:
+            logger.warning('Invalid [color] sequence. Expected ["#000000", ...] <auto-fixing>')
+            return get_hex_color(color, cmap=cmap)[0]
+
+        valid = np.all([
+            isinstance(x, str) and len(x) == 7 and x.startswith('#')
+            for x in color
+        ])
+
+        if not valid:
+            logger.warning('Invalid hex colors in [color]. Expected ["#000000", ...] <auto-fixing>')
+            return get_hex_color(color, cmap=cmap)[0]
+
+        if (n is not None) and (len(color) != n):
+            logger.warning(f'Invalid [color] length. Expected length={n} <auto-fixing>')
+            return get_hex_color(color, cmap=cmap)[0]
+
     return color
 
 
