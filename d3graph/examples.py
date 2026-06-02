@@ -1,3 +1,28 @@
+# %% SET PATH ISSUE https://github.com/erdogant/d3graph/issues/42
+from pathlib import Path
+from d3graph import d3graph, vec2adjmat, import_example
+output_path = Path.cwd() / 'd3graph.html'
+
+# Load example data
+df = import_example('stormofswords')
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+
+
+# sticky=True (default) — drag to pin, right-click to release
+d3 = d3graph(sticky=True)
+d3.set_path(output_path)
+d3.config['filepath']
+
+d3.graph(adjmat)
+d3.show()
+
+# sticky=False — classic spring-back behaviour
+d3 = d3graph(adjmat, sticky=False)
+d3.show()
+
+# %%
+
+
 from d3graph import d3graph, import_example, vec2adjmat
 
 d3 = d3graph()

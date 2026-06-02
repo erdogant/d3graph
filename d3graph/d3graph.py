@@ -485,8 +485,10 @@ class d3graph:
         node_names = self.adjmat.columns.astype(str)
         nodecount = self.adjmat.shape[0]
         group = np.zeros_like(node_names).astype(int)
+
         # Check validity of color.
         color = _check_hex_color(color, nodecount, cmap=cmap)
+
         # Store in config
         self.config['cmap'] = 'Paired' if cmap is None else cmap
         self.config['node_scaler'] = scaler
@@ -1621,18 +1623,21 @@ def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
 def _check_hex_color(color, n=None, cmap='Set1'):
     seq_types = (list, np.ndarray, pd.Series, StringArray)
 
+    if isinstance(color, str) and color=='cluster':
+        return 'cluster'
+
     # Single string
     if isinstance(color, str):
         if len(color) != 7 or not color.startswith('#'):
-            logger.warning('Invalid [color] format. Expected "#000000" <auto-fixing>')
-            return get_hex_color(color, cmap=cmap)[0]
+            logger.warning('1. Invalid [color] format. Expected "#000000" <auto-fixing>')
+            return get_hex_color([color]*n, cmap=cmap)[0]
         return color
 
     # Sequence input
     if isinstance(color, seq_types):
 
         if len(color) == 0:
-            logger.warning('Invalid [color] sequence. Expected ["#000000", ...] <auto-fixing>')
+            logger.warning('2. Invalid [color] sequence. Expected ["#000000", ...] <auto-fixing>')
             return get_hex_color(color, cmap=cmap)[0]
 
         valid = np.all([
@@ -1641,11 +1646,11 @@ def _check_hex_color(color, n=None, cmap='Set1'):
         ])
 
         if not valid:
-            logger.warning('Invalid hex colors in [color]. Expected ["#000000", ...] <auto-fixing>')
+            logger.warning('3. Invalid hex colors in [color]. Expected ["#000000", ...] <auto-fixing>')
             return get_hex_color(color, cmap=cmap)[0]
 
         if (n is not None) and (len(color) != n):
-            logger.warning(f'Invalid [color] length. Expected length={n} <auto-fixing>')
+            logger.warning(f'4. Invalid [color] length. Expected length={n} <auto-fixing>')
             return get_hex_color(color, cmap=cmap)[0]
 
     return color
