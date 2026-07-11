@@ -1,16 +1,24 @@
 # %%
 from d3graph import d3graph, vec2adjmat, import_example
 import pandas as pd
+import time
+
 
 df = pd.read_csv('https://github.com/d3blocks/d3blocks/files/11995798/Df.csv', sep=',', index_col=False)
 del df['Unnamed: 0']
-df = df[0:5000]
+df = df[0:10000]
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 
-# sticky=False — classic spring-back behaviour
 d3 = d3graph()
+
+start = time.perf_counter()
 d3.graph(adjmat)
+end = time.perf_counter()
+
 d3.show()
+
+print(f"Elapsed: {end - start:.6f} seconds")
+
 
 # %% SET PATH ISSUE https://github.com/erdogant/d3graph/issues/42
 from pathlib import Path
@@ -123,15 +131,18 @@ adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'
 
 
 # sticky=True (default) — drag to pin, right-click to release
-d3 = d3graph(adjmat, sticky=True)
+d3 = d3graph(sticky=True)
+d3.graph(adjmat)
 d3.show()
 
 # sticky=False — classic spring-back behaviour
-d3 = d3graph(adjmat, sticky=False)
+d3 = d3graph(sticky=False)
+d3.graph(adjmat)
 d3.show()
 
 # Can also be overridden per-render:
-d3.show(adjmat, sticky=False)
+d3.show(sticky=False)
+d3.graph(adjmat)
 d3.show()
 
 
