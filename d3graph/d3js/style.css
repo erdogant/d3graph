@@ -28,3 +28,11 @@ h3 {
 .node .node-shape {
   cursor: pointer;
 }
+
+/* Zoom-linked label visibility (performance): when zoomed far out, node and
+   edge labels are unreadable anyway, so they're hidden via this single class
+   toggle instead of being permanently removed. Placed after .node text so it
+   wins on specificity ties. */
+.labels-hidden text {
+  display: none;
+}

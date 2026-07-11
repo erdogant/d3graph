@@ -11,6 +11,7 @@ function d3graphscript(config = {
     background_color: '#FFFFFF',
     node_text_inside: false,
     max_ticks: 300,
+    label_zoom_threshold: 0.6,
     }) {
     
     //Constants for the SVG
@@ -25,6 +26,10 @@ function d3graphscript(config = {
     // this counter so it still settles again after each change.
     var maxTicks = (config.max_ticks !== undefined && config.max_ticks !== null) ? config.max_ticks : 300;
     var tickCount = 0;
+    // Below this zoom scale, labels are unreadable anyway — hide them (via a
+    // single CSS class, not per-element work) instead of rendering thousands
+    // of illegible <text> nodes. They reappear once zoomed back in past it.
+    var labelZoomThreshold = (config.label_zoom_threshold !== undefined && config.label_zoom_threshold !== null) ? config.label_zoom_threshold : 0.6;
     
     // Set the body background color
     document.body.style.backgroundColor = background_color;
@@ -223,7 +228,12 @@ function d3graphscript(config = {
       .attr("width", width)
       .attr("height", height)
       .style("background-color", background_color)
-      .call(d3.behavior.zoom().on("zoom", function () { svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")") }))
+      .call(d3.behavior.zoom().on("zoom", function () {
+        svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+        // Single class toggle (cheap) rather than iterating every label on
+        // every zoom/pan event — CSS handles hiding all descendant <text>.
+        svg.classed("labels-hidden", d3.event.scale < labelZoomThreshold);
+      }))
       .on("dblclick.zoom", null)
       .append("g")
     

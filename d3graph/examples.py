@@ -1,3 +1,17 @@
+# %%
+from d3graph import d3graph, vec2adjmat, import_example
+import pandas as pd
+
+df = pd.read_csv('https://github.com/d3blocks/d3blocks/files/11995798/Df.csv', sep=',', index_col=False)
+del df['Unnamed: 0']
+df = df[0:5000]
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+
+# sticky=False — classic spring-back behaviour
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
+
 # %% SET PATH ISSUE https://github.com/erdogant/d3graph/issues/42
 from pathlib import Path
 from d3graph import d3graph, vec2adjmat, import_example

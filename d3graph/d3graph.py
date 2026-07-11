@@ -122,6 +122,7 @@ class d3graph:
              sticky: bool = None,
              node_text_inside: bool = False,
              max_ticks: int = 300,
+             label_zoom_threshold: float = 0.4,
              ) -> None:
         """Build and show the graph.
 
@@ -172,6 +173,10 @@ class d3graph:
             of letting it cool down naturally (which can take thousands of ticks on large
             graphs, each re-running collision detection over every node).
             0 or None: disable the cap and run to natural cooldown.
+        label_zoom_threshold : float, (default: 0.6)
+            Node and edge labels are hidden below this zoom scale (unreadable anyway, and
+            costly to keep rendering for large graphs) and reappear once zoomed back in
+            past it. Uses a single CSS class toggle, not per-label work. 0: never hide.
 
         Returns
         -------
@@ -195,6 +200,7 @@ class d3graph:
         self.config['dark_mode'] = dark_mode
         self.config['node_text_inside'] = node_text_inside
         self.config['max_ticks'] = max_ticks
+        self.config['label_zoom_threshold'] = label_zoom_threshold
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -809,6 +815,7 @@ class d3graph:
                    'link_tension': self.config.get('link_tension', 1.0),
                    'sticky': self.config.get('sticky', False),
                    'max_ticks': self.config.get('max_ticks', 300),
+                   'label_zoom_threshold': self.config.get('label_zoom_threshold', 0.6),
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
