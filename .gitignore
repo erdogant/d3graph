@@ -7,6 +7,7 @@ __pycache__/
 *.so
 
 .pypirc
+d3graph.html
 
 # Distribution / packaging
 .Python
