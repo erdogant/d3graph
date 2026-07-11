@@ -317,7 +317,9 @@ function d3graphscript(config = {
       // Position each shape according to its SVG element type:
       //   circle / ellipse  →  cx / cy attributes
       //   path              →  transform translate(x, y)
-      d3.selectAll(".node-shape").each(function(d) {
+      // Scoped to the bound `node` selection instead of re-querying the
+      // entire DOM every tick (was: d3.selectAll(".node-shape")).
+      node.select(".node-shape").each(function(d) {
         var el  = d3.select(this);
         var tag = this.tagName.toLowerCase();
         if (tag === 'circle' || tag === 'ellipse') {
@@ -327,7 +329,9 @@ function d3graphscript(config = {
         }
       });
 
-      d3.selectAll("text").attr("x", function(d) { return d.x; })
+      // Scoped to node labels only (was: d3.selectAll("text"), which also
+      // re-matched every link-text element on every tick).
+      node.select("text").attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
       linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
         .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
