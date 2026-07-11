@@ -12,7 +12,7 @@ adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'
 d3 = d3graph()
 
 start = time.perf_counter()
-d3.graph(adjmat)
+d3.graph(adjmat, min_weight=1)
 end = time.perf_counter()
 
 d3.show()
