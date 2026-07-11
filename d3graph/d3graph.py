@@ -121,6 +121,7 @@ class d3graph:
              link_tension: float = None,
              sticky: bool = None,
              node_text_inside: bool = False,
+             max_ticks: int = 300,
              ) -> None:
         """Build and show the graph.
 
@@ -166,6 +167,11 @@ class d3graph:
             When False, nodes are released after dragging (default simulation behaviour).
             When None, the value set in __init__ is used.
             Right-click a fixed node to release it back into the simulation.
+        max_ticks : int, (default: 300)
+            Caps how many simulation ticks run before the force layout auto-stops, instead
+            of letting it cool down naturally (which can take thousands of ticks on large
+            graphs, each re-running collision detection over every node).
+            0 or None: disable the cap and run to natural cooldown.
 
         Returns
         -------
@@ -188,6 +194,7 @@ class d3graph:
         self.config['background_color'] = background_color
         self.config['dark_mode'] = dark_mode
         self.config['node_text_inside'] = node_text_inside
+        self.config['max_ticks'] = max_ticks
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -801,6 +808,7 @@ class d3graph:
                    'collision': self.config['collision'],
                    'link_tension': self.config.get('link_tension', 1.0),
                    'sticky': self.config.get('sticky', False),
+                   'max_ticks': self.config.get('max_ticks', 300),
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],

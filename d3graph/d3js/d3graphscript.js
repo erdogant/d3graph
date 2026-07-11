@@ -10,6 +10,7 @@ function d3graphscript(config = {
     sticky: false,
     background_color: '#FFFFFF',
     node_text_inside: false,
+    max_ticks: 300,
     }) {
     
     //Constants for the SVG
@@ -17,6 +18,13 @@ function d3graphscript(config = {
     var height = config.height;
     var background_color = config.background_color || '#FFFFFF';
     var sticky = config.sticky || false;
+    // Cap how many simulation ticks run before auto-stopping, instead of
+    // letting a large graph's force layout cool down naturally over
+    // thousands of ticks (each one re-running collision detection over
+    // every node). Restarting the simulation (drag, slider changes) resets
+    // this counter so it still settles again after each change.
+    var maxTicks = (config.max_ticks !== undefined && config.max_ticks !== null) ? config.max_ticks : 300;
+    var tickCount = 0;
     
     // Set the body background color
     document.body.style.backgroundColor = background_color;
@@ -42,6 +50,7 @@ function d3graphscript(config = {
       d3.select(this).classed("dragging", true);
       if (sticky) {
         d.fixed = true;
+        tickCount = 0;
         force.start();
       }
     }
@@ -277,6 +286,7 @@ function d3graphscript(config = {
         d3.select(this).select(".node-shape")
           .style("stroke-dasharray", null)
           .style("stroke-width", function(d) { return d.node_size_edge; });
+        tickCount = 0;
         force.resume();
       });
     }
@@ -318,6 +328,14 @@ function d3graphscript(config = {
     
     //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
     force.on("tick", function() {
+      // Auto-stop after maxTicks so a large graph doesn't keep re-running
+      // collision detection / layout math for thousands of frames while
+      // settling. maxTicks <= 0 disables the cap (run to natural cooldown).
+      if (maxTicks > 0 && ++tickCount > maxTicks) {
+        force.stop();
+        return;
+      }
+
       link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
@@ -547,6 +565,7 @@ function d3graphscript(config = {
 
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
+    tickCount = 0;
     force.start();
   }
 
