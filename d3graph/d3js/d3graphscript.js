@@ -218,8 +218,17 @@ function d3graphscript(config = {
       .on("dblclick.zoom", null)
       .append("g")
     
-    graphRec = JSON.parse(JSON.stringify(graph));
-    
+    graphRec = JSON.parse(JSON.stringify(graph));   // Full, unfiltered copy — used by the slider to restore edges later
+
+    // Apply the initial slider threshold BEFORE building any DOM elements.
+    // Without this, the browser would create a <line>/<title>/<text> for every
+    // single edge (e.g. 100,000+) and immediately delete most of them once the
+    // slider filter ran — doubling the work and freezing the page in the meantime.
+    (function applyInitialThreshold() {
+      var initialThresh = {{ SET_SLIDER }};
+      graph.links = graph.links.filter(function(d) { return d.edge_weight > initialThresh; });
+    })();
+
     //Creates the graph data structure out of the json data
     force.nodes(graph.nodes)
       .links(graph.links)
