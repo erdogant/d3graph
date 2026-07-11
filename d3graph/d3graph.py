@@ -352,7 +352,7 @@ class d3graph:
             return
 
         if (not directed) and (marker_end is not None) or (marker_start is not None):
-            logger.info('Set directed=True to see the markers!')
+            logger.info('Markers not shown. Set directed=True to see the markers.')
 
         # Get node color properties which is required to set the edge color
         node_color_map = None
@@ -364,6 +364,7 @@ class d3graph:
                 self.config['edge_color'] = '#808080'
 
         # Set the edge properties
+        logger.info('Set the edge properties')
         self.edge_properties, self.adjmat = adjmat2dict(
             self.adjmat,
             filter_weight=0,
@@ -385,7 +386,7 @@ class d3graph:
             node_color_map=node_color_map,
         )
 
-        logger.debug('Number of edges: %.0d', len(self.edge_properties.keys()))
+        # logger.info(f'Number of edges: {len(self.edge_properties.keys())}')
 
     def set_node_properties(self,
                             label=None,
@@ -710,7 +711,7 @@ class d3graph:
         Parameters
         ----------
         adjmat : pd.DataFrame()
-            Adjacency matrix (symmetric). Values > 0 are edges.
+            Adjacency matrix (symmetric and Values > 0 are edges).
         color : list of strings (default: 'cluster')
             Coloring of the nodes.
             * 'cluster' or None : Colours are based on the community distance clusters.
@@ -1153,21 +1154,23 @@ def adjmat2dict(adjmat: pd.DataFrame,
             'tooltip': Text that is shown when hovering over the edge.
 
     """
-    # Convert adjacency matrix into vector
-    df = adjmat.stack().reset_index()
-    # Set columns
-    df.columns = ['source', 'target', 'weight']
-    # Combine source-target values with weights
-    df = create_unique_dataframe(df)
-    # Remove self loops and no-connected edges
-    Iloc = df['source'] != df['target']
-    # Keep only edges with a minimum edge strength
-    if filter_weight is not None:
-        logger.info("Keep only edges with weight>%g" % filter_weight)
-        Iloc2 = df['weight'] > filter_weight
-        Iloc = Iloc & Iloc2
-    df = df.loc[Iloc, :]
-    df.reset_index(drop=True, inplace=True)
+    # # Convert adjacency matrix into vector
+    # df = adjmat.stack().reset_index()
+    # # Set columns
+    # df.columns = ['source', 'target', 'weight']
+    # # Combine source-target values with weights
+    # df = create_unique_dataframe(df)
+    # # Remove self loops and no-connected edges
+    # Iloc = df['source'] != df['target']
+    # # Keep only edges with a minimum edge strength
+    # if filter_weight is not None:
+    #     logger.info(f"Keep only edges with weight>{filter_weight}")
+    #     Iloc2 = df['weight'] > filter_weight
+    #     Iloc = Iloc & Iloc2
+    # df = df.loc[Iloc, :]
+    # df.reset_index(drop=True, inplace=True)
+
+    df = adjmat2vec(adjmat)
 
     # Scale the weights for visualization purposes
     if minmax_distance is not None:
@@ -1225,6 +1228,7 @@ def adjmat2dict(adjmat: pd.DataFrame,
     source_target = list(zip(df['source'], df['target']))
     if len(source_target)==0:
         raise Exception('There are no links in the input data set that have unique source-target value with weight > 0')
+    
     # Return
     d = {edge: {'weight': df['weight'].iloc[i],
                    'weight_scaled': df['weight_scaled'].iloc[i],
@@ -1249,6 +1253,36 @@ def adjmat2dict(adjmat: pd.DataFrame,
 
 
 # %% Create unique dataframe and update weights
+# def create_unique_dataframe(X, logger=None):
+#     """Combine source-target into adjacency matrix with updated weights.
+
+#     Parameters
+#     ----------
+#     X : DataFrame
+#         Data frame containing the columns [source, target, weight].
+#     logger : Object, optional
+#         Logger object. The default is None.
+
+#     Returns
+#     -------
+#     X : pd.DataFrame
+#         Unique adjacency matrix containing with index as source and columns as target labels. Weights are in the matrix.
+
+#     References
+#     ----------
+#     * This function is similar to that of d3blocks.
+
+#     """
+#     # Check whether labels are unique
+#     if isinstance(X, pd.DataFrame):
+#         Iloc = ismember(X.columns, ['source', 'target', 'weight'])[0]
+#         X = X.loc[:, Iloc]
+#         if 'weight' in X.columns: X['weight'] = X['weight'].astype(float)
+#         # Groupby values and sum the weights
+#         X = X.groupby(by=['source', 'target']).sum()
+#         X.reset_index(drop=False, inplace=True)
+#     return X
+
 def create_unique_dataframe(X, logger=None):
     """Combine source-target into adjacency matrix with updated weights.
 
@@ -1269,15 +1303,12 @@ def create_unique_dataframe(X, logger=None):
     * This function is similar to that of d3blocks.
 
     """
-    # Check whether labels are unique
-    if isinstance(X, pd.DataFrame):
-        Iloc = ismember(X.columns, ['source', 'target', 'weight'])[0]
-        X = X.loc[:, Iloc]
-        if 'weight' in X.columns: X['weight'] = X['weight'].astype(float)
-        # Groupby values and sum the weights
-        X = X.groupby(by=['source', 'target']).sum()
-        X.reset_index(drop=False, inplace=True)
-    return X
+    X = X[['source', 'target', 'weight']]
+    return (
+        X.groupby(['source', 'target'], sort=False, observed=True)
+         .agg({'weight': 'sum'})
+         .reset_index()
+    )
 
 
 # %% Convert dict with edges to graph (G) (also works with lower versions of networkx)
@@ -1580,61 +1611,80 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
 
 
 # %%  Convert adjacency matrix to vector
+# def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
+#     """Convert adjacency matrix into vector with source and target.
+
+#     Parameters
+#     ----------
+#     adjmat : pd.DataFrame()
+#         Adjacency matrix.
+
+#     min_weight : float
+#         edges are returned with a minimum weight.
+
+#     Returns
+#     -------
+#     pd.DataFrame()
+#         nodes that are connected based on source and target
+
+#     Examples
+#     --------
+#     >>> source = ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain']
+#     >>> target = ['Sprinkler', 'Rain', 'Wet_Grass', 'Wet_Grass']
+#     >>> adjmat = vec2adjmat(source, target, weight=[1, 2, 1, 3])
+#     >>> vector = adjmat2vec(adjmat)
+
+#     """
+#     # Convert adjacency matrix into vector
+#     logger.info('Converting adjacency matrix into source-target..')
+#     adjmat = adjmat.stack().reset_index()
+#     # Set columns
+#     adjmat.columns = ['source', 'target', 'weight']
+#     # Remove self loops and no-connected edges
+#     Iloc1 = adjmat['source'] != adjmat['target']
+#     Iloc2 = adjmat['weight'] >= min_weight
+#     Iloc = Iloc1 & Iloc2
+#     # Take only connected nodes
+#     adjmat = adjmat.loc[Iloc, :]
+#     adjmat.reset_index(drop=True, inplace=True)
+#     return adjmat
+
+
 def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
-    """Convert adjacency matrix into vector with source and target.
-
-    Parameters
-    ----------
-    adjmat : pd.DataFrame()
-        Adjacency matrix.
-
-    min_weight : float
-        edges are returned with a minimum weight.
-
-    Returns
-    -------
-    pd.DataFrame()
-        nodes that are connected based on source and target
-
-    Examples
-    --------
-    >>> source = ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain']
-    >>> target = ['Sprinkler', 'Rain', 'Wet_Grass', 'Wet_Grass']
-    >>> adjmat = vec2adjmat(source, target, weight=[1, 2, 1, 3])
-    >>> vector = adjmat2vec(adjmat)
-
     """
-    # Convert adjacency matrix into vector
-    logger.info('Converting adjacency matrix into source-target..')
-    adjmat = adjmat.stack().reset_index()
-    # Set columns
-    adjmat.columns = ['source', 'target', 'weight']
-    # Remove self loops and no-connected edges
-    Iloc1 = adjmat['source'] != adjmat['target']
-    Iloc2 = adjmat['weight'] >= min_weight
-    Iloc = Iloc1 & Iloc2
-    # Take only connected nodes
-    adjmat = adjmat.loc[Iloc, :]
-    adjmat.reset_index(drop=True, inplace=True)
-    return adjmat
+    Fast conversion of adjacency matrix → edge list.
+    Removes self-loops and filters by min_weight.
+    """
+    weights = adjmat.to_numpy(copy=False)
+
+    # Mask of valid edges (stack() drops NaN, so we mimic that)
+    mask = ~np.isnan(weights)
+
+    # Extract coordinates of non-NaN entries
+    row_idx, col_idx = np.nonzero(mask)
+
+    index = adjmat.index.to_numpy()
+    columns = adjmat.columns.to_numpy()
+
+    # Build edge list
+    df = pd.DataFrame({
+        'source': index[row_idx],
+        'target': columns[col_idx],
+        'weight': weights[row_idx, col_idx],
+    })
+
+    # Remove self-loops
+    df = df[df['source'] != df['target']]
+
+    # Apply minimum weight filter
+    if min_weight is not None:
+        df = df[df['weight'] >= min_weight]
+
+    df.reset_index(drop=True, inplace=True)
+    return df
 
 
-# def _check_hex_color(color, n=None, cmap='Set1'):
-#     if isinstance(color, str) and len(color) != 7:
-#         logger.warning('Input parameter [color] has wrong format. Must be like color="#000000" <auto-fixing>')
-#         return get_hex_color(color, cmap=cmap)[0]
-#     if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) == 0:
-#         logger.warning('Input parameter [color] has wrong format and length. Must be like: color=["#000000", "...", "#000000"] <auto-fixing>')
-#         return get_hex_color(color, cmap=cmap)[0]
-#     if isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and (not np.all(list(map(lambda x: len(x) == 7, color)))):
-#         logger.warning('[color] contains incorrect hex-colors. Hex must be of length 7: ["#000000", "#000000", etc] <auto-fixing>')
-#         return get_hex_color(color, cmap=cmap)[0]
-#     if (n is not None) and isinstance(color, (list, np.ndarray, pd.Series, pd.Series, StringArray)) and len(color) != n:
-#         logger.warning(f'Input parameter [color] has wrong length. Must be of length: {str(n)} <auto-fixing>')
-#         return get_hex_color(color, cmap=cmap)[0]
-#     # Return original input
-#     return color
-
+# %%
 def _check_hex_color(color, n=None, cmap='Set1'):
     seq_types = (list, np.ndarray, pd.Series, StringArray)
 
