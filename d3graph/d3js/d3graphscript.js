@@ -41,6 +41,10 @@ function d3graphscript(config = {
     var useCanvasEdges = false;
     var canvasEl, ctx;
     var currentTransform = { scale: 1, translate: [0, 0] };
+    // Master on/off switch for edges (independent of the weight/component
+    // sliders) — lets the user clear visual clutter on large graphs to see
+    // node structure/clustering without redrawing or refiltering anything.
+    var edgesVisible = true;
     
     // Set the body background color
     document.body.style.backgroundColor = background_color;
@@ -278,7 +282,7 @@ function d3graphscript(config = {
     // Draws all links onto the canvas layer, matching the SVG group's current
     // pan/zoom transform. No-ops when the graph is small enough to stay on SVG.
     function drawCanvasEdges() {
-      if (!useCanvasEdges || !ctx) return;
+      if (!useCanvasEdges || !ctx || !edgesVisible) return;
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
@@ -298,6 +302,24 @@ function d3graphscript(config = {
       ctx.restore();
     }
 
+    // Master edges on/off switch: applies to both rendering modes. SVG mode
+    // uses a single CSS class (cheap, no per-line work); canvas mode just
+    // skips drawing (and clears what's already been drawn).
+    function applyEdgeVisibility() {
+      svg.classed("edges-hidden", !edgesVisible);
+      if (useCanvasEdges) {
+        if (edgesVisible) {
+          d3.select(canvasEl).style("display", null);
+          drawCanvasEdges();
+        } else {
+          if (ctx) ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+          d3.select(canvasEl).style("display", "none");
+        }
+      } else {
+        d3.select(canvasEl).style("display", "none");
+      }
+    }
+
     // Builds (or tears down) the SVG <line>/<text> elements for links, or
     // switches to canvas rendering, based on the current edge count. Shared
     // by the initial render and by restart() (slider-driven updates), so the
@@ -311,10 +333,7 @@ function d3graphscript(config = {
         link.exit().remove();
         linkText = linkText.data([]);
         linkText.exit().remove();
-        d3.select(canvasEl).style("display", null);
-        drawCanvasEdges();
       } else {
-        d3.select(canvasEl).style("display", "none");
         if (ctx) ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 
         link = link.data(graph.links);
@@ -339,6 +358,8 @@ function d3graphscript(config = {
           .style("font-family", "Arial")
           .text(function(d) { return d.label; });
       }
+
+      applyEdgeVisibility();
     }
     
     graphRec = JSON.parse(JSON.stringify(graph));   // Full, unfiltered copy — used by the slider to restore edges later
@@ -637,6 +658,17 @@ function d3graphscript(config = {
   threshold.call(document.getElementById('thresholdSlider'));
 
   d3.select("#thresholdSlider").on("change", threshold);
+
+  // Master edges on/off toggle — independent of the weight slider, purely
+  // visual, doesn't touch the underlying filtered data.
+  var edgeToggleBtn = document.getElementById('edgeToggleButton');
+  if (edgeToggleBtn) {
+    edgeToggleBtn.addEventListener('click', function() {
+      edgesVisible = !edgesVisible;
+      edgeToggleBtn.textContent = edgesVisible ? 'Hide Edges' : 'Show Edges';
+      applyEdgeVisibility();
+    });
+  }
 
   //Restart the visualisation after any node and link changes
   function restart() {

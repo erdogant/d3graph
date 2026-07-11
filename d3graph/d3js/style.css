@@ -36,3 +36,10 @@ h3 {
 .labels-hidden text {
   display: none;
 }
+
+/* Master edges on/off switch (SVG mode). Canvas mode is handled purely in JS
+   (skips drawing / clears the canvas) since there's no DOM to toggle. */
+.edges-hidden .link,
+.edges-hidden .link-text {
+  display: none;
+}
