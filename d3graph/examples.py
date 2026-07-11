@@ -6,7 +6,7 @@ import time
 
 df = pd.read_csv('https://github.com/d3blocks/d3blocks/files/11995798/Df.csv', sep=',', index_col=False)
 del df['Unnamed: 0']
-df = df[0:10000]
+df = df[0:5000]
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 
 d3 = d3graph()

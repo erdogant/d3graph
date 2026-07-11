@@ -253,6 +253,7 @@ class d3graph:
                             edge_style=0,
                             edge_color: (str, list) = '#808080',
                             edge_opacity: (float, str, list) = 'weight',
+                            min_weight: float = 1.0,
                             scaler: str = 'zscore',
                             directed: bool = False,
                             marker_start=None,
@@ -287,6 +288,8 @@ class d3graph:
         edge_opacity : (float, str, list), (default: 1.0)
             * 0.8 : Opacity of the edges [0-1] where 0=transparent and 1=fully opaque.
             * 'weight' : Set opacity based on the weight of the edge and the scaler
+        min_weight : float
+            edges are kept with >= weight.
         scaler : str, (default: 'zscore')
             Scale the edge-width using the following scaler:
             * 'zscore' : Scale values to Z-scores.
@@ -346,6 +349,7 @@ class d3graph:
         self.config['label'] = label
         self.config['label_color'] = label_color
         self.config['label_fontsize'] = label_fontsize
+        self.config['min_weight'] = min_weight
         
         if not hasattr(self, 'adjmat'):
             logger.error('adjmat is missing. Initialize first with d3 = d3graph(adjmat)')
@@ -367,7 +371,7 @@ class d3graph:
         logger.info('Set the edge properties')
         self.edge_properties, self.adjmat = adjmat2dict(
             self.adjmat,
-            filter_weight=0,
+            min_weight=self.config['min_weight'],
             minmax=self.config['minmax'],
             minmax_distance=self.config['minmax_distance'],
             scaler=self.config['edge_scaler'],
@@ -698,6 +702,7 @@ class d3graph:
 
     def graph(self,
               adjmat,
+              min_weight: float = 1.0,
               color: str = 'cluster',
               opacity: str = 'degree',
               size='degree',
@@ -712,6 +717,8 @@ class d3graph:
         ----------
         adjmat : pd.DataFrame()
             Adjacency matrix (symmetric and Values > 0 are edges).
+        min_weight : float
+            edges are kept with >= weight.
         color : list of strings (default: 'cluster')
             Coloring of the nodes.
             * 'cluster' or None : Colours are based on the community distance clusters.
@@ -765,7 +772,7 @@ class d3graph:
         # Checks
         self.adjmat = data_checks(adjmat.copy())
         # Set default edge properties
-        self.set_edge_properties(scaler=scaler)
+        self.set_edge_properties(scaler=scaler, min_weight=min_weight)
         # Set default node properties
         self.set_node_properties(color=color, opacity=opacity, size=size, scaler=scaler, cmap=cmap)
 
@@ -1060,7 +1067,7 @@ def json_create(G: nx.Graph) -> str:
 
 # %%  Convert adjacency matrix to vector
 def adjmat2dict(adjmat: pd.DataFrame,
-                filter_weight: float = 0.0,
+                min_weight: float = 1.0,
                 scaler: str = 'zscore',
                 marker_start=None,
                 marker_end='arrow',
@@ -1084,8 +1091,8 @@ def adjmat2dict(adjmat: pd.DataFrame,
     ----------
     adjmat : pd.DataFrame()
         Adjacency matrix.
-    filter_weight : float
-        edges are returned with a minimum weight.
+    min_weight : float
+        edges are kept with >= weight.
     scaler : str, (default: 'zscore')
         Scale the edge-width using the following scaler:
         'zscore' : Scale values to Z-scores.
@@ -1163,14 +1170,14 @@ def adjmat2dict(adjmat: pd.DataFrame,
     # # Remove self loops and no-connected edges
     # Iloc = df['source'] != df['target']
     # # Keep only edges with a minimum edge strength
-    # if filter_weight is not None:
-    #     logger.info(f"Keep only edges with weight>{filter_weight}")
-    #     Iloc2 = df['weight'] > filter_weight
+    # if min_weight is not None:
+    #     logger.info(f"Keep only edges with weight>{min_weight}")
+    #     Iloc2 = df['weight'] > min_weight
     #     Iloc = Iloc & Iloc2
     # df = df.loc[Iloc, :]
     # df.reset_index(drop=True, inplace=True)
 
-    df = adjmat2vec(adjmat)
+    df = adjmat2vec(adjmat, min_weight=min_weight)
 
     # Scale the weights for visualization purposes
     if minmax_distance is not None:
