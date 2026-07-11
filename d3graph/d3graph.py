@@ -123,6 +123,7 @@ class d3graph:
              node_text_inside: bool = False,
              max_ticks: int = 300,
              label_zoom_threshold: float = 0.4,
+             canvas_edge_threshold: int = 2000,
              ) -> None:
         """Build and show the graph.
 
@@ -177,6 +178,14 @@ class d3graph:
             Node and edge labels are hidden below this zoom scale (unreadable anyway, and
             costly to keep rendering for large graphs) and reappear once zoomed back in
             past it. Uses a single CSS class toggle, not per-label work. 0: never hide.
+        canvas_edge_threshold : int, (default: 2000)
+            Above this many visible edges, edges are drawn on a <canvas> layer instead of
+            as individual SVG <line> elements. SVG's per-element DOM overhead is what makes
+            tens of thousands of edges freeze the page; canvas draw calls stay cheap
+            regardless of edge count. Nodes always stay SVG (drag/click/tooltips). Only
+            applies once edges exceed this count, so small/medium graphs are unaffected -
+            note that in canvas mode, the "Save as SVG" export won't include edges, since
+            they no longer live in the SVG DOM.
 
         Returns
         -------
@@ -201,6 +210,7 @@ class d3graph:
         self.config['node_text_inside'] = node_text_inside
         self.config['max_ticks'] = max_ticks
         self.config['label_zoom_threshold'] = label_zoom_threshold
+        self.config['canvas_edge_threshold'] = canvas_edge_threshold
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -824,6 +834,7 @@ class d3graph:
                    'sticky': self.config.get('sticky', False),
                    'max_ticks': self.config.get('max_ticks', 300),
                    'label_zoom_threshold': self.config.get('label_zoom_threshold', 0.6),
+                   'canvas_edge_threshold': self.config.get('canvas_edge_threshold', 2000),
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],

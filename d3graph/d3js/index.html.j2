@@ -13,7 +13,7 @@
             background-color: #222 !important;
             color: #eee !important;
         }
-        .dark-mode svg {
+        .dark-mode #graphContainer {
             background-color: #222 !important;
         }
         .dark-mode .button-switch {
@@ -103,7 +103,7 @@
 
 <!-- Top right panel with dark mode and save buttons -->
 <div class="top-panel">
-    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
+    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
     <button id="saveButton" class="button-switch">Save</button>
 </div>
 
@@ -131,6 +131,7 @@
                 background_color: '{{ background_color }}',
                 node_text_inside: {{ node_text_inside | lower }},
                 max_ticks: {{ max_ticks }},
+                canvas_edge_threshold: {{ canvas_edge_threshold }},
                 label_zoom_threshold: {{ label_zoom_threshold }},
             })
         });
@@ -144,15 +145,15 @@
                 document.body.classList.add('dark-mode');
                 document.body.style.backgroundColor = '#222';
                 document.body.style.color = '#eee';
-                let svg = document.querySelector('svg');
-                if (svg) svg.style.backgroundColor = '#222';
-                darkSwitch.textContent = '☀️ Light Mode';
+                let graphBg = document.getElementById('graphContainer');
+                if (graphBg) graphBg.style.backgroundColor = '#222';
+                darkSwitch.textContent = '☀ Light Mode';
             } else {
                 document.body.classList.remove('dark-mode');
                 document.body.style.backgroundColor = originalBg;
                 document.body.style.color = '';
-                let svg = document.querySelector('svg');
-                if (svg) svg.style.backgroundColor = originalBg;
+                let graphBg = document.getElementById('graphContainer');
+                if (graphBg) graphBg.style.backgroundColor = originalBg;
                 darkSwitch.textContent = '🌙 Dark Mode';
             }
         }
@@ -164,6 +165,9 @@
         });
 
         // Save image to svg
+        // Note: when the graph is large enough to switch to canvas-rendered edges
+        // (see canvas_edge_threshold), this export will include nodes but not edges,
+        // since edges live on a separate <canvas> element, not in the SVG DOM.
         document.getElementById('saveButton').addEventListener('click', function () {
             var svgData = document.querySelector('svg').outerHTML;
             var blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});

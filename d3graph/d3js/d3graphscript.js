@@ -12,6 +12,7 @@ function d3graphscript(config = {
     node_text_inside: false,
     max_ticks: 300,
     label_zoom_threshold: 0.6,
+    canvas_edge_threshold: 2000,
     }) {
     
     //Constants for the SVG
@@ -30,6 +31,16 @@ function d3graphscript(config = {
     // single CSS class, not per-element work) instead of rendering thousands
     // of illegible <text> nodes. They reappear once zoomed back in past it.
     var labelZoomThreshold = (config.label_zoom_threshold !== undefined && config.label_zoom_threshold !== null) ? config.label_zoom_threshold : 0.6;
+    // Above this many visible edges, draw links on a <canvas> instead of as
+    // SVG <line> elements. SVG per-element overhead (DOM node creation,
+    // layout, GC) is what makes tens of thousands of edges freeze the page;
+    // canvas just issues draw calls into a single bitmap each frame, so cost
+    // stays flat regardless of edge count. Nodes stay SVG either way (far
+    // fewer of them, and it keeps drag/click/tooltip interactivity simple).
+    var canvasEdgeThreshold = (config.canvas_edge_threshold !== undefined && config.canvas_edge_threshold !== null) ? config.canvas_edge_threshold : 2000;
+    var useCanvasEdges = false;
+    var canvasEl, ctx;
+    var currentTransform = { scale: 1, translate: [0, 0] };
     
     // Set the body background color
     document.body.style.backgroundColor = background_color;
@@ -223,19 +234,112 @@ function d3graphscript(config = {
 
     // ---- END SHAPE RENDERING ----
 
-    //Append a SVG to the body of the html page. Assign this SVG as an object to svg
-    var svg = d3.select("body").append("svg")
+    // Layered container: canvas (background + edges, used only above
+    // canvasEdgeThreshold) sits under a transparent SVG (nodes always render
+    // here, for drag/click/tooltip interactivity). The background color lives
+    // on the container so it shows through the transparent SVG either way.
+    var container = d3.select("body").append("div")
+      .attr("id", "graphContainer")
+      .style("position", "relative")
+      .style("width", width + "px")
+      .style("height", height + "px")
+      .style("background-color", background_color);
+
+    canvasEl = container.append("canvas")
       .attr("width", width)
       .attr("height", height)
-      .style("background-color", background_color)
+      .style("position", "absolute")
+      .style("top", 0)
+      .style("left", 0)
+      .style("pointer-events", "none")
+      .node();
+    ctx = canvasEl.getContext("2d");
+
+    //Append a SVG to the container. Assign this SVG as an object to svg
+    var svg = container.append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("position", "absolute")
+      .style("top", 0)
+      .style("left", 0)
+      .style("background-color", "transparent")
       .call(d3.behavior.zoom().on("zoom", function () {
         svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
         // Single class toggle (cheap) rather than iterating every label on
         // every zoom/pan event — CSS handles hiding all descendant <text>.
         svg.classed("labels-hidden", d3.event.scale < labelZoomThreshold);
+        currentTransform.scale = d3.event.scale;
+        currentTransform.translate = d3.event.translate;
+        drawCanvasEdges();
       }))
       .on("dblclick.zoom", null)
       .append("g")
+
+    // Draws all links onto the canvas layer, matching the SVG group's current
+    // pan/zoom transform. No-ops when the graph is small enough to stay on SVG.
+    function drawCanvasEdges() {
+      if (!useCanvasEdges || !ctx) return;
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+      ctx.setTransform(currentTransform.scale, 0, 0, currentTransform.scale, currentTransform.translate[0], currentTransform.translate[1]);
+      for (var i = 0; i < graph.links.length; i++) {
+        var d = graph.links[i];
+        if (!d.source || !d.target || typeof d.source.x !== 'number') continue;
+        ctx.beginPath();
+        ctx.moveTo(d.source.x, d.source.y);
+        ctx.lineTo(d.target.x, d.target.y);
+        ctx.strokeStyle = d.edge_color || '#999';
+        ctx.globalAlpha = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
+        ctx.lineWidth = d.edge_width || 1;
+        ctx.setLineDash(d.edge_style === 'dashed' ? [6, 3] : d.edge_style === 'dotted' ? [1.5, 3] : []);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Builds (or tears down) the SVG <line>/<text> elements for links, or
+    // switches to canvas rendering, based on the current edge count. Shared
+    // by the initial render and by restart() (slider-driven updates), so the
+    // threshold is re-evaluated every time the visible edge set changes.
+    function renderLinks() {
+      useCanvasEdges = graph.links.length > canvasEdgeThreshold;
+
+      if (useCanvasEdges) {
+        // Canvas takes over — drop any SVG link/link-text DOM entirely.
+        link = link.data([]);
+        link.exit().remove();
+        linkText = linkText.data([]);
+        linkText.exit().remove();
+        d3.select(canvasEl).style("display", null);
+        drawCanvasEdges();
+      } else {
+        d3.select(canvasEl).style("display", "none");
+        if (ctx) ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+        link = link.data(graph.links);
+        link.exit().remove();
+        var linkEnter = link.enter().insert("line", ".node")
+          .attr("class", "link")
+          .attr('marker-start', function(d) { return 'url(#marker_' + d.marker_start + ')' });
+        linkEnter.append("title").text(function(d) { return d.tooltip; });
+        link.attr("marker-end", function(d) {
+          if (config.directed) { return 'url(#marker_' + d.marker_end + ')' } });
+        link.style("stroke-width", function(d) { return d.edge_width; });
+        link.style("stroke", function(d) { return d.edge_color; });
+        link.style("stroke-dasharray", function(d) { return d.edge_style; });
+        link.style("opacity", function(d) { return d.edge_opacity; });
+
+        linkText = linkText.data(graph.links);
+        linkText.exit().remove();
+        linkText.enter().append("text")
+          .attr("class", "link-text")
+          .attr("font-size", function(d) { return d.label_fontsize + "px"; })
+          .style("fill", function(d) { return d.label_color; })
+          .style("font-family", "Arial")
+          .text(function(d) { return d.label; });
+      }
+    }
     
     graphRec = JSON.parse(JSON.stringify(graph));   // Full, unfiltered copy — used by the slider to restore edges later
 
@@ -253,32 +357,13 @@ function d3graphscript(config = {
       .links(graph.links)
       .start();
     
-    // Create all the line svgs but without locations yet
-    var link = svg.selectAll(".link")
-      .data(graph.links)
-      .enter().append("line")
-      .attr("class", "link")
-      .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
-      .attr("marker-end", function(d) {
-        if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-      .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-      .style("stroke", function(d) {return d.edge_color;})                 // EDGE-COLORS
-      .style("stroke-dasharray", function(d) {return d.edge_style;})      // EDGE-STYLE
-      .style("opacity", function(d) {return d.edge_opacity;})             // EDGE-OPACITY
-    ;
-    
-    link.append("title").text(function(d) { return d.tooltip; });
-    
-    // ADD TEXT ON THE EDGES (PART 1/2)
-    var linkText = svg.selectAll(".link-text")
-      .data(graph.links)
-      .enter().append("text")
-      .attr("class", "link-text")
-      .attr("font-size", function(d) {return d.label_fontsize + "px";})
-      .style("fill", function(d) {return d.label_color;})
-      .style("font-family", "Arial")
-      .text(function(d) { return d.label; });
-    
+    // Create empty node/link/link-text selections. renderLinks(), called
+    // below, decides whether links go to SVG or canvas and populates
+    // link/linkText accordingly.
+    var link = svg.selectAll(".link").data([]);
+    var linkText = svg.selectAll(".link-text").data([]);
+    renderLinks();
+
     //Do the same with the circles for the nodes
     var node = svg.selectAll(".node")
       .data(graph.nodes)
@@ -346,10 +431,14 @@ function d3graphscript(config = {
         return;
       }
 
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+      if (useCanvasEdges) {
+        drawCanvasEdges();
+      } else {
+        link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+      }
 
       // Position each shape according to its SVG element type:
       //   circle / ellipse  →  cx / cy attributes
@@ -552,26 +641,7 @@ function d3graphscript(config = {
   //Restart the visualisation after any node and link changes
   function restart() {
 
-    // Update EDGE-LINKS
-    link = link.data(graph.links);
-    link.exit().remove();
-    link.enter().insert("line", ".node").attr("class", "link");
-    link.style("stroke-width", function(d) {return d.edge_width;});           // LINK-WIDTH AFTER BREAKING WITH SLIDER
-    link.style("marker-end", function(d) {                                    // Include the markers.
-      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-    link.style("stroke", function(d) {return d.edge_color;});                 // EDGE-COLOR AFTER BREAKING WITH SLIDER
-    link.style("stroke-dasharray", function(d) {return d.edge_style;})        // EDGE-STYLE
-    link.style("opacity", function(d) {return d.edge_opacity;});              // EDGE-OPACITY AFTER BREAKING WITH SLIDER
-
-    // Update EDGE-LABELS
-    linkText = linkText.data(graph.links);
-    linkText.exit().remove();
-    linkText.enter().append("text")
-      .attr("class", "link-text")
-      .attr("font-size", function(d) {return d.label_fontsize + "px";})
-      .style("fill", function(d) {return d.label_color;})
-      .style("font-family", "Arial")
-      .text(function(d) { return d.label; });
+    renderLinks();
 
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
