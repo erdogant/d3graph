@@ -17,7 +17,7 @@ from d3graph.d3graph import (
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '2.9.0'
+__version__ = '2.9.1'
 
 # Setup root logger
 _logger = logging.getLogger('d3graph')
