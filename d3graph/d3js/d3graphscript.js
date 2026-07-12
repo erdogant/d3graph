@@ -13,6 +13,11 @@ function d3graphscript(config = {
     max_ticks: 300,
     label_zoom_threshold: 0.6,
     canvas_edge_threshold: 2000,
+    density_grid_size: 40,
+    density_blur: 8,
+    density_opacity: 0.6,
+    show_density: false,
+    dark_mode: false,
     }) {
     
     //Constants for the SVG
@@ -45,6 +50,20 @@ function d3graphscript(config = {
     // sliders) — lets the user clear visual clutter on large graphs to see
     // node structure/clustering without redrawing or refiltering anything.
     var edgesVisible = true;
+
+    // ---- DENSITY (clustering heatmap) LAYER ----
+    // Grid-binned node density, drawn on its own canvas beneath the edges and
+    // nodes. Recomputed from live node positions every tick it's visible, so
+    // it tracks the force layout as nodes settle/move — cheap since it's a
+    // single O(nodes) pass, unlike the edge count this was never the
+    // bottleneck. Color scheme adapts to dark mode (updated live via
+    // window.d3graphSetDarkMode, called from the dark-mode toggle).
+    var densityGridSize = (config.density_grid_size !== undefined && config.density_grid_size !== null) ? config.density_grid_size : 40;
+    var densityBlur = (config.density_blur !== undefined && config.density_blur !== null) ? config.density_blur : 8;
+    var densityOpacity = (config.density_opacity !== undefined && config.density_opacity !== null) ? config.density_opacity : 0.6;
+    var densityVisible = config.show_density || false;
+    var darkMode = config.dark_mode || false;
+    var densityCanvasEl, densityCtx, densityOffscreen;
     
     // Set the body background color
     document.body.style.backgroundColor = background_color;
@@ -82,6 +101,7 @@ function d3graphscript(config = {
       } else {
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
       }
+      if (densityVisible) drawDensityLayer();
     }
     
     function dragended(d) {
@@ -249,6 +269,19 @@ function d3graphscript(config = {
       .style("height", height + "px")
       .style("background-color", background_color);
 
+    // Density (clustering heatmap) layer — created first so it stacks
+    // beneath both the edge canvas and the SVG node layer.
+    densityCanvasEl = container.append("canvas")
+      .attr("width", width)
+      .attr("height", height)
+      .style("position", "absolute")
+      .style("top", 0)
+      .style("left", 0)
+      .style("pointer-events", "none")
+      .style("display", densityVisible ? null : "none")
+      .node();
+    densityCtx = densityCanvasEl.getContext("2d");
+
     canvasEl = container.append("canvas")
       .attr("width", width)
       .attr("height", height)
@@ -275,6 +308,7 @@ function d3graphscript(config = {
         currentTransform.scale = d3.event.scale;
         currentTransform.translate = d3.event.translate;
         drawCanvasEdges();
+        drawDensityLayer();
       }))
       .on("dblclick.zoom", null)
       .append("g")
@@ -302,9 +336,105 @@ function d3graphscript(config = {
       ctx.restore();
     }
 
-    // Master edges on/off switch: applies to both rendering modes. SVG mode
-    // uses a single CSS class (cheap, no per-line work); canvas mode just
-    // skips drawing (and clears what's already been drawn).
+    // Bins the currently visible nodes' live (x, y) positions into a coarse
+    // grid over their bounding box. O(nodes) — cheap enough to recompute
+    // every tick, unlike the edge count this was never the bottleneck.
+    function computeDensityGrid() {
+      var nodesData = node.data();
+      if (!nodesData.length) return null;
+
+      var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      for (var i = 0; i < nodesData.length; i++) {
+        var nx = nodesData[i].x, ny = nodesData[i].y;
+        if (typeof nx !== 'number' || typeof ny !== 'number') continue;
+        if (nx < minX) minX = nx;
+        if (nx > maxX) maxX = nx;
+        if (ny < minY) minY = ny;
+        if (ny > maxY) maxY = ny;
+      }
+      if (minX === Infinity) return null;
+
+      var padX = (maxX - minX) * 0.05 || 20;
+      var padY = (maxY - minY) * 0.05 || 20;
+      minX -= padX; maxX += padX; minY -= padY; maxY += padY;
+
+      var w = (maxX - minX) || 1;
+      var h = (maxY - minY) || 1;
+      var cellsX, cellsY;
+      if (w >= h) {
+        cellsX = densityGridSize;
+        cellsY = Math.max(1, Math.round(densityGridSize * h / w));
+      } else {
+        cellsY = densityGridSize;
+        cellsX = Math.max(1, Math.round(densityGridSize * w / h));
+      }
+      var cellW = w / cellsX;
+      var cellH = h / cellsY;
+
+      var grid = new Float32Array(cellsX * cellsY);
+      var maxCount = 0;
+      for (var j = 0; j < nodesData.length; j++) {
+        var d = nodesData[j];
+        if (typeof d.x !== 'number' || typeof d.y !== 'number') continue;
+        var cx = Math.min(cellsX - 1, Math.max(0, Math.floor((d.x - minX) / cellW)));
+        var cy = Math.min(cellsY - 1, Math.max(0, Math.floor((d.y - minY) / cellH)));
+        var idx = cy * cellsX + cx;
+        grid[idx] += 1;
+        if (grid[idx] > maxCount) maxCount = grid[idx];
+      }
+
+      return { grid: grid, cellsX: cellsX, cellsY: cellsY, cellW: cellW, cellH: cellH, minX: minX, minY: minY, maxCount: maxCount };
+    }
+
+    // t in [0, 1] (relative density) -> fill color. Light mode: yellow -> red
+    // heat gradient. Dark mode: single-hue blue, so it reads well against a
+    // dark background instead of clashing with it.
+    function densityColor(t) {
+      if (darkMode) {
+        var l = 25 + t * 45; // 25%..70% lightness
+        return 'hsl(210, 90%, ' + l + '%)';
+      }
+      var hue = 60 - t * 60; // 60=yellow -> 0=red
+      return 'hsl(' + hue + ', 100%, 50%)';
+    }
+
+    // Draws the heatmap: unblurred cells go to an offscreen buffer first,
+    // then get composited onto the visible canvas with a single blurred
+    // drawImage — much cheaper than blurring each cell individually.
+    function drawDensityLayer() {
+      if (!densityVisible || !densityCtx) return;
+      densityCtx.save();
+      densityCtx.setTransform(1, 0, 0, 1, 0, 0);
+      densityCtx.clearRect(0, 0, densityCanvasEl.width, densityCanvasEl.height);
+
+      var data = computeDensityGrid();
+      if (!data || data.maxCount <= 0) { densityCtx.restore(); return; }
+
+      if (!densityOffscreen) densityOffscreen = document.createElement('canvas');
+      densityOffscreen.width = densityCanvasEl.width;
+      densityOffscreen.height = densityCanvasEl.height;
+      var offCtx = densityOffscreen.getContext('2d');
+      offCtx.clearRect(0, 0, densityOffscreen.width, densityOffscreen.height);
+      offCtx.setTransform(currentTransform.scale, 0, 0, currentTransform.scale, currentTransform.translate[0], currentTransform.translate[1]);
+
+      for (var cy = 0; cy < data.cellsY; cy++) {
+        for (var cx = 0; cx < data.cellsX; cx++) {
+          var count = data.grid[cy * data.cellsX + cx];
+          if (count <= 0) continue;
+          var t = count / data.maxCount;
+          offCtx.fillStyle = densityColor(t);
+          offCtx.globalAlpha = densityOpacity * t;
+          offCtx.fillRect(data.minX + cx * data.cellW, data.minY + cy * data.cellH, data.cellW, data.cellH);
+        }
+      }
+
+      densityCtx.filter = 'blur(' + densityBlur + 'px)';
+      densityCtx.drawImage(densityOffscreen, 0, 0);
+      densityCtx.filter = 'none';
+      densityCtx.restore();
+    }
+
+
     function applyEdgeVisibility() {
       svg.classed("edges-hidden", !edgesVisible);
       if (useCanvasEdges) {
@@ -485,6 +615,8 @@ function d3graphscript(config = {
         .attr("text-anchor", "middle");
     
       node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
+
+      if (densityVisible) drawDensityLayer();
 
   });
 
@@ -669,6 +801,30 @@ function d3graphscript(config = {
       applyEdgeVisibility();
     });
   }
+
+  // Density (clustering heatmap) layer toggle.
+  var densityToggleBtn = document.getElementById('densityToggleButton');
+  if (densityToggleBtn) {
+    densityToggleBtn.addEventListener('click', function() {
+      densityVisible = !densityVisible;
+      densityToggleBtn.textContent = densityVisible ? 'Hide Density' : 'Show Density';
+      d3.select(densityCanvasEl).style("display", densityVisible ? null : "none");
+      if (densityVisible) {
+        drawDensityLayer();
+      } else {
+        densityCtx.setTransform(1, 0, 0, 1, 0, 0);
+        densityCtx.clearRect(0, 0, densityCanvasEl.width, densityCanvasEl.height);
+      }
+    });
+  }
+
+  // Called from the dark-mode toggle (outside this function's scope, in the
+  // page's own script) so the density color scheme switches live instead of
+  // only reflecting whatever mode the page loaded in.
+  window.d3graphSetDarkMode = function(isDark) {
+    darkMode = !!isDark;
+    if (densityVisible) drawDensityLayer();
+  };
 
   //Restart the visualisation after any node and link changes
   function restart() {

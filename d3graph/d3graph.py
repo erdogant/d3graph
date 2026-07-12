@@ -124,6 +124,10 @@ class d3graph:
              max_ticks: int = 300,
              label_zoom_threshold: float = 0.4,
              canvas_edge_threshold: int = 2000,
+             show_density: bool = False,
+             density_grid_size: int = 60,
+             density_blur: int = 10,
+             density_opacity: float = 0.6,
              ) -> None:
         """Build and show the graph.
 
@@ -186,6 +190,23 @@ class d3graph:
             applies once edges exceed this count, so small/medium graphs are unaffected -
             note that in canvas mode, the "Save as SVG" export won't include edges, since
             they no longer live in the SVG DOM.
+        show_density : bool, (default: False)
+            Adds a node-clustering heatmap layer (grid-binned density of node positions),
+            drawn on its own canvas beneath the edges and nodes, with a toggle button in
+            the UI ("Show/Hide Density") to turn it on/off regardless of this default.
+            Recomputed from live node positions each frame it's visible, so it tracks the
+            force layout as nodes settle, and it responds to the weight/component sliders
+            since it's based on whichever nodes are currently on screen. Color scheme is
+            a yellow-to-red heat gradient in light mode, single-hue blue in dark mode
+            (updates live when dark mode is toggled).
+        density_grid_size : int, (default: 40)
+            Grid resolution for the density heatmap (cells along the longer axis of the
+            node bounding box). Higher = finer detail on tight clusters, more cells to draw.
+        density_blur : int, (default: 8)
+            Blur radius (px) applied to the heatmap for a smooth look instead of a
+            blocky grid.
+        density_opacity : float, (default: 0.6)
+            Maximum heatmap opacity, reached at the highest-density grid cell.
 
         Returns
         -------
@@ -211,6 +232,10 @@ class d3graph:
         self.config['max_ticks'] = max_ticks
         self.config['label_zoom_threshold'] = label_zoom_threshold
         self.config['canvas_edge_threshold'] = canvas_edge_threshold
+        self.config['show_density'] = show_density
+        self.config['density_grid_size'] = density_grid_size
+        self.config['density_blur'] = density_blur
+        self.config['density_opacity'] = density_opacity
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -835,6 +860,10 @@ class d3graph:
                    'max_ticks': self.config.get('max_ticks', 300),
                    'label_zoom_threshold': self.config.get('label_zoom_threshold', 0.6),
                    'canvas_edge_threshold': self.config.get('canvas_edge_threshold', 2000),
+                   'show_density': self.config.get('show_density', False),
+                   'density_grid_size': self.config.get('density_grid_size', 40),
+                   'density_blur': self.config.get('density_blur', 8),
+                   'density_opacity': self.config.get('density_opacity', 0.6),
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],

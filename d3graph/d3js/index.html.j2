@@ -35,12 +35,11 @@
             transition: background 0.2s, color 0.2s;
         }
         .top-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
             display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
             gap: 8px;
+            padding: 10px;
         }
         .slider-container {
             display: flex;
@@ -103,8 +102,9 @@
 
 <!-- Top right panel with dark mode and save buttons -->
 <div class="top-panel">
-    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}â˜€ï¸ Light Mode{% else %}ðŸŒ™ Dark Mode{% endif %}</button>
+    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
     <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
+    <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
     <button id="saveButton" class="button-switch">Save</button>
 </div>
 
@@ -134,6 +134,11 @@
                 max_ticks: {{ max_ticks }},
                 canvas_edge_threshold: {{ canvas_edge_threshold }},
                 label_zoom_threshold: {{ label_zoom_threshold }},
+                density_grid_size: {{ density_grid_size }},
+                density_blur: {{ density_blur }},
+                density_opacity: {{ density_opacity }},
+                show_density: {{ show_density | lower }},
+                dark_mode: {{ 'true' if dark_mode else 'false' }},
             })
         });
 
@@ -157,6 +162,7 @@
                 if (graphBg) graphBg.style.backgroundColor = originalBg;
                 darkSwitch.textContent = '🌙 Dark Mode';
             }
+            if (window.d3graphSetDarkMode) window.d3graphSetDarkMode(on);
         }
         // Set initial mode
         setDarkMode(darkMode);
