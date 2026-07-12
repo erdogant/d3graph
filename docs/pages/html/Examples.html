@@ -85,6 +85,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#karate-club-network">Karate Club network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#social-media">Social Media</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -292,7 +293,35 @@
     <span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_3.html" height="800px" width="850px", frameBorder="0"></iframe><hr>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_3.html" height="800px" width="850px", frameBorder="0"></iframe></section>
+<section id="social-media">
+<h1>Social Media<a class="headerlink" href="#social-media" title="Link to this heading"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+<span class="c1"># Load example data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;socialmedia&#39;</span><span class="p">)</span>
+<span class="c1"># Slice first 10000 rows</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10000</span><span class="p">]</span>
+<span class="c1"># Create adjmat</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+
+<span class="c1"># Update matrix with random weights</span>
+<span class="n">tmpadjmat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">adjmat</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">adjmat</span><span class="o">*</span><span class="n">tmpadjmat</span>
+
+<span class="c1"># Create graph</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Show graph with default settings</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Show graph with custom specific settings</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">density_grid_size</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">density_blur</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">density_opacity</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">dark_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/d3blocks/d3graph_socialmedia.html" height="800px" width="850px", frameBorder="0"></iframe><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

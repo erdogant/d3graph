@@ -244,4 +244,39 @@ Karate Club network
    <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/energy_3.html" height="800px" width="850px", frameBorder="0"></iframe>
 
 
+
+Social Media
+####################
+
+.. code:: python
+
+    from d3graph import d3graph, vec2adjmat
+    import numpy as np
+    
+    d3 = d3graph()
+    # Load example data
+    df = d3.import_example('socialmedia')
+    # Slice first 10000 rows
+    df = df[0:10000]
+    # Create adjmat
+    adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+
+    # Update matrix with random weights
+    tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
+    adjmat = adjmat*tmpadjmat
+    
+    # Create graph
+    d3.graph(adjmat)
+    
+    # Show graph with default settings
+    d3.show()
+    
+    # Show graph with custom specific settings
+    d3.show(density_grid_size=60, density_blur=10, density_opacity=0.6, dark_mode=True, show_density=True)
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3blocks/d3graph_socialmedia.html" height="800px" width="850px", frameBorder="0"></iframe>
+
+
 .. include:: add_bottom.add

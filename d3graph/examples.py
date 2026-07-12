@@ -1,12 +1,36 @@
 # %%
-from d3graph import d3graph, vec2adjmat, import_example
+from d3graph import d3graph, vec2adjmat
+import numpy as np
+
+d3 = d3graph()
+# Load example data
+df = d3.import_example('socialmedia')
+# Slice first 10000 rows
+df = df[0:10000]
+# Create adjmat
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# Update matrix with random weights
+tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
+adjmat = adjmat*tmpadjmat
+
+# Create graph
+d3.graph(adjmat)
+
+# Show graph with default settings
+# d3.show()
+
+# Show graph with custom specific settings
+d3.show(density_grid_size=60, density_blur=10, density_opacity=0.6, dark_mode=True, show_density=True)
+
+# %%
+from d3graph import d3graph, vec2adjmat
 import pandas as pd
 import time
 
 
 df = pd.read_csv('https://github.com/d3blocks/d3blocks/files/11995798/Df.csv', sep=',', index_col=False)
 del df['Unnamed: 0']
-df = df[0:5000]
+df = df[0:10000]
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 
 d3 = d3graph()
@@ -15,7 +39,7 @@ start = time.perf_counter()
 d3.graph(adjmat, min_weight=1)
 end = time.perf_counter()
 
-d3.show()
+d3.show(density_grid_size=80)
 
 print(f"Elapsed: {end - start:.6f} seconds")
 
