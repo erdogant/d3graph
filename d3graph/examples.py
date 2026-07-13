@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:10000]
+df = df[0:1000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -20,7 +20,14 @@ d3.graph(adjmat)
 # d3.show()
 
 # Show graph with custom specific settings
-d3.show(density_grid_size=60, density_blur=10, density_opacity=0.6, dark_mode=True, show_density=True)
+d3.show(density_grid_size=60,
+        density_blur=100,
+        density_opacity=0.6,
+        dark_mode=True,
+        show_density=True,
+        show_slider=True,
+        show_controls=True,
+        )
 
 # %%
 from d3graph import d3graph, vec2adjmat
@@ -60,7 +67,7 @@ d3.set_path(output_path)
 d3.config['filepath']
 
 d3.graph(adjmat)
-d3.show()
+d3.show(show_controls=True)
 
 # sticky=False — classic spring-back behaviour
 d3 = d3graph(adjmat, sticky=False)

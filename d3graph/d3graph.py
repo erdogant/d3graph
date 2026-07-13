@@ -128,6 +128,7 @@ class d3graph:
              density_grid_size: int = 60,
              density_blur: int = 10,
              density_opacity: float = 0.6,
+             show_controls: bool = True,
              ) -> None:
         """Build and show the graph.
 
@@ -207,6 +208,14 @@ class d3graph:
             blocky grid.
         density_opacity : float, (default: 0.6)
             Maximum heatmap opacity, reached at the highest-density grid cell.
+        show_controls : bool, (default: True)
+            Whether to render the top-panel buttons (Dark Mode, Hide Edges, Show Density,
+            Save) at all. Set to False when embedding the generated HTML into an existing
+            page/app that provides its own UI chrome and doesn't need d3graph's built-in
+            controls - the buttons (and their JS wiring) are omitted entirely rather than
+            just hidden, so there's no extra DOM/clutter in the embed. The weight/component
+            sliders are controlled separately via show_slider; the Save button specifically
+            is also controlled via save_button, independent of this.
 
         Returns
         -------
@@ -236,6 +245,7 @@ class d3graph:
         self.config['density_grid_size'] = density_grid_size
         self.config['density_blur'] = density_blur
         self.config['density_opacity'] = density_opacity
+        self.config['show_controls'] = show_controls
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -837,7 +847,6 @@ class d3graph:
 
         # Hide slider
         show_slider = ['', ''] if self.config['show_slider'] else ['<!--', '-->']
-        show_save_button = ['', ''] if self.config['save_button'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
         width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
         height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
@@ -864,6 +873,8 @@ class d3graph:
                    'density_grid_size': self.config.get('density_grid_size', 40),
                    'density_blur': self.config.get('density_blur', 8),
                    'density_opacity': self.config.get('density_opacity', 0.6),
+                   'show_controls': self.config.get('show_controls', True),
+                   'save_button': self.config['save_button'],
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
@@ -872,8 +883,6 @@ class d3graph:
                    'CLICK_STROKEW': click_properties['stroke-width'],
                    'slider_comment_start': show_slider[0],
                    'slider_comment_stop': show_slider[1],
-                   'save_button_comment_start': show_save_button[0],
-                   'save_button_comment_stop': show_save_button[1],
                    'SET_SLIDER': self.config['set_slider'],
                    'SUPPORT': support,
                    'background_color': self.config['background_color'],

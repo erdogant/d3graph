@@ -101,17 +101,14 @@
 <body style="background-color: {{ background_color }};{% if dark_mode %} color: #eee;{% endif %}"{% if dark_mode %} class="dark-mode"{% endif %}>
 
 <!-- Top right panel with dark mode and save buttons -->
+{% if show_controls %}
 <div class="top-panel">
     <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
     <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
     <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
-    <button id="saveButton" class="button-switch">Save</button>
+    {% if save_button %}<button id="saveButton" class="button-switch">Save</button>{% endif %}
 </div>
-
-<!-- Create save button (removed old location) -->
-{{ save_button_comment_start }}
-    <!-- Save button now in top-panel -->
-{{ save_button_comment_stop }}
+{% endif %}
 
     <script>
         {% include "d3.v3.js" %}
@@ -153,29 +150,33 @@
                 document.body.style.color = '#eee';
                 let graphBg = document.getElementById('graphContainer');
                 if (graphBg) graphBg.style.backgroundColor = '#222';
-                darkSwitch.textContent = '☀ Light Mode';
+                if (darkSwitch) darkSwitch.textContent = '☀ Light Mode';
             } else {
                 document.body.classList.remove('dark-mode');
                 document.body.style.backgroundColor = originalBg;
                 document.body.style.color = '';
                 let graphBg = document.getElementById('graphContainer');
                 if (graphBg) graphBg.style.backgroundColor = originalBg;
-                darkSwitch.textContent = '🌙 Dark Mode';
+                if (darkSwitch) darkSwitch.textContent = '🌙 Dark Mode';
             }
             if (window.d3graphSetDarkMode) window.d3graphSetDarkMode(on);
         }
         // Set initial mode
         setDarkMode(darkMode);
-        darkSwitch.addEventListener('click', function () {
-            darkMode = !darkMode;
-            setDarkMode(darkMode);
-        });
+        if (darkSwitch) {
+            darkSwitch.addEventListener('click', function () {
+                darkMode = !darkMode;
+                setDarkMode(darkMode);
+            });
+        }
 
         // Save image to svg
         // Note: when the graph is large enough to switch to canvas-rendered edges
         // (see canvas_edge_threshold), this export will include nodes but not edges,
         // since edges live on a separate <canvas> element, not in the SVG DOM.
-        document.getElementById('saveButton').addEventListener('click', function () {
+        var saveBtn = document.getElementById('saveButton');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function () {
             var svgData = document.querySelector('svg').outerHTML;
             var blob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
             var url = URL.createObjectURL(blob);
@@ -183,7 +184,8 @@
             link.href = url;
             link.download = '{{ title }}.svg';
             link.click();
-        });
+            });
+        }
         
         
     </script>
