@@ -51,6 +51,23 @@ function d3graphscript(config = {
     // node structure/clustering without redrawing or refiltering anything.
     var edgesVisible = true;
 
+    // ---- STATS PANEL (recolor nodes by a network statistic) ----
+    // node_pagerank / node_hits_hub / node_hits_authority are precomputed
+    // server-side (networkx) and normalized to [0, 1]; the panel just picks
+    // which one (if any) drives node fill color. null = original node colors.
+    var currentStatKey = null;
+
+    // COLOR SCHEME
+    var statColorScale = d3.scale.linear()
+    .domain([0, 0.5, 1])
+    .range(["#2166ac", "#f7f7f7", "#b2182b"]);
+    
+    // While a stat is active, nodes/edges get a visibility boost (bigger nodes,
+    // thicker/more opaque edges) so the highlighted structure reads clearly.
+    var statHighlightActive = false;
+    var EDGE_HIGHLIGHT_WIDTH_MULT = 1.8;
+    var EDGE_HIGHLIGHT_OPACITY_MULT = 1.6;
+
     // ---- DENSITY (clustering heatmap) LAYER ----
     // Grid-binned node density, drawn on its own canvas beneath the edges and
     // nodes. Recomputed from live node positions every tick it's visible, so
@@ -328,8 +345,10 @@ function d3graphscript(config = {
         ctx.moveTo(d.source.x, d.source.y);
         ctx.lineTo(d.target.x, d.target.y);
         ctx.strokeStyle = d.edge_color || '#999';
-        ctx.globalAlpha = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
-        ctx.lineWidth = d.edge_width || 1;
+        var baseOpacity = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
+        var baseWidth = d.edge_width || 1;
+        ctx.globalAlpha = statHighlightActive ? Math.min(1, baseOpacity * EDGE_HIGHLIGHT_OPACITY_MULT) : baseOpacity;
+        ctx.lineWidth = statHighlightActive ? baseWidth * EDGE_HIGHLIGHT_WIDTH_MULT : baseWidth;
         ctx.setLineDash(d.edge_style === 'dashed' ? [6, 3] : d.edge_style === 'dotted' ? [1.5, 3] : []);
         ctx.stroke();
       }
@@ -702,49 +721,64 @@ function d3graphscript(config = {
 
   // COLOR ON CLICK
   function color_on_click() {
-    // Reset all nodes to their original styles
-    d3.selectAll(".node")
-    .select(".node-shape")
-    .style("fill", function(d) {return d.node_color;})
-    .style("opacity", function(d) {return d.node_opacity;})
-    .style("stroke", function(d) {return d.node_color_edge;})
-    .style("stroke-width", function(d) {return d.node_size_edge;})
-    // Restore pinned cue on still-fixed nodes
-    .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; });
 
-    // Reset circle radii
-    d3.selectAll(".node").select("circle.node-shape")
-      .attr("r", function(d) { return d.node_size; });
+  // First restore the currently active base styling:
+  // - statistic colors/sizes when a radio metric is active
+  // - original node styling when no statistic is active
+  applyStatStyling();
 
-    // Apply click styling to the selected node's shape
-    var clickedShape = d3.select(this).select(".node-shape");
-    clickedShape
-      .style("fill", {{ CLICK_FILL }})
-      .style("stroke", "{{ CLICK_STROKE }}")
-      .style("stroke-width", {{ CLICK_STROKEW }});
+  // Restore pinned cue after applyStatStyling()
+  node.select(".node-shape")
+    .style("stroke-dasharray", function(d) {
+      return (sticky && d.fixed) ? "4,2" : null;
+    });
 
-    // Scale up the shape — strategy depends on element type
-    var shapeNode = clickedShape.node();
-    if (!shapeNode) return;
-    var tag = shapeNode.tagName.toLowerCase();
-    if (tag === 'circle') {
-      clickedShape.attr("r", function(d) { return d.node_size * {{ CLICK_SIZE }}; });
-    } else if (tag === 'ellipse') {
-      clickedShape.each(function(d) {
-        var r = parseFloat(d.node_size) || 8;
-        d3.select(this)
-          .attr("rx", r * 1.6 * {{ CLICK_SIZE }})
-          .attr("ry", r * {{ CLICK_SIZE }});
-      });
-    } else {
-      // <path>: re-compute path with a scaled radius
-      clickedShape.each(function(d) {
-        var r = (parseFloat(d.node_size) || 8) * {{ CLICK_SIZE }};
-        d3.select(this).attr("d", shapePathD(d.node_marker, r));
-      });
+  // Apply click styling only to the selected node
+  var clickedShape = d3.select(this).select(".node-shape");
+
+  clickedShape
+    .style("fill", {{ CLICK_FILL }})
+    .style("stroke", "{{ CLICK_STROKE }}")
+    .style("stroke-width", {{ CLICK_STROKEW }});
+
+  var shapeNode = clickedShape.node();
+  if (!shapeNode) return;
+
+  var tag = shapeNode.tagName.toLowerCase();
+
+  clickedShape.each(function(d) {
+    var el = d3.select(this);
+    var baseR = parseFloat(d.node_size) || 8;
+
+    // Preserve the statistic-driven size before applying click enlargement
+    var statValue = currentStatKey ? d[currentStatKey] : null;
+    var hasStatValue =
+      currentStatKey &&
+      typeof statValue === "number" &&
+      !isNaN(statValue);
+
+    var statScale = hasStatValue
+      ? 1.2 + statValue * 1.3
+      : 1;
+
+    var clickScale = statScale * {{ CLICK_SIZE }};
+
+    if (tag === "circle") {
+      el.attr("r", baseR * clickScale);
+
+    } else if (tag === "ellipse") {
+      el
+        .attr("rx", baseR * 1.6 * clickScale)
+        .attr("ry", baseR * clickScale);
+
+    } else if (tag === "path") {
+      el.attr(
+        "d",
+        shapePathD(d.node_marker, baseR * clickScale)
+      );
     }
-  }
-
+  });
+}
 
 
   function connectedNodes() {
@@ -826,6 +860,98 @@ function d3graphscript(config = {
     if (densityVisible) drawDensityLayer();
   };
 
+  // Recolors AND resizes node shapes by the currently selected statistic
+  // (reverting to each node's original color/size/opacity when none is
+  // selected), and boosts edge width/opacity for readability against the
+  // now-emphasized nodes. Handles circle/ellipse/path shapes generically,
+  // same approach as the click-to-highlight scaling. Safe to call even if a
+  // node is missing the stat (e.g. older data) — falls back to defaults.
+  function applyStatStyling() {
+    statHighlightActive = !!currentStatKey;
+
+    node.select(".node-shape").each(function(d) {
+      var el = d3.select(this);
+      var tag = this.tagName.toLowerCase();
+      var baseR = parseFloat(d.node_size) || 8;
+      var v = statHighlightActive ? d[currentStatKey] : null;
+      var hasVal = (typeof v === 'number' && !isNaN(v));
+      // 1.2x–2.5x range: even low scorers get a visibility bump, high scorers stand out more.
+      var scale = (statHighlightActive && hasVal) ? (1.2 + v * 1.3) : 1;
+      var fillColor = (statHighlightActive && hasVal) ? statColorScale(v) : d.node_color;
+
+      if (tag === 'circle') {
+        el.attr('r', baseR * scale);
+      } else if (tag === 'ellipse') {
+        el.attr('rx', baseR * 1.6 * scale).attr('ry', baseR * scale);
+      } else if (tag === 'path') {
+        el.attr('d', shapePathD(d.node_marker, baseR * scale));
+      }
+
+      el.style('fill', fillColor)
+        .style('opacity', statHighlightActive ? 1 : d.node_opacity)
+        .style('stroke-width', statHighlightActive ? (parseFloat(d.node_size_edge) || 1) * 1.5 : d.node_size_edge);
+    });
+
+    // SVG-mode edges: bump width/opacity directly on the current selection.
+    // Canvas-mode edges read statHighlightActive inside drawCanvasEdges().
+    link.style("stroke-width", function(d) {
+      var w = parseFloat(d.edge_width) || 1;
+      return statHighlightActive ? w * EDGE_HIGHLIGHT_WIDTH_MULT : w;
+    });
+    link.style("opacity", function(d) {
+      var o = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
+      return statHighlightActive ? Math.min(1, o * EDGE_HIGHLIGHT_OPACITY_MULT) : o;
+    });
+    if (useCanvasEdges) drawCanvasEdges();
+  }
+
+  var statRadios = document.querySelectorAll('input[name="statMetric"]');
+  if (statRadios.length) {
+    statRadios.forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        currentStatKey = (this.value === 'none') ? null : this.value;
+        applyStatStyling();
+      });
+    });
+  }
+
+  // Exports the currently filtered nodes/edges (respecting the weight and
+  // component sliders — whatever's "in scope" right now, not necessarily
+  // what's on screen if edges are toggled off) together with their
+  // precomputed stats, as a single JSON file.
+  var exportDataBtn = document.getElementById('exportDataButton');
+  if (exportDataBtn) {
+    exportDataBtn.addEventListener('click', function() {
+      var nodesOut = graph.nodes.map(function(d) {
+        return {
+          id: d.index,
+          name: d.node_name,
+          pagerank: d.node_pagerank,
+          hits_hub: d.node_hits_hub,
+          hits_authority: d.node_hits_authority,
+          degree_centrality: d.node_degree_centrality,
+          closeness_centrality: d.node_closeness_centrality,
+          betweenness_centrality: d.node_betweenness_centrality
+        };
+      });
+      var edgesOut = graph.links.map(function(d) {
+        return {
+          source: (d.source && d.source.node_name !== undefined) ? d.source.node_name : d.source,
+          target: (d.target && d.target.node_name !== undefined) ? d.target.node_name : d.target,
+          weight: d.edge_weight
+        };
+      });
+      var payload = { nodes: nodesOut, edges: edgesOut };
+      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = '{{ title }}_export.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
   //Restart the visualisation after any node and link changes
   function restart() {
 
@@ -835,6 +961,7 @@ function d3graphscript(config = {
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
     tickCount = 0;
     force.start();
+    applyStatStyling();
   }
 
 }

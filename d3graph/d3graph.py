@@ -262,7 +262,7 @@ class d3graph:
         # Make slider
         self.setup_slider()
         # Create json
-        json_data = json_create(self.G)
+        json_data = json_create(self.G, compute_stats=self.config.get('show_controls', True))
         # Create html with json file embedded
         html = self.write_html(json_data, overwrite=overwrite)
         # Display the chart
@@ -1049,13 +1049,20 @@ def check_logger(verbose: [str, int] = 'info'):
 
 
 # %% Write network in json file
-def json_create(G: nx.Graph) -> str:
+def json_create(G: nx.Graph, compute_stats: bool = True) -> str:
     """Create json from Graph.
 
     Parameters
     ----------
     G : Networkx object
         Graph G
+    compute_stats : bool, (default: True)
+        Compute PageRank, HITS (hub/authority), degree/closeness/betweenness centrality
+        per node and embed them as node_pagerank / node_hits_hub / node_hits_authority /
+        node_degree_centrality / node_closeness_centrality / node_betweenness_centrality,
+        normalized to [0, 1], for the interactive stats side panel. Skipped when the
+        panel won't be shown (show_controls=False) to avoid the wasted computation.
+        Betweenness is approximated (sampled) above 500 nodes to bound generation time.
 
     Returns
     -------
@@ -1071,6 +1078,59 @@ def json_create(G: nx.Graph) -> str:
     for edge in edges:
         source.append(node_id[edge[0] == node_ui][0])
         target.append(node_id[edge[1] == node_ui][0])
+
+    # Common network statistics for the optional interactive stats panel
+    # (recolors nodes by the selected metric). Computed once here, server-side,
+    # rather than in the browser, since networkx already has these and it keeps
+    # the JS side simple (just reads a precomputed per-node number).
+    if compute_stats and len(node_ui) > 0:
+        def _normalize_dict(d):
+            vals = np.array(list(d.values()), dtype=float)
+            vmin, vmax = vals.min(), vals.max()
+            if (vmax - vmin) < 1e-12:
+                return {k: 0.0 for k in d}
+            return {k: float((v - vmin) / (vmax - vmin)) for k, v in d.items()}
+
+        try:
+            pagerank_norm = _normalize_dict(nx.pagerank(G, weight='weight'))
+        except Exception:
+            pagerank_norm = {n: 0.0 for n in G.nodes()}
+
+        try:
+            hubs, authorities = nx.hits(G, max_iter=1000)
+            hubs_norm = _normalize_dict(hubs)
+            authorities_norm = _normalize_dict(authorities)
+        except Exception:
+            hubs_norm = {n: 0.0 for n in G.nodes()}
+            authorities_norm = {n: 0.0 for n in G.nodes()}
+
+        try:
+            degree_norm = _normalize_dict(nx.degree_centrality(G))
+        except Exception:
+            degree_norm = {n: 0.0 for n in G.nodes()}
+
+        try:
+            closeness_norm = _normalize_dict(nx.closeness_centrality(G))
+        except Exception:
+            closeness_norm = {n: 0.0 for n in G.nodes()}
+
+        try:
+            # Betweenness is O(V*E) (Brandes) - exact for smaller graphs, but that
+            # gets slow fast on larger ones. Above 500 nodes, approximate via a
+            # fixed-seed sample of source nodes so generation time stays bounded.
+            n_nodes = G.number_of_nodes()
+            k = min(100, n_nodes) if n_nodes > 500 else None
+            betweenness_norm = _normalize_dict(
+                nx.betweenness_centrality(G, k=k, weight='weight', seed=42 if k else None))
+        except Exception:
+            betweenness_norm = {n: 0.0 for n in G.nodes()}
+    else:
+        pagerank_norm = {n: 0.0 for n in G.nodes()}
+        hubs_norm = {n: 0.0 for n in G.nodes()}
+        authorities_norm = {n: 0.0 for n in G.nodes()}
+        degree_norm = {n: 0.0 for n in G.nodes()}
+        closeness_norm = {n: 0.0 for n in G.nodes()}
+        betweenness_norm = {n: 0.0 for n in G.nodes()}
 
     # Set edge properties
     links = pd.DataFrame([*G.edges.values()]).T.to_dict()
@@ -1108,6 +1168,14 @@ def json_create(G: nx.Graph) -> str:
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
         nodes[i]['node_fontcolor'] = nodes[i].pop('fontcolor')
         nodes[i]['node_fontsize'] = nodes[i].pop('fontsize')
+        # Stats for the interactive side panel (see compute_stats above)
+        nid = node_ui[i]
+        nodes[i]['node_pagerank'] = pagerank_norm.get(nid, 0.0)
+        nodes[i]['node_hits_hub'] = hubs_norm.get(nid, 0.0)
+        nodes[i]['node_hits_authority'] = authorities_norm.get(nid, 0.0)
+        nodes[i]['node_degree_centrality'] = degree_norm.get(nid, 0.0)
+        nodes[i]['node_closeness_centrality'] = closeness_norm.get(nid, 0.0)
+        nodes[i]['node_betweenness_centrality'] = betweenness_norm.get(nid, 0.0)
         # Combine all information into new list
         nodes_new[i] = nodes[i]
     data = {'links': links_new, 'nodes': nodes_new}

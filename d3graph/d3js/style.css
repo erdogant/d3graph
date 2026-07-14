@@ -43,3 +43,131 @@ h3 {
 .edges-hidden .link-text {
   display: none;
 }
+
+/* Stats side panel (PageRank / HITS / centrality toggles). Deliberately NOT
+   position:fixed/absolute — this codebase has twice hit bugs from
+   floating-overlay panels landing behind or on top of other content in ways
+   that depend on the exact height of the (wrapping) top-panel row. Normal
+   document flow sidesteps that whole category of bug: it always renders
+   directly below the top-panel, full stop. */
+.stats-panel {
+  position: absolute;
+  top: 70px;       /* Adjust to place it below the top controls */
+  left: 10px;
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-family: "Helvetica", Arial, sans-serif;
+  font-size: 13px;
+  width: 220px;
+  max-width: calc(100vw - 40px);
+}
+
+.dark-mode .stats-panel {
+  background: rgba(34, 34, 34, 0.92);
+  color: #eee;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.stats-panel .stats-panel-title {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.stats-panel label {
+  display: block;
+  margin: 4px 0;
+  cursor: pointer;
+}
+
+
+.dark-mode {
+    background-color: #222 !important;
+    color: #eee !important;
+}
+.dark-mode #graphContainer {
+    background-color: #222 !important;
+}
+.dark-mode .button-switch {
+    background: #333;
+    color: #eee;
+    border: 1px solid #555;
+}
+.button-switch {
+    display: inline-block;
+    margin: 8px 4px;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #222;
+    cursor: pointer;
+    font-size: 1em;
+    font-family: inherit, Arial, sans-serif;
+    transition: background 0.2s, color 0.2s;
+}
+.top-panel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px;
+}
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0;
+}
+.slider-label {
+    margin: 0 8px;
+    font-size: 1em;
+    font-family: inherit, Arial, sans-serif;
+}
+.styled-slider {
+    -webkit-appearance: none;
+    width: 180px;
+    height: 8px;
+    background: #eee;
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.2s;
+    margin: 0 8px;
+}
+.styled-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #888;
+    cursor: pointer;
+    box-shadow: 0 0 2px #888;
+}
+.styled-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #888;
+    cursor: pointer;
+    box-shadow: 0 0 2px #888;
+}
+.styled-slider:focus {
+    background: #ddd;
+}
+.dark-mode .styled-slider {
+    background: #444;
+}
+.dark-mode .styled-slider::-webkit-slider-thumb {
+    background: #222;
+    border: 2px solid #eee;
+}
+.dark-mode .styled-slider::-moz-range-thumb {
+    background: #222;
+    border: 2px solid #eee;
+}
