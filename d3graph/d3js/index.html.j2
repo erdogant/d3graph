@@ -20,7 +20,7 @@
     {{ slider_comment_start }}
     <div class="slider-container">
         <form style="margin:0;">
-            <span class="slider-label">Edge Threshold</span>
+            <span class="slider-label">Edge Threshold: <span id="thresholdValue">{{ SET_SLIDER }}</span></span>
             <span class="slider-label">{{ min_slider }}</span>
             <input type="range" autocomplete="off" id="thresholdSlider" value="{{ min_slider }}" min="{{ min_slider }}" max="{{ max_slider }}" class="styled-slider">
             <span class="slider-label">{{ max_slider }}</span>
@@ -127,7 +127,7 @@
         // Stacks every .stats-panel element (Network Statistic, Layout, ...)
         // below the header row (edge-threshold slider + top-panel buttons),
         // using its actual measured height rather than a hardcoded pixel
-        // guess â€” a guessed offset breaks the moment the row wraps onto two
+        // guess guessed offset breaks the moment the row wraps onto two
         // lines on a narrower screen, which is exactly what caused this
         // panel's earlier positioning bugs. Scales to any number of panels
         // automatically. Falls back to .top-panel alone if .header-row isn't

@@ -846,6 +846,13 @@ function d3graphscript(config = {
   function threshold() {
     let thresh = this.value;
 
+    // Reflect the current slider value in the header label. Kept inside
+    // threshold() itself (not a separate handler) so it stays in sync with
+    // every path that sets the network state: the initial load call below,
+    // and the "change" listener — no risk of the two drifting apart.
+    var thresholdValueEl = document.getElementById('thresholdValue');
+    if (thresholdValueEl) thresholdValueEl.textContent = thresh;
+
     graph.links.splice(0, graph.links.length);
     linkText = linkText.data([]);   // CLEAR EDGE-LABELS: Clear the linkText selection
     linkText.exit().remove();       // CLEAR EDGE-LABELS: Clear the linkText elements from the DOM
@@ -864,6 +871,18 @@ function d3graphscript(config = {
   threshold.call(document.getElementById('thresholdSlider'));
 
   d3.select("#thresholdSlider").on("change", threshold);
+
+  // Live-update the label while dragging, without paying for a full
+  // restart() (network refilter + recompute of whichever stat is active)
+  // on every intermediate value — that still only happens on "change"
+  // (drag release), same as before.
+  var thresholdValueLiveEl = document.getElementById('thresholdValue');
+  var thresholdSliderEl = document.getElementById('thresholdSlider');
+  if (thresholdValueLiveEl && thresholdSliderEl) {
+    thresholdSliderEl.addEventListener('input', function() {
+      thresholdValueLiveEl.textContent = this.value;
+    });
+  }
 
   // Master edges on/off toggle — independent of the weight slider, purely
   // visual, doesn't touch the underlying filtered data.
