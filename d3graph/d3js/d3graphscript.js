@@ -21,8 +21,19 @@ function d3graphscript(config = {
     }) {
     
     //Constants for the SVG
+    //var width = config.width;
+    //var height = config.height;
+
+    // Constants for the SVG
     var width = config.width;
     var height = config.height;
+    // When height is null, fill the remaining viewport below the header.
+    if (height === null) {
+        var header = document.querySelector(".header-row");
+        var headerHeight = header ? header.offsetHeight : 0;
+        height = window.innerHeight - headerHeight;
+    }
+
     var background_color = config.background_color || '#FFFFFF';
     var sticky = config.sticky || false;
     // Cap how many simulation ticks run before auto-stopping, instead of
@@ -1184,5 +1195,39 @@ function d3graphscript(config = {
     }
     applyStatStyling();
   }
+
+    function resizeGraph() {
+    
+        if (config.width === window.innerWidth) {
+            width = window.innerWidth;
+        }
+    
+        if (config.height === null) {
+            var header = document.querySelector(".header-row");
+            var headerHeight = header ? header.offsetHeight : 0;
+            height = window.innerHeight - headerHeight;
+        }
+    
+        container
+            .style("width", width + "px")
+            .style("height", height + "px");
+    
+        container.select("svg")
+            .attr("width", width)
+            .attr("height", height);
+    
+        canvasEl.width = width;
+        canvasEl.height = height;
+    
+        densityCanvasEl.width = width;
+        densityCanvasEl.height = height;
+    
+        force.size([width, height]).resume();
+    
+        drawCanvasEdges();
+        drawDensityLayer();
+    }
+    
+    window.addEventListener("resize", resizeGraph);
 
 }

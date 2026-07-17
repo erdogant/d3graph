@@ -21,8 +21,9 @@ d3.graph(adjmat)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
-        density_blur=10, # Smaller is more dense heatmap
-        density_opacity=0.6,
+        figsize=[None, None],
+        density_blur=15, # Smaller is more dense heatmap
+        density_opacity=0.8,
         dark_mode=True,
         show_density=True,
         show_slider=True,

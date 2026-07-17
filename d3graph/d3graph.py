@@ -106,7 +106,7 @@ class d3graph:
         if clean_config and hasattr(self, 'config'): del self.config
 
     def show(self,
-             figsize=[1500, 800],
+             figsize=[None, None],
              title: str = 'd3graph',
              filepath: str = None,
              showfig: bool = True,
@@ -126,15 +126,15 @@ class d3graph:
              canvas_edge_threshold: int = 2000,
              show_density: bool = False,
              density_grid_size: int = 60,
-             density_blur: int = 10,
-             density_opacity: float = 0.6,
+             density_blur: int = 15,
+             density_opacity: float = 0.8,
              show_controls: bool = True,
              ) -> None:
         """Build and show the graph.
 
         Parameters
         ----------
-        figsize : tuple, (default: (1500, 800))
+        figsize : tuple, (default: (None, None))
             Size of the figure in the browser, (width, height).
             (None, None): Use the screen resolution.
         title : String, (default: None)
@@ -848,8 +848,8 @@ class d3graph:
         # Hide slider
         show_slider = ['', ''] if self.config['show_slider'] else ['<!--', '-->']
         # Set width and height to screen resolution if None.
-        width = 'window.screen.width' if self.config['figsize'][0] is None else self.config['figsize'][0]
-        height = 'window.screen.height' if self.config['figsize'][1] is None else self.config['figsize'][1]
+        width = 'window.innerWidth' if self.config['figsize'][0] is None else self.config['figsize'][0]
+        height = 'null' if self.config['figsize'][1] is None else self.config['figsize'][1]
         # Get support
         support = self.config.get('support')
         if support is None: support = get_support('text')
@@ -897,7 +897,6 @@ class d3graph:
         html = index_template.render(content)
 
         index_file = self.config['filepath']
-        # index_file.write_text(index_template.render(content))
         if overwrite and index_file:
             logger.info(f'Write to path: [{index_file.absolute()}]')
             logger.info(f'File already exists and will be overwritten: [{index_file}]')
