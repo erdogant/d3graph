@@ -40,13 +40,14 @@
 <!-- Side panel: interactively recolor/resize nodes by common network statistics -->
 <div class="stats-panel" id="statsPanel">
     <div class="stats-panel-title">Network Statistic</div>
-    <label><input type="radio" name="statMetric" value="none" checked> Default</label>
+    <label><input type="radio" name="statMetric" value="user_default" checked> Default</label>
     <label><input type="radio" name="statMetric" value="node_pagerank"> PageRank</label>
     <label><input type="radio" name="statMetric" value="node_hits_hub"> HITS (Hub)</label>
     <label><input type="radio" name="statMetric" value="node_hits_authority"> HITS (Authority)</label>
     <label><input type="radio" name="statMetric" value="node_degree_centrality"> Degree Centrality</label>
     <label><input type="radio" name="statMetric" value="node_closeness_centrality"> Closeness Centrality</label>
     <label><input type="radio" name="statMetric" value="node_betweenness_centrality"> Betweenness Centrality</label>
+    <label><input type="radio" name="statMetric" value="network_clustering"> Network Clustering</label>
 </div>
 
 <!-- Layout panel (Force-directed / Circular / Grid) removed from the UI -
@@ -58,7 +59,7 @@
 <div class="stats-panel" id="physicsPanel">
     <div class="stats-panel-title">Physics</div>
     <div class="physics-control">
-        <label for="chargeSlider">Charge <span id="chargeValue">{{ charge }}</span></label>
+        <label for="chargeSlider">Network Tension <span id="chargeValue">{{ charge }}</span></label>
         <input type="range" id="chargeSlider" min="-2000" max="200" step="10" value="{{ charge }}">
     </div>
     <div class="physics-control">
@@ -66,7 +67,7 @@
         <input type="range" id="collisionSlider" min="0" max="2" step="0.05" value="{{ collision }}">
     </div>
     <div class="physics-control">
-        <label for="linkTensionSlider">Link Tension <span id="linkTensionValue">{{ link_tension }}</span></label>
+        <label for="linkTensionSlider">Edge Tension <span id="linkTensionValue">{{ link_tension }}</span></label>
         <input type="range" id="linkTensionSlider" min="0" max="5" step="0.1" value="{{ link_tension }}">
     </div>
     <button id="physicsResetButton" class="button-switch">Reset to Default</button>

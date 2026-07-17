@@ -14,14 +14,10 @@ tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
 adjmat = adjmat*tmpadjmat
 
 # Create graph
-d3.graph(adjmat)
-
-# Show graph with default settings
-# d3.show()
+d3.graph(adjmat, opacity=None)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
-        figsize=[None, None],
         density_blur=15, # Smaller is more dense heatmap
         density_opacity=0.8,
         dark_mode=True,

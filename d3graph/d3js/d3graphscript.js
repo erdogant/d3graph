@@ -66,8 +66,16 @@ function d3graphscript(config = {
     // node_pagerank / node_hits_hub / node_hits_authority are precomputed
     // server-side (networkx) and normalized to [0, 1]; the panel just picks
     // which one (if any) drives node fill color. null = original node colors.
+    // 'network_clustering' is the one exception: instead of a precomputed
+    // per-node number, it's derived client-side (connected components over
+    // whatever edges are currently visible past the weight-threshold slider)
+    // so it always reflects the network's live, filtered state rather than
+    // a static server-side clustering. networkClusters maps node index ->
+    // small integer cluster id, recomputed on every applyStatStyling() call
+    // while that mode is active.
     var currentStatKey = null;
-
+    var networkClusters = {};
+    
     // ---- LAYOUT MENU ----
     // 'force' (default) is the existing physics simulation, unchanged.
     // 'circular' / 'grid' are static, one-shot arrangements: force is
@@ -79,6 +87,10 @@ function d3graphscript(config = {
     var statColorScale = d3.scale.linear()
     .domain([0, 0.5, 1])
     .range(["#2166ac", "#f7f7f7", "#b2182b"]);
+
+    // Categorical palette for network-clustering mode — one color per
+    // connected-component id, cycling every 20 clusters.
+    var clusterColorScale = d3.scale.category20();
     
     // While a stat is active, nodes/edges get a visibility boost (bigger nodes,
     // thicker/more opaque edges) so the highlighted structure reads clearly.
@@ -896,14 +908,337 @@ function d3graphscript(config = {
     if (densityVisible) drawDensityLayer();
   };
 
+  // ---- DYNAMIC STAT RECOMPUTATION ----
+  // PageRank / HITS / degree / closeness / betweenness centrality arrive
+  // precomputed server-side (networkx), since that's the only graph that
+  // exists at render time. But the weight-threshold slider changes which
+  // edges are actually "in" the network, and a statistic computed on
+  // since-removed edges is stale. So these are recomputed client-side from
+  // graph.links (the currently filtered edge set) every time
+  // applyStatStyling() runs — i.e. on stat selection AND on every slider
+  // change (restart() -> applyStatStyling()) — overwriting d[<stat key>]
+  // on each node so the rest of the styling pipeline needs no changes.
+  var DYNAMIC_STAT_KEYS = ['node_pagerank', 'node_hits_hub', 'node_hits_authority',
+    'node_degree_centrality', 'node_closeness_centrality', 'node_betweenness_centrality'];
+
+  // Adjacency built fresh from the CURRENT graph.nodes/graph.links.
+  //
+  // IMPORTANT: this always follows edges source -> target, never
+  // symmetrized — regardless of config.directed. config.directed only
+  // controls whether arrowheads are drawn (it's a display setting); the
+  // underlying graph object these stats need to match is the one built
+  // server-side by make_graph(), which is unconditionally an nx.DiGraph
+  // (see d3graph.py). Treating the network as undirected here (as an
+  // earlier version of this code did whenever config.directed was false,
+  // which is also the default) was the actual bug behind mismatched
+  // HITS hub/authority and skewed degree/closeness/betweenness scores —
+  // it silently added a reverse edge for every edge, which networkx's
+  // computation never does.
+  function buildAdjacency() {
+    var indices = graph.nodes.map(function(d) { return d.index; });
+    var out = {}, inn = {};
+    indices.forEach(function(i) { out[i] = []; inn[i] = []; });
+
+    graph.links.forEach(function(l) {
+      var s = (l.source && l.source.index !== undefined) ? l.source.index : l.source;
+      var t = (l.target && l.target.index !== undefined) ? l.target.index : l.target;
+      if (out[s] === undefined || out[t] === undefined) return; // safety
+      out[s].push(t);
+      inn[t].push(s);
+    });
+
+    return { indices: indices, out: out, inn: inn, n: indices.length };
+  }
+
+  function computeDegreeCentrality(adj) {
+    var result = {};
+    var n = adj.n;
+    adj.indices.forEach(function(i) {
+      // Matches networkx's degree_centrality on a DiGraph: total (in + out)
+      // degree / (n - 1).
+      var deg = adj.out[i].length + adj.inn[i].length;
+      result[i] = (n > 1) ? deg / (n - 1) : 0;
+    });
+    return result;
+  }
+
+  function bfsDistances(adj, sourceIdx, neighborsOf) {
+    var dist = {};
+    dist[sourceIdx] = 0;
+    var queue = [sourceIdx];
+    var head = 0;
+    while (head < queue.length) {
+      var u = queue[head++];
+      var neighbors = neighborsOf[u];
+      for (var k = 0; k < neighbors.length; k++) {
+        var v = neighbors[k];
+        if (dist[v] === undefined) {
+          dist[v] = dist[u] + 1;
+          queue.push(v);
+        }
+      }
+    }
+    return dist;
+  }
+
+  function computeClosenessCentrality(adj) {
+    var result = {};
+    var n = adj.n;
+    adj.indices.forEach(function(i) {
+      // networkx's closeness_centrality reverses directed graphs before
+      // computing shortest paths, so a node's score reflects how reachable
+      // it is FROM the rest of the network (incoming paths), not how far
+      // it can reach outward. Traverse via `inn` (in-edges) to match —
+      // using `out` here was inverting the metric for any graph with real
+      // directionality.
+      var dist = bfsDistances(adj, i, adj.inn);
+      var reachable = Object.keys(dist).length; // includes i itself
+      var totalDist = 0;
+      for (var key in dist) totalDist += dist[key];
+      if (reachable > 1 && totalDist > 0 && n > 1) {
+        // Wasserman-Faust "improved" formula (networkx default): scales by
+        // the fraction of the graph actually reached, so a node stuck in a
+        // small component doesn't get an inflated score just for being
+        // close to the few nodes it can see.
+        result[i] = ((reachable - 1) / totalDist) * ((reachable - 1) / (n - 1));
+      } else {
+        result[i] = 0;
+      }
+    });
+    return result;
+  }
+
+  // Brandes' algorithm, unweighted — O(V*E), single pass computes
+  // betweenness for every node at once.
+  function computeBetweennessCentrality(adj) {
+    var n = adj.n;
+    var betweenness = {};
+    adj.indices.forEach(function(i) { betweenness[i] = 0; });
+
+    adj.indices.forEach(function(s) {
+      var S = [];
+      var P = {}, sigma = {}, dist = {};
+      adj.indices.forEach(function(i) { P[i] = []; sigma[i] = 0; dist[i] = -1; });
+      sigma[s] = 1;
+      dist[s] = 0;
+      var queue = [s];
+      var head = 0;
+      while (head < queue.length) {
+        var v = queue[head++];
+        S.push(v);
+        var neighbors = adj.out[v];
+        for (var k = 0; k < neighbors.length; k++) {
+          var w = neighbors[k];
+          if (dist[w] < 0) {
+            queue.push(w);
+            dist[w] = dist[v] + 1;
+          }
+          if (dist[w] === dist[v] + 1) {
+            sigma[w] += sigma[v];
+            P[w].push(v);
+          }
+        }
+      }
+      var delta = {};
+      adj.indices.forEach(function(i) { delta[i] = 0; });
+      while (S.length) {
+        var w = S.pop();
+        for (var k = 0; k < P[w].length; k++) {
+          var v = P[w][k];
+          delta[v] += (sigma[v] / sigma[w]) * (1 + delta[w]);
+        }
+        if (w !== s) betweenness[w] += delta[w];
+      }
+    });
+
+    // Normalize (networkx defaults, normalized=True, directed graph): scale
+    // by 1/((n-1)(n-2)) — no halving, since directed pairs (s,t) and (t,s)
+    // are distinct and each is only ever visited once as a source here.
+    var scale = (n > 2) ? 1 / ((n - 1) * (n - 2)) : 0;
+    adj.indices.forEach(function(i) { betweenness[i] = betweenness[i] * scale; });
+
+    return betweenness;
+  }
+
+  // Power-iteration PageRank (damping 0.85), with dangling nodes (no
+  // out-edges) leaking their rank uniformly to every node, same as
+  // networkx's default handling.
+  function computePageRank(adj) {
+    var n = adj.n;
+    if (n === 0) return {};
+    var alpha = 0.85, maxIter = 100, tol = 1e-8;
+    var rank = {};
+    adj.indices.forEach(function(i) { rank[i] = 1 / n; });
+    var outDegree = {};
+    adj.indices.forEach(function(i) { outDegree[i] = adj.out[i].length; });
+
+    for (var iter = 0; iter < maxIter; iter++) {
+      var newRank = {};
+      adj.indices.forEach(function(i) { newRank[i] = (1 - alpha) / n; });
+
+      var danglingSum = 0;
+      adj.indices.forEach(function(i) { if (outDegree[i] === 0) danglingSum += rank[i]; });
+      adj.indices.forEach(function(i) { newRank[i] += alpha * danglingSum / n; });
+
+      adj.indices.forEach(function(u) {
+        if (outDegree[u] === 0) return;
+        var share = alpha * rank[u] / outDegree[u];
+        adj.out[u].forEach(function(v) { newRank[v] += share; });
+      });
+
+      var diff = 0;
+      adj.indices.forEach(function(i) { diff += Math.abs(newRank[i] - rank[i]); });
+      rank = newRank;
+      if (diff < tol) break;
+    }
+
+    return rank;
+  }
+
+  // Power-iteration HITS. Hub and authority are computed together since
+  // they're mutually dependent either way.
+  function computeHITS(adj) {
+    var hub = {}, auth = {};
+    adj.indices.forEach(function(i) { hub[i] = 1; auth[i] = 1; });
+    var maxIter = 100, tol = 1e-8;
+
+    for (var iter = 0; iter < maxIter; iter++) {
+      var newAuth = {};
+      adj.indices.forEach(function(i) { newAuth[i] = 0; });
+      adj.indices.forEach(function(u) {
+        adj.out[u].forEach(function(v) { newAuth[v] += hub[u]; });
+      });
+      var authNorm = Math.sqrt(adj.indices.reduce(function(s, i) { return s + newAuth[i] * newAuth[i]; }, 0)) || 1;
+      adj.indices.forEach(function(i) { newAuth[i] /= authNorm; });
+
+      var newHub = {};
+      adj.indices.forEach(function(i) { newHub[i] = 0; });
+      adj.indices.forEach(function(u) {
+        adj.out[u].forEach(function(v) { newHub[u] += newAuth[v]; });
+      });
+      var hubNorm = Math.sqrt(adj.indices.reduce(function(s, i) { return s + newHub[i] * newHub[i]; }, 0)) || 1;
+      adj.indices.forEach(function(i) { newHub[i] /= hubNorm; });
+
+      var diff = 0;
+      adj.indices.forEach(function(i) { diff += Math.abs(newHub[i] - hub[i]) + Math.abs(newAuth[i] - auth[i]); });
+      hub = newHub;
+      auth = newAuth;
+      if (diff < tol) break;
+    }
+
+    return { hub: hub, authority: auth };
+  }
+
+  // Min-max normalize a {index -> value} map to [0,1] — matches d3graph.py's
+  // server-side _normalize_dict() exactly, which is applied uniformly to
+  // ALL six stats there. Doing the same here (rather than the previous
+  // divide-by-max, and rather than leaving degree/closeness/betweenness
+  // unnormalized) keeps the color scale's [0, 0.5, 1] domain fully used
+  // regardless of which stat is active or how the slider has filtered the
+  // network — a stat whose raw scores are all clustered near 0 (e.g.
+  // betweenness on a sparse graph) still stretches across the full range
+  // instead of rendering as a single flat color.
+  function normalizeMinMax(values, indices) {
+    var vmin = Infinity, vmax = -Infinity;
+    indices.forEach(function(i) {
+      var v = values[i];
+      if (v < vmin) vmin = v;
+      if (v > vmax) vmax = v;
+    });
+    var range = vmax - vmin;
+    var result = {};
+    indices.forEach(function(i) {
+      result[i] = (range < 1e-12) ? 0 : (values[i] - vmin) / range;
+    });
+    return result;
+  }
+
+  function computeDynamicStatValues(key, adj) {
+    var raw;
+    switch (key) {
+      case 'node_degree_centrality':     raw = computeDegreeCentrality(adj); break;
+      case 'node_closeness_centrality':  raw = computeClosenessCentrality(adj); break;
+      case 'node_betweenness_centrality':raw = computeBetweennessCentrality(adj); break;
+      case 'node_pagerank':              raw = computePageRank(adj); break;
+      case 'node_hits_hub':              raw = computeHITS(adj).hub; break;
+      case 'node_hits_authority':        raw = computeHITS(adj).authority; break;
+      default: return null;
+    }
+    return normalizeMinMax(raw, adj.indices);
+  }
+
+  // Groups nodes into connected components using ONLY the edges currently
+  // in `graph.links` — i.e. whatever survives the weight-threshold slider
+  // right now. Re-run every time applyStatStyling() is called while
+  // 'network_clustering' is the active stat, so the coloring always
+  // reflects the live, filtered network rather than a one-time snapshot.
+  // Cheap union-find over nodes/links; fine at interactive graph sizes.
+  function computeNetworkClusters() {
+    var parent = {};
+    function find(x) {
+      while (parent[x] !== x) {
+        parent[x] = parent[parent[x]]; // path halving
+        x = parent[x];
+      }
+      return x;
+    }
+    function union(a, b) {
+      var ra = find(a), rb = find(b);
+      if (ra !== rb) parent[ra] = rb;
+    }
+
+    graph.nodes.forEach(function(d) { parent[d.index] = d.index; });
+    graph.links.forEach(function(l) {
+      var s = (l.source && l.source.index !== undefined) ? l.source.index : l.source;
+      var t = (l.target && l.target.index !== undefined) ? l.target.index : l.target;
+      union(s, t);
+    });
+
+    // Re-number component roots to small, dense integers (0, 1, 2, ...) so
+    // they map cleanly onto the categorical color scale.
+    networkClusters = {};
+    var rootToClusterId = {};
+    var nextId = 0;
+    graph.nodes.forEach(function(d) {
+      var root = find(d.index);
+      if (!(root in rootToClusterId)) rootToClusterId[root] = nextId++;
+      networkClusters[d.index] = rootToClusterId[root];
+    });
+  }
+
   // Recolors AND resizes node shapes by the currently selected statistic
   // (reverting to each node's original color/size/opacity when none is
   // selected), and boosts edge width/opacity for readability against the
   // now-emphasized nodes. Handles circle/ellipse/path shapes generically,
   // same approach as the click-to-highlight scaling. Safe to call even if a
   // node is missing the stat (e.g. older data) — falls back to defaults.
+  //
+  // 'network_clustering' is handled as a variant of this same flow: it has
+  // no single [0,1] value to size nodes by (cluster ids are categorical,
+  // not a magnitude), so size stays at the default scale, but fill color
+  // still comes from the stat — just from the categorical cluster palette
+  // instead of statColorScale. Clusters are recomputed here every call, so
+  // switching the weight-threshold slider (which rebuilds graph.links and
+  // calls restart() -> applyStatStyling()) immediately updates node colors
+  // to match the new connected-component structure.
+  //
+  // The other stats (PageRank, HITS, degree/closeness/betweenness
+  // centrality) get the same live-recompute treatment: DYNAMIC_STAT_KEYS
+  // are recalculated from the current graph.links before being read below,
+  // so they also update immediately on every slider change.
   function applyStatStyling() {
-    statHighlightActive = !!currentStatKey;
+    var isClustering = (currentStatKey === 'network_clustering');
+    statHighlightActive = !!currentStatKey && !isClustering;
+
+    if (isClustering) computeNetworkClusters();
+
+    if (currentStatKey && DYNAMIC_STAT_KEYS.indexOf(currentStatKey) !== -1) {
+      var adj = buildAdjacency();
+      var values = computeDynamicStatValues(currentStatKey, adj);
+      if (values) {
+        graph.nodes.forEach(function(d) { d[currentStatKey] = values[d.index]; });
+      }
+    }
 
     node.select(".node-shape").each(function(d) {
       var el = d3.select(this);
@@ -913,7 +1248,12 @@ function d3graphscript(config = {
       var hasVal = (typeof v === 'number' && !isNaN(v));
       // 1.2x–2.5x range: even low scorers get a visibility bump, high scorers stand out more.
       var scale = (statHighlightActive && hasVal) ? (1.2 + v * 1.3) : 1;
-      var fillColor = (statHighlightActive && hasVal) ? statColorScale(v) : d.node_color;
+      // Clustering has no [0,1] magnitude to size by, but it does have a
+      // categorical color per component — use that for fill instead of
+      // falling back to the node's original color.
+      var fillColor = isClustering
+        ? clusterColorScale(networkClusters[d.index] % 20)
+        : ((statHighlightActive && hasVal) ? statColorScale(v) : d.node_color);
 
       if (tag === 'circle') {
         el.attr('r', baseR * scale);
@@ -938,6 +1278,17 @@ function d3graphscript(config = {
       var o = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
       return statHighlightActive ? Math.min(1, o * EDGE_HIGHLIGHT_OPACITY_MULT) : o;
     });
+
+    // Node label color: cluster color while clustering mode is active (so
+    // the label visibly matches its node's cluster), otherwise each node's
+    // own configured font color. Always set explicitly (rather than
+    // clearing the inline style) so switching away from clustering cleanly
+    // restores the original per-node color instead of falling through to
+    // the CSS default.
+    node.select("text").style("fill", function(d) {
+      return isClustering ? clusterColorScale(networkClusters[d.index] % 20) : d.node_fontcolor;
+    });
+
     if (useCanvasEdges) drawCanvasEdges();
   }
 
