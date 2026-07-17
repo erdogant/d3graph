@@ -65,9 +65,9 @@ class d3graph:
     def __init__(self,
                  collision: float = 0.5,
                  charge: int = 600,
+                 link_tension: float = 1,
                  slider=None,
                  support: str = 'text',
-                 link_tension: float = 1,
                  sticky: bool = True,
                  verbose: int = 20) -> None:
         """Initialize d3graph.
@@ -115,7 +115,7 @@ class d3graph:
              set_slider: bool = 0,
              click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
              background_color = '#FFFFFF',
-             dark_mode = False,
+             dark_mode = True,
              notebook: bool = False,
              save_button: bool = True,
              link_tension: float = None,
