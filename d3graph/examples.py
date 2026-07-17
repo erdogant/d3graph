@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:10000]
+df = df[0:5000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -21,7 +21,7 @@ d3.graph(adjmat)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
-        density_blur=100,
+        density_blur=10, # Smaller is more dense heatmap
         density_opacity=0.6,
         dark_mode=True,
         show_density=True,
@@ -85,7 +85,10 @@ d3.graph(adjmat)
 # Mix shapes per node
 markers = ['circle', 'star', 'diamond', 'square', 'pentagon', 'hexagon', 'rectangle', 'triangle-down', 'triangle'] * 8
 d3.set_node_properties(marker=markers[:len(adjmat.columns)], color=df['label'].values, cmap='Set1')
-d3.show(filepath="d:/repos/erdogant.github.io/docs/d3graph/d3graph/node_shapes.html")
+# d3.show(filepath="d:/repos/erdogant.github.io/docs/d3graph/d3graph/node_shapes.html")
+
+d3.node_properties
+d3.edge_properties
 
 # %%
 from d3graph import d3graph, import_example
@@ -422,7 +425,7 @@ d3.set_node_properties(marker=['circle', 'circle', 'circle', 'rect', 'rect', 're
 
 d3.show(filepath=r'c:\temp\\d3graph\circle.html', set_slider=5, save_button=False)
 
-
+d3.node_properties
 
 # %% Edge distance
 
@@ -566,6 +569,8 @@ html = d3.show(click={'fill': 'green', 'stroke': 'black', 'size': 2, 'stroke-wid
 html = d3.show(click=None, filepath=r'c:\temp\d3graph\d3graph.html')
 html = d3.show(filepath=r'c:\temp\d3graph\d3graph.html')
 
+d3.edge_properties
+d3.node_properties
 
 # %% notebook examples
 from d3graph import d3graph
