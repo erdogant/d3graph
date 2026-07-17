@@ -164,6 +164,8 @@ h3 {
     align-items: start;
     gap: 8px;
     padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .header-row .slider-container {
     grid-column: 2;
