@@ -44,15 +44,17 @@ h3 {
   display: none;
 }
 
-/* Stats side panel (PageRank / HITS / centrality toggles). Deliberately NOT
-   position:fixed/absolute — this codebase has twice hit bugs from
-   floating-overlay panels landing behind or on top of other content in ways
-   that depend on the exact height of the (wrapping) top-panel row. Normal
-   document flow sidesteps that whole category of bug: it always renders
-   directly below the top-panel, full stop. */
+/* Stats/layout side panels. Positioned via JS (positionSidePanels(), in
+   index_html.j2) rather than a hardcoded pixel offset — this codebase has
+   twice hit bugs from guessed offsets that assumed a fixed top-panel height,
+   which breaks the moment the top-panel wraps onto two lines on a narrower
+   screen. JS measures the top-panel's actual rendered height at runtime and
+   stacks every .stats-panel element below it in DOM order, so this scales
+   to any number of panels on any screen size. top/left below are just the
+   pre-JS fallback (first paint, before the script runs). */
 .stats-panel {
-  position: absolute;
-  top: 70px;       /* Adjust to place it below the top controls */
+  position: fixed;
+  top: 10px;
   left: 10px;
   z-index: 1000;
 
@@ -83,6 +85,31 @@ h3 {
   cursor: pointer;
 }
 
+.stats-panel .physics-control {
+  margin: 10px 0;
+}
+
+.stats-panel .physics-control label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3px;
+  cursor: default;
+  font-weight: normal;
+}
+
+.stats-panel .physics-control input[type="range"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stats-panel .button-switch {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 10px 0 0 0;
+  box-sizing: border-box;
+}
+
 
 .dark-mode {
     background-color: #222 !important;
@@ -109,12 +136,30 @@ h3 {
     font-family: inherit, Arial, sans-serif;
     transition: background 0.2s, color 0.2s;
 }
+/* Header row: top-panel buttons (right) + edge-threshold slider (centered)
+   share one line. Grid with equal 1fr flanks keeps the slider centered on
+   the row regardless of how wide the button group is; align-items:start
+   keeps both children measured from the same top edge so
+   positionSidePanels() (which measures .header-row, not .top-panel alone)
+   gets an accurate height even if the slider and buttons differ in height. */
+.header-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    gap: 8px;
+    padding: 10px;
+}
+.header-row .slider-container {
+    grid-column: 2;
+    margin: 0;
+}
 .top-panel {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-content: start;
     gap: 8px;
-    padding: 10px;
+    grid-column: 3;
 }
 .slider-container {
     display: flex;

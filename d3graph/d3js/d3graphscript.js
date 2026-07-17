@@ -57,6 +57,13 @@ function d3graphscript(config = {
     // which one (if any) drives node fill color. null = original node colors.
     var currentStatKey = null;
 
+    // ---- LAYOUT MENU ----
+    // 'force' (default) is the existing physics simulation, unchanged.
+    // 'circular' / 'grid' are static, one-shot arrangements: force is
+    // stopped, positions are computed directly, and updatePositions() draws
+    // them once (no tick loop is running to do it automatically).
+    var currentLayout = 'force';
+
     // COLOR SCHEME
     var statColorScale = d3.scale.linear()
     .domain([0, 0.5, 1])
@@ -104,7 +111,7 @@ function d3graphscript(config = {
     function dragstarted(d) {
       d3.event.sourceEvent.stopPropagation();
       d3.select(this).classed("dragging", true);
-      if (sticky) {
+      if (sticky && currentLayout === 'force') {
         d.fixed = true;
         tickCount = 0;
         force.start();
@@ -118,6 +125,9 @@ function d3graphscript(config = {
       } else {
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
       }
+      // With the force simulation stopped (static layouts), there's no tick
+      // to refresh connected edges/labels — update them directly here.
+      if (currentLayout !== 'force') updatePositions();
       if (densityVisible) drawDensityLayer();
     }
     
@@ -592,15 +602,11 @@ function d3graphscript(config = {
         )
     
     //Now we are giving the SVGs co-ordinates - the force layout is generating the co-ordinates which this code is using to update the attributes of the SVG elements
-    force.on("tick", function() {
-      // Auto-stop after maxTicks so a large graph doesn't keep re-running
-      // collision detection / layout math for thousands of frames while
-      // settling. maxTicks <= 0 disables the cap (run to natural cooldown).
-      if (maxTicks > 0 && ++tickCount > maxTicks) {
-        force.stop();
-        return;
-      }
-
+    // Draws nodes/links/labels at their current (d.x, d.y). Called every
+    // force tick, and also directly by static layouts (circular/grid) that
+    // set positions once instead of simulating — those need a render call
+    // since there's no tick to trigger it.
+    function updatePositions() {
       if (useCanvasEdges) {
         drawCanvasEdges();
       } else {
@@ -632,10 +638,21 @@ function d3graphscript(config = {
       linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })  // ADD TEXT ON THE EDGES (PART 2/2)
         .attr("y", function(d) { return (d.source.y + d.target.y) / 2; })
         .attr("text-anchor", "middle");
-    
-      node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 
       if (densityVisible) drawDensityLayer();
+    }
+
+    force.on("tick", function() {
+      // Auto-stop after maxTicks so a large graph doesn't keep re-running
+      // collision detection / layout math for thousands of frames while
+      // settling. maxTicks <= 0 disables the cap (run to natural cooldown).
+      if (maxTicks > 0 && ++tickCount > maxTicks) {
+        force.stop();
+        return;
+      }
+
+      updatePositions();
+      node.each(collide(config.collision)); //COLLISION DETECTION. High means a big fight to get untouchable nodes (default=0.5)
 
   });
 
@@ -838,6 +855,7 @@ function d3graphscript(config = {
 
   // Density (clustering heatmap) layer toggle.
   var densityToggleBtn = document.getElementById('densityToggleButton');
+  var densityPanelEl = document.getElementById('densityPanel');
   if (densityToggleBtn) {
     densityToggleBtn.addEventListener('click', function() {
       densityVisible = !densityVisible;
@@ -849,7 +867,14 @@ function d3graphscript(config = {
         densityCtx.setTransform(1, 0, 0, 1, 0, 0);
         densityCtx.clearRect(0, 0, densityCanvasEl.width, densityCanvasEl.height);
       }
+      // The density tuning panel (grid size / blur / opacity) is only
+      // useful while the layer is actually visible.
+      if (densityPanelEl) densityPanelEl.style.display = densityVisible ? '' : 'none';
+      // Re-stack the remaining side panels now that one changed size/visibility.
+      if (typeof positionSidePanels === 'function') positionSidePanels();
     });
+    // Reflect the initial show_density state on load, in case it started true.
+    if (densityPanelEl) densityPanelEl.style.display = densityVisible ? '' : 'none';
   }
 
   // Called from the dark-mode toggle (outside this function's scope, in the
@@ -915,6 +940,193 @@ function d3graphscript(config = {
     });
   }
 
+  // Arranges nodes evenly around a circle. Order follows each node's stable
+  // .index (assignment order), not the current force-settled position, so
+  // the arrangement is deterministic and doesn't depend on prior layout.
+  function layoutCircular() {
+    var nodesData = graph.nodes;
+    var n = nodesData.length;
+    if (!n) return;
+    var cx = width / 2, cy = height / 2;
+    var r = Math.min(width, height) * 0.4;
+    nodesData.forEach(function(d, i) {
+      var angle = (i / n) * 2 * Math.PI;
+      d.x = d.px = cx + r * Math.cos(angle);
+      d.y = d.py = cy + r * Math.sin(angle);
+    });
+  }
+
+  // Arranges nodes in a roughly-square grid.
+  function layoutGrid() {
+    var nodesData = graph.nodes;
+    var n = nodesData.length;
+    if (!n) return;
+    var cols = Math.max(1, Math.ceil(Math.sqrt(n)));
+    var rows = Math.max(1, Math.ceil(n / cols));
+    var spacingX = width / (cols + 1);
+    var spacingY = height / (rows + 1);
+    nodesData.forEach(function(d, i) {
+      var col = i % cols;
+      var row = Math.floor(i / cols);
+      d.x = d.px = spacingX * (col + 1);
+      d.y = d.py = spacingY * (row + 1);
+    });
+  }
+
+  // Switches between the physics-simulated force layout (default) and
+  // static, one-shot arrangements. Static layouts stop the simulation so
+  // they don't get pulled back out of shape by ongoing forces; switching
+  // back to 'force' just resumes the simulation from wherever nodes
+  // currently are.
+  function setLayout(layoutName) {
+    currentLayout = layoutName;
+
+    if (layoutName === 'force') {
+      tickCount = 0;
+      force.resume();
+      return;
+    }
+
+    force.stop();
+    if (layoutName === 'circular') {
+      layoutCircular();
+    } else if (layoutName === 'grid') {
+      layoutGrid();
+    }
+    updatePositions();
+  }
+
+  var layoutRadios = document.querySelectorAll('input[name="layoutMode"]');
+  if (layoutRadios.length) {
+    layoutRadios.forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        setLayout(this.value);
+      });
+    });
+  }
+
+  // ---- PHYSICS PANEL (charge / collision / link tension sliders) ----
+  // Snapshot the values the graph was generated with, so Reset can restore
+  // them exactly — not some hardcoded JS default, but whatever was actually
+  // passed into show().
+  var DEFAULT_CHARGE = config.charge;
+  var DEFAULT_COLLISION = config.collision;
+  var DEFAULT_LINK_TENSION = (config.link_tension !== undefined && config.link_tension !== null) ? config.link_tension : 1;
+
+  // Only reheats the simulation if the force layout is actually the one
+  // active — if a static layout (circular/grid) is selected, the new value
+  // is stored and takes effect next time the user switches back to it,
+  // rather than yanking them out of the layout they chose.
+  function reheatIfForceActive() {
+    if (currentLayout === 'force') {
+      tickCount = 0;
+      force.start();
+    }
+  }
+
+  function setCharge(value) {
+    config.charge = value;
+    force.charge(value);
+    reheatIfForceActive();
+  }
+  function setCollision(value) {
+    // Read live every tick via node.each(collide(config.collision)) — no
+    // force.* setter call needed, just update the value it reads.
+    config.collision = value;
+    reheatIfForceActive();
+  }
+  function setLinkTension(value) {
+    config.link_tension = value;
+    force.linkStrength(value);
+    reheatIfForceActive();
+  }
+
+  function wirePhysicsSlider(sliderId, valueId, onChange) {
+    var slider = document.getElementById(sliderId);
+    var valueLabel = document.getElementById(valueId);
+    if (!slider) return;
+    slider.addEventListener('input', function() {
+      var v = parseFloat(this.value);
+      if (valueLabel) valueLabel.textContent = v;
+      onChange(v);
+    });
+  }
+  wirePhysicsSlider('chargeSlider', 'chargeValue', setCharge);
+  wirePhysicsSlider('collisionSlider', 'collisionValue', setCollision);
+  wirePhysicsSlider('linkTensionSlider', 'linkTensionValue', setLinkTension);
+
+  var physicsResetBtn = document.getElementById('physicsResetButton');
+  if (physicsResetBtn) {
+    physicsResetBtn.addEventListener('click', function() {
+      setCharge(DEFAULT_CHARGE);
+      setCollision(DEFAULT_COLLISION);
+      setLinkTension(DEFAULT_LINK_TENSION);
+
+      var chargeSlider = document.getElementById('chargeSlider');
+      var collisionSlider = document.getElementById('collisionSlider');
+      var tensionSlider = document.getElementById('linkTensionSlider');
+      if (chargeSlider) chargeSlider.value = DEFAULT_CHARGE;
+      if (collisionSlider) collisionSlider.value = DEFAULT_COLLISION;
+      if (tensionSlider) tensionSlider.value = DEFAULT_LINK_TENSION;
+
+      var chargeVal = document.getElementById('chargeValue');
+      var collisionVal = document.getElementById('collisionValue');
+      var tensionVal = document.getElementById('linkTensionValue');
+      if (chargeVal) chargeVal.textContent = DEFAULT_CHARGE;
+      if (collisionVal) collisionVal.textContent = DEFAULT_COLLISION;
+      if (tensionVal) tensionVal.textContent = DEFAULT_LINK_TENSION;
+    });
+  }
+
+  // ---- DENSITY PANEL (grid size / blur / opacity sliders) ----
+  // Snapshot the values the graph was generated with, so Reset restores
+  // exactly those, not a hardcoded JS default.
+  var DEFAULT_DENSITY_GRID_SIZE = densityGridSize;
+  var DEFAULT_DENSITY_BLUR = densityBlur;
+  var DEFAULT_DENSITY_OPACITY = densityOpacity;
+
+  // Only visually matters while the density layer is toggled on, but the
+  // values are stored either way (so turning the layer on later reflects
+  // whatever the sliders were last set to).
+  function setDensityGridSize(value) {
+    densityGridSize = value;
+    if (densityVisible) drawDensityLayer();
+  }
+  function setDensityBlur(value) {
+    densityBlur = value;
+    if (densityVisible) drawDensityLayer();
+  }
+  function setDensityOpacity(value) {
+    densityOpacity = value;
+    if (densityVisible) drawDensityLayer();
+  }
+  wirePhysicsSlider('densityGridSizeSlider', 'densityGridSizeValue', setDensityGridSize);
+  wirePhysicsSlider('densityBlurSlider', 'densityBlurValue', setDensityBlur);
+  wirePhysicsSlider('densityOpacitySlider', 'densityOpacityValue', setDensityOpacity);
+
+  var densityResetBtn = document.getElementById('densityResetButton');
+  if (densityResetBtn) {
+    densityResetBtn.addEventListener('click', function() {
+      setDensityGridSize(DEFAULT_DENSITY_GRID_SIZE);
+      setDensityBlur(DEFAULT_DENSITY_BLUR);
+      setDensityOpacity(DEFAULT_DENSITY_OPACITY);
+
+      var gridSlider = document.getElementById('densityGridSizeSlider');
+      var blurSlider = document.getElementById('densityBlurSlider');
+      var opacitySlider = document.getElementById('densityOpacitySlider');
+      if (gridSlider) gridSlider.value = DEFAULT_DENSITY_GRID_SIZE;
+      if (blurSlider) blurSlider.value = DEFAULT_DENSITY_BLUR;
+      if (opacitySlider) opacitySlider.value = DEFAULT_DENSITY_OPACITY;
+
+      var gridVal = document.getElementById('densityGridSizeValue');
+      var blurVal = document.getElementById('densityBlurValue');
+      var opacityVal = document.getElementById('densityOpacityValue');
+      if (gridVal) gridVal.textContent = DEFAULT_DENSITY_GRID_SIZE;
+      if (blurVal) blurVal.textContent = DEFAULT_DENSITY_BLUR;
+      if (opacityVal) opacityVal.textContent = DEFAULT_DENSITY_OPACITY;
+    });
+  }
+
   // Exports the currently filtered nodes/edges (respecting the weight and
   // component sliders — whatever's "in scope" right now, not necessarily
   // what's on screen if edges are toggled off) together with their
@@ -959,8 +1171,17 @@ function d3graphscript(config = {
 
     node = node.data(graph.nodes);
     node.enter().insert("circle", ".cursor").attr("class", "node").attr("r", 5).call(force.drag);
-    tickCount = 0;
-    force.start();
+
+    if (currentLayout === 'force') {
+      tickCount = 0;
+      force.start();
+    } else {
+      // Static layout active: re-apply it (new/changed nodes need positions
+      // too) instead of reheating the physics simulation.
+      if (currentLayout === 'circular') layoutCircular();
+      else if (currentLayout === 'grid') layoutGrid();
+      updatePositions();
+    }
     applyStatStyling();
   }
 
