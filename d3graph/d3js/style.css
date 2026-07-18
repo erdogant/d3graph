@@ -102,7 +102,18 @@ h3 {
 
   /* Prevent growing outside the viewport */
   max-width: min(600px, calc(100vw - 40px));
+  /* Pre-JS fallback only. positionSidePanels() overrides this per-panel with
+     a max-height based on the panel's own top offset, since a flat 40px
+     doesn't account for panels stacked further down the page — without that,
+     a panel low in the stack (e.g. Node Info) could grow tall enough to push
+     its bottom edge, and its resize handle, off the bottom of the screen
+     with no way to grab it back. */
   max-height: calc(100vh - 40px);
+}
+/* Resizing a collapsed panel (title bar only) makes no sense, and its handle
+   would sit right on top of the toggle icon, so disable it while collapsed. */
+.stats-panel.collapsed {
+  resize: none;
 }
 .stats-panel-body {
     flex: 1 1 auto;
@@ -136,9 +147,18 @@ h3 {
 }
 
 .stats-panel-toggle {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 8px;
+  flex-shrink: 0;
+  color: inherit;
   transition: transform 0.15s ease;
+}
+.stats-panel-toggle svg {
+  width: 12px;
+  height: 12px;
+  display: block;
 }
 .stats-panel.collapsed .stats-panel-toggle {
   transform: rotate(-90deg);
@@ -215,6 +235,9 @@ h3 {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Small right-side gutter so the scrollbar (even at its thin resting
+     width) never sits flush against the text next to it. */
+  padding-right: 4px;
   /* Firefox: no per-state (hover) width control exists for native
      scrollbars, so this is the closest equivalent — always thin rather
      than the default width, at least matching the "resting" state below. */
@@ -222,15 +245,15 @@ h3 {
   scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
 }
 
-/* Thin by default, doubles in width only on hover — "wider when needed"
-   instead of permanently taking up space. Chrome/Edge/Safari only;
-   Firefox falls back to the static scrollbar-width: thin above. */
+/* Slim by default, widens only slightly on hover — "wider when needed"
+   instead of permanently crowding the text next to it. Chrome/Edge/Safari
+   only; Firefox falls back to the static scrollbar-width: thin above. */
 .node-info-content::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
   transition: width 0.15s ease;
 }
 .node-info-content:hover::-webkit-scrollbar {
-  width: 12px;
+  width: 6px;
 }
 .node-info-content::-webkit-scrollbar-track {
   background: transparent;

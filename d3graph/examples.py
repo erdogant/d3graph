@@ -307,7 +307,6 @@ import pandas as pd
 import numpy as np
 from d3graph import d3graph, adjmat2vec, vec2adjmat
 
-#%%
 from d3graph import check_logger
 import numpy as np
 import pandas as pd

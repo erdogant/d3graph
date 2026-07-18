@@ -39,7 +39,7 @@
 
 <!-- Side panel: interactively recolor/resize nodes by common network statistics -->
 <div class="stats-panel" id="statsPanel">
-    <div class="stats-panel-title">Network Statistic<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-title">Network Statistic<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
     <div class="stats-panel-body">
     <label><input type="radio" name="statMetric" value="user_default" checked> Default</label>
     <label><input type="radio" name="statMetric" value="node_pagerank"> PageRank</label>
@@ -59,7 +59,7 @@
 
 <!-- Side panel: interactively tune the force simulation -->
 <div class="stats-panel" id="physicsPanel">
-    <div class="stats-panel-title">Physics<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-title">Physics<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
     <div class="stats-panel-body">
     <div class="physics-control">
         <label for="chargeSlider">Network Tension <span id="chargeValue">{{ charge }}</span></label>
@@ -79,7 +79,7 @@
 
 <!-- Side panel: interactively tune the density heatmap layer -->
 <div class="stats-panel" id="densityPanel">
-    <div class="stats-panel-title">Density Layer<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-title">Density Layer<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
     <div class="stats-panel-body">
     <div class="physics-control">
         <label for="densityGridSizeSlider">Grid Size <span id="densityGridSizeValue">{{ density_grid_size }}</span></label>
@@ -99,7 +99,7 @@
 
 <!-- Side panel: details for whichever node is currently selected, with browser-style back/forward navigation through previously viewed nodes -->
 <div class="stats-panel" id="nodeInfoPanel">
-    <div class="stats-panel-title">Node Info<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-title">Node Info<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
     <div class="stats-panel-body">
     <div class="node-info-nav">
         <button type="button" id="nodeInfoBack" class="node-info-nav-btn" title="Back" disabled>&larr;</button>
@@ -148,7 +148,7 @@
         // Stacks every .stats-panel element (Network Statistic, Layout, ...)
         // below the header row (edge-threshold slider + top-panel buttons),
         // using its actual measured height rather than a hardcoded pixel
-        // guess Ã¢â‚¬â€ a guessed offset breaks the moment the row wraps onto two
+        // guess ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â a guessed offset breaks the moment the row wraps onto two
         // lines on a narrower screen, which is exactly what caused this
         // panel's earlier positioning bugs. Scales to any number of panels
         // automatically. Falls back to .top-panel alone if .header-row isn't
@@ -161,6 +161,13 @@
             panels.forEach(function (panel) {
                 panel.style.top = y + 'px';
                 panel.style.left = '10px';
+                // A flat "calc(100vh - 40px)" (the CSS fallback) ignores how
+                // far down the stack this particular panel sits, so a panel
+                // near the bottom (Node Info is last) could grow past the
+                // bottom of the screen â€” taking its resize handle with it,
+                // with no way to grab it back. Cap each panel's max-height to
+                // whatever viewport space actually remains below its own top.
+                panel.style.maxHeight = 'calc(100vh - ' + Math.round(y + 10) + 'px)';
                 y += panel.getBoundingClientRect().height + 8;
             });
         }
@@ -180,11 +187,30 @@
         // Collapsible side panels: clicking a panel's title hides/shows its
         // body (everything but the title) and flips the arrow. Re-stacks
         // immediately after, since positionSidePanels() measures each
-        // panel's actual rendered height â€” a collapsed panel is just
+        // panel's actual rendered height Ã¢â‚¬â€ a collapsed panel is just
         // shorter, no separate logic needed to close the gap.
         document.querySelectorAll('.stats-panel-title').forEach(function (title) {
             title.addEventListener('click', function () {
-                title.parentElement.classList.toggle('collapsed');
+                var panel = title.parentElement;
+                var collapsing = !panel.classList.contains('collapsed');
+                if (collapsing) {
+                    // Dragging the native resize handle sets an inline
+                    // height on the panel. That inline height sticks around
+                    // even after the body is hidden via the .collapsed CSS
+                    // class, so a manually-resized panel would just show a
+                    // tall block of empty space instead of actually
+                    // shrinking â€” looking like the collapse button had
+                    // stopped working. Remember it, then clear it so the
+                    // panel really collapses down to the title bar.
+                    if (panel.style.height) {
+                        panel.dataset.expandedHeight = panel.style.height;
+                    }
+                    panel.style.height = '';
+                } else if (panel.dataset.expandedHeight) {
+                    // Restore whatever size the user had manually set.
+                    panel.style.height = panel.dataset.expandedHeight;
+                }
+                panel.classList.toggle('collapsed');
                 positionSidePanels();
             });
         });
