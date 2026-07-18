@@ -37,14 +37,23 @@
     <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
     <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
     <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
-    <button id="exportDataButton" class="button-switch">Export Data</button>
-    {% if save_button %}<button id="saveButton" class="button-switch">Save</button>{% endif %}
 </div>
 {% endif %}
 </div>
 {% endif %}
 
 {% if show_controls %}
+<!-- Side panel: data/image export actions, previously loose buttons in the
+     top-panel row â€” grouped here since they're one-off actions rather than
+     persistent view controls, and it keeps the top-panel row shorter. -->
+<div class="stats-panel" id="exportPanel">
+    <div class="stats-panel-title">Export<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
+    <div class="stats-panel-body">
+    <button id="exportDataButton" class="button-switch">Export Data</button>
+    {% if save_button %}<button id="saveButton" class="button-switch">Save</button>{% endif %}
+    </div>
+</div>
+
 <!-- Side panel: interactively recolor/resize nodes by common network statistics -->
 <div class="stats-panel" id="statsPanel">
     <div class="stats-panel-title">Network Statistic<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
@@ -62,6 +71,7 @@
 
 <!-- Layout panel (Force-directed / Circular / Grid) removed from the UI -
      circular/grid felt too static to be useful. The underlying setLayout()/
+
      layoutCircular()/layoutGrid() functions are still in d3graphscript.js,
      just unwired, in case this is worth revisiting later. -->
 
