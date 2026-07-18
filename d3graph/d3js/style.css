@@ -93,6 +93,29 @@ h3 {
 .stats-panel .stats-panel-title {
   font-weight: bold;
   margin-bottom: 6px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Collapsed panels have no body margin left behind, and the title itself
+   loses its bottom margin so the panel hugs the title tightly. */
+.stats-panel.collapsed .stats-panel-title {
+  margin-bottom: 0;
+}
+.stats-panel.collapsed .stats-panel-body {
+  display: none;
+}
+
+.stats-panel-toggle {
+  font-size: 11px;
+  margin-left: 8px;
+  transition: transform 0.15s ease;
+}
+.stats-panel.collapsed .stats-panel-toggle {
+  transform: rotate(-90deg);
 }
 
 .stats-panel label {

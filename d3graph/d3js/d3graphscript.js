@@ -572,8 +572,7 @@ function d3graphscript(config = {
       .data(graph.nodes)
       .enter().append("g")
       .attr("class", "node")
-      .call(drag)
-      .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
+      .call(drag);
     
     // Right-click handler: release a pinned node back into the simulation (sticky mode only)
     if (sticky) {
@@ -589,7 +588,9 @@ function d3graphscript(config = {
       });
     }
     
-    {{ CLICK_COMMENT }} node.on('click', color_on_click); // ON CLICK HANDLER
+    // SINGLE-CLICK HANDLER — recolors/resizes the clicked node AND dims
+    // non-neighbors (previously dblclick's job; see nodeClickHandler above).
+    {{ CLICK_COMMENT }} node.on('click', nodeClickHandler); // ON CLICK HANDLER
 
     // Append the correct shape per node (circle, ellipse, rect, triangle, etc.)
     appendShape(node);
@@ -759,21 +760,49 @@ function d3graphscript(config = {
   }
 
 
-  // COLOR ON CLICK
-  function color_on_click() {
+  // SINGLE-CLICK HANDLER: recolors/resizes the clicked node AND dims
+  // everything except it and its directly-connected neighbors/edges.
+  // These were previously two separate handlers (click = recolor, dblclick
+  // = dim-non-neighbors); merged here so both happen on one click. The
+  // dim/undim toggle logic is unchanged from the old connectedNodes() —
+  // clicking any node flips it, same as double-clicking any node used to.
+  function nodeClickHandler() {
 
-  // First restore the currently active base styling:
+  // First restore the currently active base styling (cheap — reuses
+  // whichever stat/cluster values were last computed, does NOT re-run
+  // PageRank/HITS/betweenness/etc. on every click):
   // - statistic colors/sizes when a radio metric is active
   // - original node styling when no statistic is active
-  applyStatStyling();
+  renderStatStyling();
 
-  // Restore pinned cue after applyStatStyling()
+  // Restore pinned cue after renderStatStyling()
   node.select(".node-shape")
     .style("stroke-dasharray", function(d) {
       return (sticky && d.fixed) ? "4,2" : null;
     });
 
-  // Apply click styling only to the selected node
+  // Dim everything except the clicked node and its direct neighbors/edges.
+  var clickedDatum = d3.select(this).node().__data__;
+  if (toggle == 0) {
+    node.style("opacity", function(o) {
+      return neighboring(clickedDatum, o) | neighboring(o, clickedDatum) ? 1 : 0.1;
+    });
+    link.style("opacity", function(o) {
+      return clickedDatum.index == o.source.index | clickedDatum.index == o.target.index ? 1 : 0.1;
+    });
+    toggle = 1;
+  } else {
+    node.style("opacity", 0.95);
+    link.style("opacity", 1);
+    toggle = 0;
+  }
+
+  // Apply click styling only to the selected node. This runs LAST and
+  // touches only this one shape's fill/stroke/size, so nothing above (the
+  // base-style restore or the neighbor dimming, which only ever touch
+  // opacity) can overwrite it — the clicked node reliably ends up showing
+  // its underlying node_color, regardless of which network statistic is
+  // currently active.
   var clickedShape = d3.select(this).select(".node-shape");
 
   clickedShape
@@ -819,27 +848,6 @@ function d3graphscript(config = {
     }
   });
 }
-
-
-  function connectedNodes() {
-    if (toggle == 0) {
-      //Reduce the opacity of all but the neighbouring nodes
-      d = d3.select(this).node().__data__;
-      node.style("opacity", function(o) {
-        return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
-      });
-      link.style("opacity", function(o) {
-        return d.index == o.source.index | d.index == o.target.index ? 1 : 0.1;
-      });
-      toggle = 1;
-    } else {
-      //Put them back to opacity=1
-      node.style("opacity", 0.95);
-      link.style("opacity", 1);
-
-      toggle = 0;
-    }
-  }
 
 
   //adjust threshold
@@ -1236,28 +1244,17 @@ function d3graphscript(config = {
   // no single [0,1] value to size nodes by (cluster ids are categorical,
   // not a magnitude), so size stays at the default scale, but fill color
   // still comes from the stat — just from the categorical cluster palette
-  // instead of statColorScale. Clusters are recomputed here every call, so
-  // switching the weight-threshold slider (which rebuilds graph.links and
-  // calls restart() -> applyStatStyling()) immediately updates node colors
-  // to match the new connected-component structure.
+  // instead of statColorScale.
   //
-  // The other stats (PageRank, HITS, degree/closeness/betweenness
-  // centrality) get the same live-recompute treatment: DYNAMIC_STAT_KEYS
-  // are recalculated from the current graph.links before being read below,
-  // so they also update immediately on every slider change.
-  function applyStatStyling() {
+  // PURELY a rendering pass — reads currentStatKey/networkClusters/
+  // d[currentStatKey] as they currently stand, without recomputing any of
+  // them. Split out from the old combined applyStatStyling() so the click
+  // handler can restore this base look cheaply (no re-running PageRank/
+  // HITS/betweenness on every click) and so the click highlight override
+  // is provably the last thing written to the clicked node's fill.
+  function renderStatStyling() {
     var isClustering = (currentStatKey === 'network_clustering');
     statHighlightActive = !!currentStatKey && !isClustering;
-
-    if (isClustering) computeNetworkClusters();
-
-    if (currentStatKey && DYNAMIC_STAT_KEYS.indexOf(currentStatKey) !== -1) {
-      var adj = buildAdjacency();
-      var values = computeDynamicStatValues(currentStatKey, adj);
-      if (values) {
-        graph.nodes.forEach(function(d) { d[currentStatKey] = values[d.index]; });
-      }
-    }
 
     node.select(".node-shape").each(function(d) {
       var el = d3.select(this);
@@ -1309,6 +1306,35 @@ function d3graphscript(config = {
     });
 
     if (useCanvasEdges) drawCanvasEdges();
+  }
+
+  // Recomputes whatever the currently selected stat actually needs
+  // (connected components for clustering, or the relevant graph algorithm
+  // for PageRank/HITS/degree/closeness/betweenness) from the CURRENT
+  // graph.links — i.e. whatever survives the weight-threshold slider right
+  // now. Only call this when the network or the selected stat has actually
+  // changed (initial render, stat-radio change, slider change); clicking a
+  // node doesn't change either, so the click handler calls renderStatStyling()
+  // directly instead and skips this.
+  function recomputeActiveStat() {
+    var isClustering = (currentStatKey === 'network_clustering');
+    if (isClustering) computeNetworkClusters();
+
+    if (currentStatKey && DYNAMIC_STAT_KEYS.indexOf(currentStatKey) !== -1) {
+      var adj = buildAdjacency();
+      var values = computeDynamicStatValues(currentStatKey, adj);
+      if (values) {
+        graph.nodes.forEach(function(d) { d[currentStatKey] = values[d.index]; });
+      }
+    }
+  }
+
+  // Full refresh: recompute + render. Used wherever the network or the
+  // selected stat may have changed (initial render, restart() on slider
+  // change, stat-radio change).
+  function applyStatStyling() {
+    recomputeActiveStat();
+    renderStatStyling();
   }
 
   var statRadios = document.querySelectorAll('input[name="statMetric"]');

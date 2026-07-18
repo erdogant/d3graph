@@ -39,7 +39,8 @@
 
 <!-- Side panel: interactively recolor/resize nodes by common network statistics -->
 <div class="stats-panel" id="statsPanel">
-    <div class="stats-panel-title">Network Statistic</div>
+    <div class="stats-panel-title">Network Statistic<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-body">
     <label><input type="radio" name="statMetric" value="user_default" checked> Default</label>
     <label><input type="radio" name="statMetric" value="node_pagerank"> PageRank</label>
     <label><input type="radio" name="statMetric" value="node_hits_hub"> HITS (Hub)</label>
@@ -48,6 +49,7 @@
     <label><input type="radio" name="statMetric" value="node_closeness_centrality"> Closeness Centrality</label>
     <label><input type="radio" name="statMetric" value="node_betweenness_centrality"> Betweenness Centrality</label>
     <label><input type="radio" name="statMetric" value="network_clustering"> Network Clustering</label>
+    </div>
 </div>
 
 <!-- Layout panel (Force-directed / Circular / Grid) removed from the UI -
@@ -57,7 +59,8 @@
 
 <!-- Side panel: interactively tune the force simulation -->
 <div class="stats-panel" id="physicsPanel">
-    <div class="stats-panel-title">Physics</div>
+    <div class="stats-panel-title">Physics<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-body">
     <div class="physics-control">
         <label for="chargeSlider">Network Tension <span id="chargeValue">{{ charge }}</span></label>
         <input type="range" id="chargeSlider" min="-2000" max="200" step="10" value="{{ charge }}">
@@ -71,11 +74,13 @@
         <input type="range" id="linkTensionSlider" min="0" max="5" step="0.1" value="{{ link_tension }}">
     </div>
     <button id="physicsResetButton" class="button-switch">Reset to Default</button>
+    </div>
 </div>
 
 <!-- Side panel: interactively tune the density heatmap layer -->
 <div class="stats-panel" id="densityPanel">
-    <div class="stats-panel-title">Density Layer</div>
+    <div class="stats-panel-title">Density Layer<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-body">
     <div class="physics-control">
         <label for="densityGridSizeSlider">Grid Size <span id="densityGridSizeValue">{{ density_grid_size }}</span></label>
         <input type="range" id="densityGridSizeSlider" min="5" max="120" step="5" value="{{ density_grid_size }}">
@@ -89,6 +94,7 @@
         <input type="range" id="densityOpacitySlider" min="0" max="1" step="0.05" value="{{ density_opacity }}">
     </div>
     <button id="densityResetButton" class="button-switch">Reset to Default</button>
+    </div>
 </div>
 
 {% endif %}
@@ -127,7 +133,7 @@
         // Stacks every .stats-panel element (Network Statistic, Layout, ...)
         // below the header row (edge-threshold slider + top-panel buttons),
         // using its actual measured height rather than a hardcoded pixel
-        // guess guessed offset breaks the moment the row wraps onto two
+        // guess Ã¢â‚¬â€ a guessed offset breaks the moment the row wraps onto two
         // lines on a narrower screen, which is exactly what caused this
         // panel's earlier positioning bugs. Scales to any number of panels
         // automatically. Falls back to .top-panel alone if .header-row isn't
@@ -144,6 +150,18 @@
             });
         }
         window.addEventListener('resize', positionSidePanels);
+
+        // Collapsible side panels: clicking a panel's title hides/shows its
+        // body (everything but the title) and flips the arrow. Re-stacks
+        // immediately after, since positionSidePanels() measures each
+        // panel's actual rendered height â€” a collapsed panel is just
+        // shorter, no separate logic needed to close the gap.
+        document.querySelectorAll('.stats-panel-title').forEach(function (title) {
+            title.addEventListener('click', function () {
+                title.parentElement.classList.toggle('collapsed');
+                positionSidePanels();
+            });
+        });
 
         // Dark mode toggle logic
         const darkSwitch = document.getElementById('darkModeSwitch');
