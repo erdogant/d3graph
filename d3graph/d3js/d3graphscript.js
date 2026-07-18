@@ -862,95 +862,215 @@ function d3graphscript(config = {
     node.select(".node-shape")
       .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; });
     applyNeighborHighlightStyling();
+    renderNodeInfoPlaceholder();
   }
 
+  // O(1) datum lookup by .index — used by history navigation and by the
+  // Node Info panel's connection links, neither of which have a DOM click
+  // event to read a datum off of. Built once: node count never changes
+  // after initial render (only which edges are visible does), so this
+  // never goes stale the way linkedByIndex could.
+  var nodeByIndex = {};
+  node.each(function(d) { nodeByIndex[d.index] = d; });
 
-  // SINGLE-CLICK HANDLER: recolors/resizes the clicked node AND highlights
-  // its directly-connected edges with a glow while dimming everything else.
-  // These were previously two separate handlers (click = recolor, dblclick
-  // = dim-non-neighbors); merged here so both happen on one click.
-  //
-  // Clicking a different node re-targets the highlight to it; clicking the
-  // currently-highlighted node again, or clicking empty background (see
-  // container.on('click', ...) below), clears it.
-  function nodeClickHandler() {
-  // Stop this click from bubbling up to the background "clear highlight"
-  // listener on `container` — otherwise every node click would immediately
-  // clear the highlight it just set.
-  d3.event.stopPropagation();
+  // Core selection logic, shared by an actual SVG node click and by
+  // programmatic navigation (Node Info panel connection links, back/forward
+  // history) that has no click event/`this` to work from. Always (re)applies
+  // the highlight to `datum` — unlike the old toggle-on-click behavior, this
+  // never clears; toggling off on a repeat click is handled by the caller
+  // (nodeClickHandler) so history navigation can't accidentally deselect.
+  function applySelection(datum, domNode) {
+    renderStatStyling();
+    node.select(".node-shape")
+      .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; });
 
-  // First restore the currently active base styling (cheap — reuses
-  // whichever stat/cluster values were last computed, does NOT re-run
-  // PageRank/HITS/betweenness/etc. on every click):
-  // - statistic colors/sizes when a radio metric is active
-  // - original node styling when no statistic is active
-  renderStatStyling();
+    rebuildLinkedByIndex();
+    highlightedNodeIndex = datum.index;
+    applyNeighborHighlightStyling();
 
-  // Restore pinned cue after renderStatStyling()
-  node.select(".node-shape")
-    .style("stroke-dasharray", function(d) {
-      return (sticky && d.fixed) ? "4,2" : null;
+    // Apply click styling only to the selected node. This runs LAST and
+    // touches only this one shape's fill/stroke/size, so nothing above (the
+    // base-style restore or the neighbor highlight, which only ever touch
+    // opacity/width/filter) can overwrite it — the selected node reliably
+    // ends up showing its underlying node_color, regardless of which
+    // network statistic is currently active.
+    var targetNode = domNode;
+    if (!targetNode) {
+      node.each(function(o) { if (o.index === datum.index) targetNode = this; });
+    }
+    if (targetNode) {
+      var clickedShape = d3.select(targetNode).select(".node-shape");
+      clickedShape
+        .style("fill", {{ CLICK_FILL }})
+        .style("stroke", "{{ CLICK_STROKE }}")
+        .style("stroke-width", {{ CLICK_STROKEW }});
+
+      var shapeNode = clickedShape.node();
+      if (shapeNode) {
+        var tag = shapeNode.tagName.toLowerCase();
+        clickedShape.each(function(d) {
+          var el = d3.select(this);
+          var baseR = parseFloat(d.node_size) || 8;
+          var statValue = currentStatKey ? d[currentStatKey] : null;
+          var hasStatValue = currentStatKey && typeof statValue === "number" && !isNaN(statValue);
+          var statScale = hasStatValue ? 1.2 + statValue * 1.3 : 1;
+          var clickScale = statScale * {{ CLICK_SIZE }};
+
+          if (tag === "circle") {
+            el.attr("r", baseR * clickScale);
+          } else if (tag === "ellipse") {
+            el.attr("rx", baseR * 1.6 * clickScale).attr("ry", baseR * clickScale);
+          } else if (tag === "path") {
+            el.attr("d", shapePathD(d.node_marker, baseR * clickScale));
+          }
+        });
+      }
+    }
+
+    renderNodeInfoPanel(datum);
+  }
+
+  // ---- NODE INFO PANEL: browser-style back/forward history ----
+  // nodeInfoHistory holds node .index values in visit order; nodeInfoHistoryPos
+  // is where we currently are in it. Visiting a NEW node (graph click or a
+  // connection link, not Back/Forward) truncates any "forward" entries past
+  // the current position, exactly like browser history does after following
+  // a fresh link from a page you'd navigated back to.
+  var nodeInfoHistory = [];
+  var nodeInfoHistoryPos = -1;
+
+  function navigateNodeInfo(datum, domNode, fromHistory) {
+    if (!fromHistory) {
+      nodeInfoHistory = nodeInfoHistory.slice(0, nodeInfoHistoryPos + 1);
+      nodeInfoHistory.push(datum.index);
+      nodeInfoHistoryPos = nodeInfoHistory.length - 1;
+    }
+    applySelection(datum, domNode);
+    updateNodeInfoNavButtons();
+  }
+
+  function nodeInfoGoBack() {
+    if (nodeInfoHistoryPos <= 0) return;
+    nodeInfoHistoryPos--;
+    navigateNodeInfo(nodeByIndex[nodeInfoHistory[nodeInfoHistoryPos]], null, true);
+  }
+  function nodeInfoGoForward() {
+    if (nodeInfoHistoryPos >= nodeInfoHistory.length - 1) return;
+    nodeInfoHistoryPos++;
+    navigateNodeInfo(nodeByIndex[nodeInfoHistory[nodeInfoHistoryPos]], null, true);
+  }
+  function updateNodeInfoNavButtons() {
+    var backBtn = document.getElementById('nodeInfoBack');
+    var fwdBtn = document.getElementById('nodeInfoForward');
+    if (backBtn) backBtn.disabled = nodeInfoHistoryPos <= 0;
+    if (fwdBtn) fwdBtn.disabled = nodeInfoHistoryPos >= nodeInfoHistory.length - 1;
+  }
+  var nodeInfoBackBtn = document.getElementById('nodeInfoBack');
+  var nodeInfoForwardBtn = document.getElementById('nodeInfoForward');
+  if (nodeInfoBackBtn) nodeInfoBackBtn.addEventListener('click', nodeInfoGoBack);
+  if (nodeInfoForwardBtn) nodeInfoForwardBtn.addEventListener('click', nodeInfoGoForward);
+  updateNodeInfoNavButtons();
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function(c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function nodeInfoRow(label, value) {
+    return '<div class="node-info-row"><span class="node-info-label">' + escapeHtml(label) +
+      '</span><span class="node-info-value">' + escapeHtml(value) + '</span></div>';
+  }
+
+  var STAT_LABELS = {
+    node_pagerank: 'PageRank',
+    node_hits_hub: 'HITS (Hub)',
+    node_hits_authority: 'HITS (Authority)',
+    node_degree_centrality: 'Degree Centrality',
+    node_closeness_centrality: 'Closeness Centrality',
+    node_betweenness_centrality: 'Betweenness Centrality'
+  };
+
+  function renderNodeInfoPlaceholder() {
+    var contentEl = document.getElementById('nodeInfoContent');
+    if (contentEl) contentEl.innerHTML = '<div class="node-info-placeholder">Click a node to see its details.</div>';
+  }
+
+  // Renders name/label/tooltip/group/stat scores, then the current 1-hop
+  // connections (from graph.links — i.e. whatever the weight-threshold
+  // slider currently shows) as clickable links that re-run this same
+  // navigation, so drilling through the network from the panel works
+  // exactly like clicking nodes in the graph.
+  function renderNodeInfoPanel(datum) {
+    var contentEl = document.getElementById('nodeInfoContent');
+    if (!contentEl) return;
+
+    var html = '';
+    html += nodeInfoRow('Name', datum.name);
+    html += nodeInfoRow('Label', datum.node_name);
+    if (datum.node_tooltip) html += nodeInfoRow('Tooltip', datum.node_tooltip);
+    // '-1' is the sentinel this pipeline uses for "no clustering computed" — skip it.
+    if (datum.group !== undefined && datum.group !== null && String(datum.group) !== '-1' && String(datum.group) !== '') {
+      html += nodeInfoRow('Group', datum.group);
+    }
+
+    var statRows = '';
+    DYNAMIC_STAT_KEYS.forEach(function(key) {
+      var v = datum[key];
+      if (typeof v === 'number' && !isNaN(v)) statRows += nodeInfoRow(STAT_LABELS[key] || key, v.toFixed(2));
+    });
+    if (statRows) html += '<div class="node-info-section-title">Statistics</div>' + statRows;
+
+    var connected = [];
+    var seen = {};
+    graph.links.forEach(function(l) {
+      var other = null;
+      if (l.source.index === datum.index) other = l.target;
+      else if (l.target.index === datum.index) other = l.source;
+      if (other && !seen[other.index]) { seen[other.index] = true; connected.push(other); }
     });
 
-  // Highlight the clicked node's neighborhood: glow its edges, dim
-  // everything else. rebuildLinkedByIndex() guards against the slider
-  // having changed which edges exist since the last time this ran.
-  var clickedDatum = d3.select(this).node().__data__;
-  rebuildLinkedByIndex();
-  highlightedNodeIndex = (highlightedNodeIndex === clickedDatum.index) ? null : clickedDatum.index;
-  applyNeighborHighlightStyling();
-
-  // Apply click styling only to the selected node. This runs LAST and
-  // touches only this one shape's fill/stroke/size, so nothing above (the
-  // base-style restore or the neighbor highlight, which only ever touch
-  // opacity/width/filter) can overwrite it — the clicked node reliably
-  // ends up showing its underlying node_color, regardless of which network
-  // statistic is currently active.
-  var clickedShape = d3.select(this).select(".node-shape");
-
-  clickedShape
-    .style("fill", {{ CLICK_FILL }})
-    .style("stroke", "{{ CLICK_STROKE }}")
-    .style("stroke-width", {{ CLICK_STROKEW }});
-
-  var shapeNode = clickedShape.node();
-  if (!shapeNode) return;
-
-  var tag = shapeNode.tagName.toLowerCase();
-
-  clickedShape.each(function(d) {
-    var el = d3.select(this);
-    var baseR = parseFloat(d.node_size) || 8;
-
-    // Preserve the statistic-driven size before applying click enlargement
-    var statValue = currentStatKey ? d[currentStatKey] : null;
-    var hasStatValue =
-      currentStatKey &&
-      typeof statValue === "number" &&
-      !isNaN(statValue);
-
-    var statScale = hasStatValue
-      ? 1.2 + statValue * 1.3
-      : 1;
-
-    var clickScale = statScale * {{ CLICK_SIZE }};
-
-    if (tag === "circle") {
-      el.attr("r", baseR * clickScale);
-
-    } else if (tag === "ellipse") {
-      el
-        .attr("rx", baseR * 1.6 * clickScale)
-        .attr("ry", baseR * clickScale);
-
-    } else if (tag === "path") {
-      el.attr(
-        "d",
-        shapePathD(d.node_marker, baseR * clickScale)
-      );
+    html += '<div class="node-info-section-title">Connections (' + connected.length + ')</div>';
+    if (connected.length) {
+      html += '<ul class="node-info-connections">';
+      connected.forEach(function(o) {
+        html += '<li><a href="#" class="node-info-connection-link" data-node-index="' + o.index + '">' +
+          escapeHtml(o.node_name || o.name || ('Node ' + o.index)) + '</a></li>';
+      });
+      html += '</ul>';
+    } else {
+      html += '<div class="node-info-placeholder">No connections at the current threshold.</div>';
     }
-  });
-}
+
+    contentEl.innerHTML = html;
+    contentEl.querySelectorAll('.node-info-connection-link').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = nodeByIndex[parseInt(this.getAttribute('data-node-index'), 10)];
+        if (target) navigateNodeInfo(target, null, false);
+      });
+    });
+  }
+  renderNodeInfoPlaceholder();
+
+  // SINGLE-CLICK HANDLER: recolors/resizes the clicked node, highlights its
+  // directly-connected edges with a glow while dimming everything else, and
+  // populates the Node Info panel. Clicking a different node re-targets the
+  // selection (and pushes it onto the Node Info history); clicking the
+  // currently-selected node again, or clicking empty background (see
+  // container.on('click', ...) below), clears it.
+  function nodeClickHandler() {
+    // Stop this click from bubbling up to the background "clear highlight"
+    // listener on `container` — otherwise every node click would immediately
+    // clear the highlight it just set.
+    d3.event.stopPropagation();
+
+    var clickedDatum = d3.select(this).node().__data__;
+    if (highlightedNodeIndex === clickedDatum.index) {
+      clearNeighborHighlight();
+    } else {
+      navigateNodeInfo(clickedDatum, this, false);
+    }
+  }
 
 
   //adjust threshold
@@ -1029,6 +1149,8 @@ function d3graphscript(config = {
     // Reflect the initial show_density state on load, in case it started true.
     if (densityPanelEl) densityPanelEl.style.display = densityVisible ? '' : 'none';
   }
+
+
 
   // Called from the dark-mode toggle (outside this function's scope, in the
   // page's own script) so the density color scheme switches live instead of
@@ -1451,8 +1573,12 @@ function d3graphscript(config = {
       radio.addEventListener('change', function() {
         currentStatKey = (this.value === 'none') ? null : this.value;
         highlightedNodeIndex = null;
+        nodeInfoHistory = [];
+        nodeInfoHistoryPos = -1;
         applyStatStyling();
         applyNeighborHighlightStyling(); // resets node (g) opacity — renderStatStyling() never touches it
+        renderNodeInfoPlaceholder();
+        updateNodeInfoNavButtons();
       });
     });
   }
@@ -1699,12 +1825,16 @@ function d3graphscript(config = {
       else if (currentLayout === 'grid') layoutGrid();
       updatePositions();
     }
-    // The edge set just changed (slider), so any active click-highlight may
-    // reference edges that no longer exist — clear it rather than risk a
-    // stale glow/dim.
+    // The edge set just changed (slider), so any active click-highlight (and
+    // the connections list in the Node Info panel) may reference edges that
+    // no longer exist — clear both rather than risk something stale.
     highlightedNodeIndex = null;
+    nodeInfoHistory = [];
+    nodeInfoHistoryPos = -1;
     applyStatStyling();
     applyNeighborHighlightStyling(); // resets node (g) opacity — renderStatStyling() never touches it
+    renderNodeInfoPlaceholder();
+    updateNodeInfoNavButtons();
   }
 
     function resizeGraph() {

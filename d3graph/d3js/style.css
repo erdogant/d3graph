@@ -70,6 +70,12 @@ h3 {
    pre-JS fallback (first paint, before the script runs). */
 .stats-panel {
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  /* Allow resizing in both width and height */
+  resize: both;
+  overflow: hidden;
+  
   top: 10px;
   left: 10px;
   z-index: 1000;
@@ -81,9 +87,29 @@ h3 {
   font-family: "Helvetica", Arial, sans-serif;
   font-size: 13px;
   width: 220px;
-  max-width: calc(100vw - 40px);
-}
+  min-width: 180px;
+  max-width: min(600px, calc(100vw - 40px));
+  /* Drag the bottom-right corner to widen/narrow. `resize` requires a
+     scroll container even though we don't want vertical scrolling here —
+     panel height is driven by content/positionSidePanels(), not by this,
+     so overflow only ever kicks in if a panel is resized narrower than
+     its content needs. The native resize-handle grip uses the browser's
+     default color, which reads fine on both light and dark panels. */
 
+  /* Prevent accidental shrinking to unusable sizes */
+  min-width: 180px;
+  min-height: 40px;
+
+  /* Prevent growing outside the viewport */
+  max-width: min(600px, calc(100vw - 40px));
+  max-height: calc(100vh - 40px);
+}
+.stats-panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 .dark-mode .stats-panel {
   background: rgba(34, 34, 34, 0.92);
   color: #eee;
@@ -154,6 +180,135 @@ h3 {
     background-color: #222 !important;
     color: #eee !important;
 }
+
+/* ---- Node Info panel ---- */
+.node-info-nav {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.node-info-nav-btn {
+  flex: 1;
+  padding: 4px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-size: 0.95em;
+}
+.node-info-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.dark-mode .node-info-nav-btn {
+  background: #333;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+/* Only for the Node Info panel */
+
+
+.node-info-content {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  /* Firefox: no per-state (hover) width control exists for native
+     scrollbars, so this is the closest equivalent — always thin rather
+     than the default width, at least matching the "resting" state below. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+
+/* Thin by default, doubles in width only on hover — "wider when needed"
+   instead of permanently taking up space. Chrome/Edge/Safari only;
+   Firefox falls back to the static scrollbar-width: thin above. */
+.node-info-content::-webkit-scrollbar {
+  width: 6px;
+  transition: width 0.15s ease;
+}
+.node-info-content:hover::-webkit-scrollbar {
+  width: 12px;
+}
+.node-info-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.node-info-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+}
+.node-info-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.dark-mode .node-info-content {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+.dark-mode .node-info-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+.dark-mode .node-info-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+.node-info-placeholder {
+  font-style: italic;
+  color: #888;
+  font-size: 12px;
+}
+.node-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  margin: 3px 0;
+}
+.node-info-label {
+  color: #888;
+  flex-shrink: 0;
+}
+.node-info-value {
+  text-align: right;
+  word-break: break-word;
+}
+.dark-mode .node-info-label {
+  color: #aaa;
+}
+.node-info-section-title {
+  font-weight: bold;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #888;
+  margin: 10px 0 4px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 6px;
+}
+.dark-mode .node-info-section-title {
+  color: #aaa;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+.node-info-connections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.node-info-connections li {
+  margin: 2px 0;
+}
+.node-info-connection-link {
+  font-size: 12px;
+  color: #2166ac;
+  text-decoration: none;
+  cursor: pointer;
+}
+.node-info-connection-link:hover {
+  text-decoration: underline;
+}
+.dark-mode .node-info-connection-link {
+  color: #6fa8dc;
+}
+
 .dark-mode #graphContainer {
     background-color: #222 !important;
 }

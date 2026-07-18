@@ -97,6 +97,21 @@
     </div>
 </div>
 
+<!-- Side panel: details for whichever node is currently selected, with browser-style back/forward navigation through previously viewed nodes -->
+<div class="stats-panel" id="nodeInfoPanel">
+    <div class="stats-panel-title">Node Info<span class="stats-panel-toggle">â–¾</span></div>
+    <div class="stats-panel-body">
+    <div class="node-info-nav">
+        <button type="button" id="nodeInfoBack" class="node-info-nav-btn" title="Back" disabled>&larr;</button>
+        <button type="button" id="nodeInfoForward" class="node-info-nav-btn" title="Forward" disabled>&rarr;</button>
+    </div>
+    <div id="nodeInfoContent" class="node-info-content">
+        <div class="node-info-placeholder">Click a node to see its details.</div>
+    </div>
+    </div>
+</div>
+
+
 {% endif %}
 
 
@@ -150,6 +165,17 @@
             });
         }
         window.addEventListener('resize', positionSidePanels);
+
+        // NEW: Reposition immediately whenever a panel is resized.
+        if (window.ResizeObserver) {
+            const panelObserver = new ResizeObserver(function() {
+                positionSidePanels();
+            });
+            document.querySelectorAll('.stats-panel').forEach(function(panel) {
+                panelObserver.observe(panel);
+            });
+        }
+
 
         // Collapsible side panels: clicking a panel's title hides/shows its
         // body (everything but the title) and flips the arrow. Re-stacks
