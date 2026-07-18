@@ -98,6 +98,23 @@ function d3graphscript(config = {
     var EDGE_HIGHLIGHT_WIDTH_MULT = 1.8;
     var EDGE_HIGHLIGHT_OPACITY_MULT = 1.6;
 
+    // ---- CLICK-TO-HIGHLIGHT-NEIGHBORS ----
+    // Clicking a node dims everything except it and its directly-connected
+    // neighbors/edges, and gives those edges a "glow" so the connected
+    // structure pops. highlightedNodeIndex is null when nothing is
+    // highlighted, or the .index of the currently-highlighted node.
+    var highlightedNodeIndex = null;
+    var NEIGHBOR_DIM_OPACITY = 0.1;
+    var EDGE_GLOW_WIDTH_MULT = 2;
+    var EDGE_GLOW_COLOR = '#ffcc00';
+    var EDGE_GLOW_CANVAS_BLUR = 8; // px, canvas ctx.shadowBlur for the same effect in canvas-edge mode
+    // Set true by any pan/zoom gesture (see zoom's "zoom" handler below) and
+    // read+reset by the background click listener, so dragging the canvas
+    // to pan doesn't clear the highlight — only a real click on empty
+    // background does. A plain click never fires "zoom" (no translate/scale
+    // delta), so this stays false for those.
+    var panOrZoomOccurred = false;
+
     // ---- DENSITY (clustering heatmap) LAYER ----
     // Grid-binned node density, drawn on its own canvas beneath the edges and
     // nodes. Recomputed from live node positions every tick it's visible, so
@@ -351,6 +368,7 @@ function d3graphscript(config = {
       .style("left", 0)
       .style("background-color", "transparent")
       .call(d3.behavior.zoom().on("zoom", function () {
+        panOrZoomOccurred = true;
         svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
         // Single class toggle (cheap) rather than iterating every label on
         // every zoom/pan event — CSS handles hiding all descendant <text>.
@@ -380,9 +398,28 @@ function d3graphscript(config = {
         ctx.strokeStyle = d.edge_color || '#999';
         var baseOpacity = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
         var baseWidth = d.edge_width || 1;
-        ctx.globalAlpha = statHighlightActive ? Math.min(1, baseOpacity * EDGE_HIGHLIGHT_OPACITY_MULT) : baseOpacity;
-        ctx.lineWidth = statHighlightActive ? baseWidth * EDGE_HIGHLIGHT_WIDTH_MULT : baseWidth;
         ctx.setLineDash(d.edge_style === 'dashed' ? [6, 3] : d.edge_style === 'dotted' ? [1.5, 3] : []);
+
+        if (highlightedNodeIndex !== null) {
+          // Click-highlight takes priority over the stat-driven boost below —
+          // same precedence SVG-mode edges get in applyNeighborHighlightStyling().
+          var isConnected = (d.source.index === highlightedNodeIndex || d.target.index === highlightedNodeIndex);
+          if (isConnected) {
+            ctx.globalAlpha = 1;
+            ctx.lineWidth = baseWidth * EDGE_GLOW_WIDTH_MULT;
+            ctx.shadowColor = EDGE_GLOW_COLOR;
+            ctx.shadowBlur = EDGE_GLOW_CANVAS_BLUR;
+          } else {
+            ctx.globalAlpha = NEIGHBOR_DIM_OPACITY;
+            ctx.lineWidth = baseWidth;
+            ctx.shadowBlur = 0;
+          }
+        } else {
+          ctx.globalAlpha = statHighlightActive ? Math.min(1, baseOpacity * EDGE_HIGHLIGHT_OPACITY_MULT) : baseOpacity;
+          ctx.lineWidth = statHighlightActive ? baseWidth * EDGE_HIGHLIGHT_WIDTH_MULT : baseWidth;
+          ctx.shadowBlur = 0;
+        }
+
         ctx.stroke();
       }
       ctx.restore();
@@ -588,9 +625,21 @@ function d3graphscript(config = {
       });
     }
     
-    // SINGLE-CLICK HANDLER — recolors/resizes the clicked node AND dims
-    // non-neighbors (previously dblclick's job; see nodeClickHandler above).
+    // SINGLE-CLICK HANDLER — recolors/resizes the clicked node AND
+    // glows/dims its neighborhood (previously dblclick's job; see
+    // nodeClickHandler above).
     {{ CLICK_COMMENT }} node.on('click', nodeClickHandler); // ON CLICK HANDLER
+
+    // Clicking anywhere that ISN'T a node — empty canvas background —
+    // clears the highlight. nodeClickHandler calls stopPropagation(), so
+    // this only ever fires for genuine background clicks, never as a
+    // side-effect of clicking a node. panOrZoomOccurred filters out the
+    // trailing click that follows a pan/zoom drag, so panning the view
+    // doesn't wipe the highlight.
+    container.on('click', function() {
+      if (panOrZoomOccurred) { panOrZoomOccurred = false; return; }
+      clearNeighborHighlight();
+    });
 
     // Append the correct shape per node (circle, ellipse, rect, triangle, etc.)
     appendShape(node);
@@ -744,29 +793,91 @@ function d3graphscript(config = {
   // collision detection end
 
 
-  //Toggle stores whether the highlighting is on
-  var toggle = 0;
   //Create an array logging what is connected to what
   var linkedByIndex = {};
-  for (i = 0; i < graph.nodes.length; i++) {
-    linkedByIndex[i + "," + i] = 1;
-  };
-  graph.links.forEach(function(d) {
-    linkedByIndex[d.source.index + "," + d.target.index] = 1;
-  });
-  //This function looks up whether a pair are neighbours
-  function neighboring(a, b) {
-    return linkedByIndex[a.index + "," + b.index];
+  // Rebuilds linkedByIndex from the CURRENT graph.links (i.e. whatever
+  // survives the weight-threshold slider right now). It used to be built
+  // once here at setup and never touched again, which meant neighboring()
+  // could report stale connectivity after any slider change. Cheap (O(E)),
+  // so it's fine to call before every click-highlight rather than trying to
+  // keep a cache in sync with every place graph.links gets mutated.
+  function rebuildLinkedByIndex() {
+    linkedByIndex = {};
+    for (var i = 0; i < graph.nodes.length; i++) {
+      linkedByIndex[i + "," + i] = 1;
+    }
+    graph.links.forEach(function(d) {
+      var s = (d.source && d.source.index !== undefined) ? d.source.index : d.source;
+      var t = (d.target && d.target.index !== undefined) ? d.target.index : d.target;
+      linkedByIndex[s + "," + t] = 1;
+    });
+  }
+  rebuildLinkedByIndex();
+
+  // Applies (or clears) the click-highlight dim/glow treatment based on the
+  // current value of highlightedNodeIndex. Expected to run AFTER
+  // renderStatStyling() has (re)established the base look, since it only
+  // overlays on top of that — when nothing is highlighted it just resets
+  // node (g) opacity back to resting, since renderStatStyling() already
+  // handles everything else (including clearing any glow filter).
+  function applyNeighborHighlightStyling() {
+    if (highlightedNodeIndex === null) {
+      node.style("opacity", 0.95);
+      if (useCanvasEdges) drawCanvasEdges();
+      return;
+    }
+
+    var centerIndex = highlightedNodeIndex;
+    node.style("opacity", function(o) {
+      return (linkedByIndex[centerIndex + "," + o.index] || linkedByIndex[o.index + "," + centerIndex]) ? 1 : NEIGHBOR_DIM_OPACITY;
+    });
+
+    // SVG-mode edges — no-op selection when canvas mode has emptied it;
+    // drawCanvasEdges() below covers that case instead.
+    link.each(function(o) {
+      var isConnected = (o.source.index === centerIndex || o.target.index === centerIndex);
+      var el = d3.select(this);
+      if (isConnected) {
+        var w = parseFloat(o.edge_width) || 1;
+        el.style("opacity", 1)
+          .style("stroke-width", w * EDGE_GLOW_WIDTH_MULT)
+          .style("filter", 'drop-shadow(0 0 3px ' + EDGE_GLOW_COLOR + ') drop-shadow(0 0 6px ' + EDGE_GLOW_COLOR + ')');
+      } else {
+        el.style("opacity", NEIGHBOR_DIM_OPACITY).style("filter", null);
+      }
+    });
+
+    if (useCanvasEdges) drawCanvasEdges();
+  }
+
+  // Clears the click-highlight entirely — used for "click on empty
+  // background" (see container.on('click', ...) below) and whenever the
+  // network/stat changes underneath an active highlight (restart(), stat
+  // radio change), since a highlight computed against the old edge set
+  // could otherwise linger and go stale.
+  function clearNeighborHighlight() {
+    if (highlightedNodeIndex === null) return;
+    highlightedNodeIndex = null;
+    renderStatStyling(); // undoes the dim/glow AND any per-node click color/size override
+    node.select(".node-shape")
+      .style("stroke-dasharray", function(d) { return (sticky && d.fixed) ? "4,2" : null; });
+    applyNeighborHighlightStyling();
   }
 
 
-  // SINGLE-CLICK HANDLER: recolors/resizes the clicked node AND dims
-  // everything except it and its directly-connected neighbors/edges.
+  // SINGLE-CLICK HANDLER: recolors/resizes the clicked node AND highlights
+  // its directly-connected edges with a glow while dimming everything else.
   // These were previously two separate handlers (click = recolor, dblclick
-  // = dim-non-neighbors); merged here so both happen on one click. The
-  // dim/undim toggle logic is unchanged from the old connectedNodes() —
-  // clicking any node flips it, same as double-clicking any node used to.
+  // = dim-non-neighbors); merged here so both happen on one click.
+  //
+  // Clicking a different node re-targets the highlight to it; clicking the
+  // currently-highlighted node again, or clicking empty background (see
+  // container.on('click', ...) below), clears it.
   function nodeClickHandler() {
+  // Stop this click from bubbling up to the background "clear highlight"
+  // listener on `container` — otherwise every node click would immediately
+  // clear the highlight it just set.
+  d3.event.stopPropagation();
 
   // First restore the currently active base styling (cheap — reuses
   // whichever stat/cluster values were last computed, does NOT re-run
@@ -781,28 +892,20 @@ function d3graphscript(config = {
       return (sticky && d.fixed) ? "4,2" : null;
     });
 
-  // Dim everything except the clicked node and its direct neighbors/edges.
+  // Highlight the clicked node's neighborhood: glow its edges, dim
+  // everything else. rebuildLinkedByIndex() guards against the slider
+  // having changed which edges exist since the last time this ran.
   var clickedDatum = d3.select(this).node().__data__;
-  if (toggle == 0) {
-    node.style("opacity", function(o) {
-      return neighboring(clickedDatum, o) | neighboring(o, clickedDatum) ? 1 : 0.1;
-    });
-    link.style("opacity", function(o) {
-      return clickedDatum.index == o.source.index | clickedDatum.index == o.target.index ? 1 : 0.1;
-    });
-    toggle = 1;
-  } else {
-    node.style("opacity", 0.95);
-    link.style("opacity", 1);
-    toggle = 0;
-  }
+  rebuildLinkedByIndex();
+  highlightedNodeIndex = (highlightedNodeIndex === clickedDatum.index) ? null : clickedDatum.index;
+  applyNeighborHighlightStyling();
 
   // Apply click styling only to the selected node. This runs LAST and
   // touches only this one shape's fill/stroke/size, so nothing above (the
-  // base-style restore or the neighbor dimming, which only ever touch
-  // opacity) can overwrite it — the clicked node reliably ends up showing
-  // its underlying node_color, regardless of which network statistic is
-  // currently active.
+  // base-style restore or the neighbor highlight, which only ever touch
+  // opacity/width/filter) can overwrite it — the clicked node reliably
+  // ends up showing its underlying node_color, regardless of which network
+  // statistic is currently active.
   var clickedShape = d3.select(this).select(".node-shape");
 
   clickedShape
@@ -1294,6 +1397,11 @@ function d3graphscript(config = {
       var o = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
       return statHighlightActive ? Math.min(1, o * EDGE_HIGHLIGHT_OPACITY_MULT) : o;
     });
+    // Always clear the glow filter here — the only place that ever sets it
+    // is applyNeighborHighlightStyling(), and it re-applies it right after
+    // this whenever a node is actually highlighted. Guarantees the glow
+    // never gets stuck on an edge after the highlight moves or clears.
+    link.style("filter", null);
 
     // Node label color: cluster color while clustering mode is active (so
     // the label visibly matches its node's cluster), otherwise each node's
@@ -1342,7 +1450,9 @@ function d3graphscript(config = {
     statRadios.forEach(function(radio) {
       radio.addEventListener('change', function() {
         currentStatKey = (this.value === 'none') ? null : this.value;
+        highlightedNodeIndex = null;
         applyStatStyling();
+        applyNeighborHighlightStyling(); // resets node (g) opacity — renderStatStyling() never touches it
       });
     });
   }
@@ -1589,7 +1699,12 @@ function d3graphscript(config = {
       else if (currentLayout === 'grid') layoutGrid();
       updatePositions();
     }
+    // The edge set just changed (slider), so any active click-highlight may
+    // reference edges that no longer exist — clear it rather than risk a
+    // stale glow/dim.
+    highlightedNodeIndex = null;
     applyStatStyling();
+    applyNeighborHighlightStyling(); // resets node (g) opacity — renderStatStyling() never touches it
   }
 
     function resizeGraph() {
