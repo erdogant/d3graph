@@ -129,6 +129,7 @@ class d3graph:
              density_blur: int = 15,
              density_opacity: float = 0.8,
              show_controls: bool = True,
+             highlight_full_network: bool = True,
              ) -> None:
         """Build and show the graph.
 
@@ -216,6 +217,13 @@ class d3graph:
             just hidden, so there's no extra DOM/clutter in the embed. The weight/component
             sliders are controlled separately via show_slider; the Save button specifically
             is also controlled via save_button, independent of this.
+        highlight_full_network : bool, (default: True)
+            Controls how much of the graph lights up when a node is clicked.
+            True: The entire connected network reachable from the clicked node (every node
+                and edge in its connected component, not just its direct neighbors) is
+                highlighted; everything outside that component is dimmed.
+            False: Only the clicked node's directly-connected neighbors/edges (one hop)
+                are highlighted, matching the old default behavior.
 
         Returns
         -------
@@ -246,6 +254,7 @@ class d3graph:
         self.config['density_blur'] = density_blur
         self.config['density_opacity'] = density_opacity
         self.config['show_controls'] = show_controls
+        self.config['highlight_full_network'] = highlight_full_network
 
         # Allow show() to override the link_tension set at __init__ time
         if link_tension is not None:
@@ -874,6 +883,7 @@ class d3graph:
                    'density_blur': self.config.get('density_blur', 8),
                    'density_opacity': self.config.get('density_opacity', 0.6),
                    'show_controls': self.config.get('show_controls', True),
+                   'highlight_full_network': self.config.get('highlight_full_network', True),
                    'save_button': self.config['save_button'],
                    'node_text_inside': self.config.get('node_text_inside', False),
                    'CLICK_COMMENT': CLICK_COMMENT,

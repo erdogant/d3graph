@@ -18,6 +18,7 @@ function d3graphscript(config = {
     density_opacity: 0.6,
     show_density: false,
     dark_mode: false,
+    highlight_full_network: true,
     }) {
     
     //Constants for the SVG
@@ -104,6 +105,17 @@ function d3graphscript(config = {
     // structure pops. highlightedNodeIndex is null when nothing is
     // highlighted, or the .index of the currently-highlighted node.
     var highlightedNodeIndex = null;
+    // True (default): clicking a node highlights every node/edge in its whole
+    // connected component, however many hops away. False: only its directly-
+    // connected (one-hop) neighbors/edges light up, the old behavior.
+    var highlightFullNetwork = (config.highlight_full_network !== undefined && config.highlight_full_network !== null) ? !!config.highlight_full_network : true;
+    // Set (object keyed by node index) of every node reachable from
+    // highlightedNodeIndex, recomputed once per click in
+    // applyNeighborHighlightStyling() rather than per-frame — used by both
+    // the SVG styling pass and drawCanvasEdges() below so the BFS only runs
+    // once per highlight change. Null when nothing is highlighted, or when
+    // highlightFullNetwork is off (falls back to direct-neighbor checks).
+    var highlightedComponentSet = null;
     var NEIGHBOR_DIM_OPACITY = 0.1;
     var EDGE_GLOW_WIDTH_MULT = 2;
     var EDGE_GLOW_COLOR = '#ffcc00';
@@ -403,7 +415,12 @@ function d3graphscript(config = {
         if (highlightedNodeIndex !== null) {
           // Click-highlight takes priority over the stat-driven boost below —
           // same precedence SVG-mode edges get in applyNeighborHighlightStyling().
-          var isConnected = (d.source.index === highlightedNodeIndex || d.target.index === highlightedNodeIndex);
+          // When highlightedComponentSet is set (highlightFullNetwork), an edge
+          // counts as connected if BOTH its ends are anywhere in the clicked
+          // node's connected component, not just directly touching it.
+          var isConnected = highlightedComponentSet
+            ? (highlightedComponentSet[d.source.index] && highlightedComponentSet[d.target.index])
+            : (d.source.index === highlightedNodeIndex || d.target.index === highlightedNodeIndex);
           if (isConnected) {
             ctx.globalAlpha = 1;
             ctx.lineWidth = baseWidth * EDGE_GLOW_WIDTH_MULT;
@@ -795,6 +812,13 @@ function d3graphscript(config = {
 
   //Create an array logging what is connected to what
   var linkedByIndex = {};
+  // Adjacency list (index -> array of directly-connected neighbor indices,
+  // both directions) built alongside linkedByIndex. linkedByIndex answers
+  // "are these two specific nodes linked?" in O(1); this answers "who are
+  // this node's neighbors?" in O(degree), which is what a connected-
+  // component BFS/DFS needs — walking linkedByIndex directly would mean an
+  // O(nodes) scan per node visited.
+  var adjacencyList = [];
   // Rebuilds linkedByIndex from the CURRENT graph.links (i.e. whatever
   // survives the weight-threshold slider right now). It used to be built
   // once here at setup and never touched again, which meant neighboring()
@@ -803,16 +827,44 @@ function d3graphscript(config = {
   // keep a cache in sync with every place graph.links gets mutated.
   function rebuildLinkedByIndex() {
     linkedByIndex = {};
+    adjacencyList = new Array(graph.nodes.length);
     for (var i = 0; i < graph.nodes.length; i++) {
       linkedByIndex[i + "," + i] = 1;
+      adjacencyList[i] = [];
     }
     graph.links.forEach(function(d) {
       var s = (d.source && d.source.index !== undefined) ? d.source.index : d.source;
       var t = (d.target && d.target.index !== undefined) ? d.target.index : d.target;
       linkedByIndex[s + "," + t] = 1;
+      adjacencyList[s].push(t);
+      adjacencyList[t].push(s);
     });
   }
   rebuildLinkedByIndex();
+
+  // Breadth-first walk of adjacencyList from startIndex, treating edges as
+  // undirected (matches linkedByIndex's bidirectional lookups elsewhere) —
+  // returns every node index reachable from startIndex, i.e. its whole
+  // connected component, as an object keyed by index for O(1) membership
+  // checks. Only called once per click (from applyNeighborHighlightStyling),
+  // not per-frame, so an O(V+E) walk is cheap even on large graphs.
+  function getConnectedComponent(startIndex) {
+    var visited = {};
+    visited[startIndex] = true;
+    var queue = [startIndex];
+    while (queue.length) {
+      var current = queue.shift();
+      var neighbors = adjacencyList[current] || [];
+      for (var i = 0; i < neighbors.length; i++) {
+        var n = neighbors[i];
+        if (!visited[n]) {
+          visited[n] = true;
+          queue.push(n);
+        }
+      }
+    }
+    return visited;
+  }
 
   // Applies (or clears) the click-highlight dim/glow treatment based on the
   // current value of highlightedNodeIndex. Expected to run AFTER
@@ -822,20 +874,28 @@ function d3graphscript(config = {
   // handles everything else (including clearing any glow filter).
   function applyNeighborHighlightStyling() {
     if (highlightedNodeIndex === null) {
+      highlightedComponentSet = null;
       node.style("opacity", 0.95);
       if (useCanvasEdges) drawCanvasEdges();
       return;
     }
 
     var centerIndex = highlightedNodeIndex;
+    highlightedComponentSet = highlightFullNetwork ? getConnectedComponent(centerIndex) : null;
+
     node.style("opacity", function(o) {
+      if (highlightedComponentSet) {
+        return highlightedComponentSet[o.index] ? 1 : NEIGHBOR_DIM_OPACITY;
+      }
       return (linkedByIndex[centerIndex + "," + o.index] || linkedByIndex[o.index + "," + centerIndex]) ? 1 : NEIGHBOR_DIM_OPACITY;
     });
 
     // SVG-mode edges — no-op selection when canvas mode has emptied it;
     // drawCanvasEdges() below covers that case instead.
     link.each(function(o) {
-      var isConnected = (o.source.index === centerIndex || o.target.index === centerIndex);
+      var isConnected = highlightedComponentSet
+        ? (highlightedComponentSet[o.source.index] && highlightedComponentSet[o.target.index])
+        : (o.source.index === centerIndex || o.target.index === centerIndex);
       var el = d3.select(this);
       if (isConnected) {
         var w = parseFloat(o.edge_width) || 1;
