@@ -1096,12 +1096,20 @@ function d3graphscript(config = {
     restart();
   }
 
-  // Set the initial value of the slider to the user-defined threshold
-  document.getElementById('thresholdSlider').value = {{ SET_SLIDER }};
-  // Call the threshold function to set the network state
-  threshold.call(document.getElementById('thresholdSlider'));
-
-  d3.select("#thresholdSlider").on("change", threshold);
+  // Set the initial value of the slider to the user-defined threshold, and
+  // initialize the network state at that threshold. The slider element may
+  // not exist (show_slider=False, or no usable weight range to slide over),
+  // so fall back to a plain object carrying the same value threshold()
+  // expects via `this`, rather than letting a missing element throw and
+  // abort the rest of this function's setup.
+  var thresholdSliderInit = document.getElementById('thresholdSlider');
+  if (thresholdSliderInit) {
+    thresholdSliderInit.value = {{ SET_SLIDER }};
+    threshold.call(thresholdSliderInit);
+    d3.select("#thresholdSlider").on("change", threshold);
+  } else {
+    threshold.call({ value: {{ SET_SLIDER }} });
+  }
 
   // Live-update the label while dragging, without paying for a full
   // restart() (network refilter + recompute of whichever stat is active)
