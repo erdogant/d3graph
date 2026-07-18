@@ -74,8 +74,8 @@ from d3graph import d3graph
 
 
 <p align="left">
-  <a href="https://erdogant.github.io/docs/d3graph/titanic_example/index.html">
-     <img src="https://github.com/d3blocks/d3blocks/blob/main/docs/figs/d3graph/socialmedia.gif" width="1000"/>
+  <a href="http://erdogant.github.io/docs/d3graph/d3graph/socialmedia.html">
+     <img src="http://erdogant.github.io/docs/d3graph/d3graph/socialmedia.gif" width="1000"/>
   </a>
 </p>
 
