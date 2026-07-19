@@ -890,6 +890,7 @@ class d3graph:
                    'highlight_full_network': self.config.get('highlight_full_network', True),
                    'save_button': self.config['save_button'],
                    'node_text_inside': self.config.get('node_text_inside', False),
+                   'SIGNIFICANCE_ALPHA': self.config.get('significance_alpha', 0.05),
                    'CLICK_COMMENT': CLICK_COMMENT,
                    'CLICK_FILL': click_properties['fill'],
                    'CLICK_STROKE': click_properties['stroke'],
@@ -1131,25 +1132,25 @@ class d3graph:
         Parameters
         ----------
         adjmat : pd.DataFrame
-            Weighted adjacency matrix.
-    
+            Weighted adjacency matrix. Node labels are sanitized the same
+            way graph() does (matching self.adjmat / self.node_properties),
+            so passing your original, unsanitized adjmat here is safe —
+            but for identical results, prefer passing self.adjmat.
         statistic : str
-            Network statistic:
-            pagerank, hits_hub, hits_authority,
-            degree, closeness, betweenness
-    
+            'pagerank'
+            'hits_hub'
+            'hits_authority'
+            'degree'
+            'closeness'
+            'betweenness'
         n_top : int
             Number of highest scoring nodes tested.
-    
         n_random : int
             Number of randomized networks.
-    
         nswap : int
             Number of edge swaps per random network.
-    
         alpha : float
             Significance threshold.
-    
         seed : int
             Random seed.
 
@@ -1166,16 +1167,16 @@ class d3graph:
             Significance results.
         """
         rng = np.random.default_rng(seed)
+        # Make copy
+        adjmat = data_checks(adjmat.copy())
+        # Remember alpha so write_html() can pass it into the browser as SIGNIFICANCE_ALPHA 
+        self.config['significance_alpha'] = alpha
 
-        # ----------------------------
         # Real network scores
-        # ----------------------------
         real_scores = self.network_statistic(adjmat, statistic)
         top_nodes = real_scores.sort_values(ascending=False).head(n_top).index
 
-        # ----------------------------
         # Null distributions
-        # ----------------------------
         logger.info('Creating degree-preserving randomized networks')
         null_scores = {node: [] for node in top_nodes}
     
@@ -1186,9 +1187,7 @@ class d3graph:
             for node in top_nodes:
                 null_scores[node].append(scores[node])
 
-        # ----------------------------
         # Statistics
-        # ----------------------------
         logger.info(f'Computing {statistic} significance for the top {len(top_nodes)} nodes.')
         results = []
         for node in tqdm(top_nodes):
@@ -1198,19 +1197,19 @@ class d3graph:
             rand_scores = np.asarray(null_scores[node])
             # Set very small values to 0
             rand_scores = np.where(np.abs(rand_scores) < 1e-10, 0, rand_scores)
-
             # Initialize
             model = distfit(distr="popular", method='parametric', alpha=alpha, verbose=None)
-        
             # Fit null distribution
             model_results = model.fit_transform(rand_scores)
+            # model.plot()
             
             # Calculate probability of observing score >= observed
             Pout = model.predict(y)
             # Get Probability
             y_proba = Pout['y_proba'][0]
             # FDR Multiple test correction
-            y_proba = y_proba * n_top
+            y_proba = np.minimum(y_proba * n_top, 1)
+
             # Store
             results.append({"node": node, 
                             "score_real": y, 

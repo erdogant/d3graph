@@ -95,7 +95,7 @@ function d3graphscript(config = {
     // renders as two separate scales that meet at alpha with a visible
     // color jump — reddish below alpha (more significant = redder, i.e.
     // closer to p=0), blueish at/above it (less significant = bluer).
-    var SIGNIFICANCE_ALPHA = 0.05;
+    var SIGNIFICANCE_ALPHA = {{ SIGNIFICANCE_ALPHA }};
     var significanceColorScaleBelow = d3.scale.linear()
       .domain([0, SIGNIFICANCE_ALPHA])
       .range(["#b2182b", "#fddbc7"]);
@@ -1097,6 +1097,15 @@ function d3graphscript(config = {
   function renderNodeInfoPanel(datum) {
     var contentEl = document.getElementById('nodeInfoContent');
     if (!contentEl) return;
+
+    // Panels default to collapsed now, so pop this one open on selection —
+    // otherwise the content renders behind a closed title bar and clicking
+    // a node would look like it did nothing.
+    var nodeInfoPanelEl = document.getElementById('nodeInfoPanel');
+    if (nodeInfoPanelEl && nodeInfoPanelEl.classList.contains('collapsed')) {
+      nodeInfoPanelEl.classList.remove('collapsed');
+      if (typeof positionSidePanels === 'function') positionSidePanels();
+    }
 
     var html = '';
     html += nodeInfoRow('Name', datum.name);
