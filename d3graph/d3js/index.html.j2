@@ -168,7 +168,7 @@
         // Stacks every .stats-panel element (Network Statistic, Layout, ...)
         // below the header row (edge-threshold slider + top-panel buttons),
         // using its actual measured height rather than a hardcoded pixel
-        // guess ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â a guessed offset breaks the moment the row wraps onto two
+        // guess ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a guessed offset breaks the moment the row wraps onto two
         // lines on a narrower screen, which is exactly what caused this
         // panel's earlier positioning bugs. Scales to any number of panels
         // automatically. Falls back to .top-panel alone if .header-row isn't
@@ -184,7 +184,7 @@
                 // A flat "calc(100vh - 40px)" (the CSS fallback) ignores how
                 // far down the stack this particular panel sits, so a panel
                 // near the bottom (Node Info is last) could grow past the
-                // bottom of the screen â€” taking its resize handle with it,
+                // bottom of the screen Ã¢â‚¬â€ taking its resize handle with it,
                 // with no way to grab it back. Cap each panel's max-height to
                 // whatever viewport space actually remains below its own top.
                 panel.style.maxHeight = 'calc(100vh - ' + Math.round(y + 10) + 'px)';
@@ -207,7 +207,7 @@
         // Collapsible side panels: clicking a panel's title hides/shows its
         // body (everything but the title) and flips the arrow. Re-stacks
         // immediately after, since positionSidePanels() measures each
-        // panel's actual rendered height Ã¢â‚¬â€ a collapsed panel is just
+        // panel's actual rendered height ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â a collapsed panel is just
         // shorter, no separate logic needed to close the gap.
         document.querySelectorAll('.stats-panel-title').forEach(function (title) {
             title.addEventListener('click', function () {
@@ -219,7 +219,7 @@
                     // even after the body is hidden via the .collapsed CSS
                     // class, so a manually-resized panel would just show a
                     // tall block of empty space instead of actually
-                    // shrinking â€” looking like the collapse button had
+                    // shrinking Ã¢â‚¬â€ looking like the collapse button had
                     // stopped working. Remember it, then clear it so the
                     // panel really collapses down to the title bar.
                     if (panel.style.height) {

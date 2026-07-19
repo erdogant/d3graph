@@ -1140,9 +1140,10 @@ class d3graph:
             'pagerank'
             'hits_hub'
             'hits_authority'
-            'degree'
             'closeness'
             'betweenness'
+            Note: 'degree' is not supported here — network_randomize() preserves every node's in/out-degree exactly,
+            so there is no valid null distribution to test it against (see Note below).
         n_top : int
             Number of highest scoring nodes tested.
         n_random : int
@@ -1161,6 +1162,12 @@ class d3graph:
         again after network_significance() would silently erase the computed
         'proba' values.
 
+        'degree' is deliberately unsupported as a `statistic`: network_randomize()
+        (Maslov-Sneppen edge swaps) holds every node's in/out-degree exactly
+        fixed by construction, so the null distribution for 'degree' has
+        ~zero variance and any p-value computed from it is a fitting
+        artifact, not a real result — it's tested here and raises ValueError.
+
         Returns
         -------
         pd.DataFrame
@@ -1169,6 +1176,16 @@ class d3graph:
         rng = np.random.default_rng(seed)
         # Make copy
         adjmat = data_checks(adjmat.copy())
+
+        # 'degree' can never be meaningfully tested against this null model:
+        # the Maslov-Sneppen double-edge-swap is defined to hold every
+        # node's in-degree and out-degree exactly fixed (that's the "degree-
+        # preserving" part), so network_statistic(random_adj, 'degree') is
+        # identical to the real degree in every single randomization for an
+        # unweighted/binary graph.
+        if statistic.lower() == 'degree':
+            raise ValueError("Network_significance(statistic='degree') is not meaningful.")
+
         # Remember alpha so write_html() can pass it into the browser as SIGNIFICANCE_ALPHA 
         self.config['significance_alpha'] = alpha
 

@@ -1079,6 +1079,7 @@ function d3graphscript(config = {
     node_pagerank: 'PageRank',
     node_hits_hub: 'HITS (Hub)',
     node_hits_authority: 'HITS (Authority)',
+    node_degree: 'Degree',
     node_degree_centrality: 'Degree Centrality',
     node_closeness_centrality: 'Closeness Centrality',
     node_betweenness_centrality: 'Betweenness Centrality'
@@ -1120,7 +1121,9 @@ function d3graphscript(config = {
     DYNAMIC_STAT_KEYS.forEach(function(key) {
       if (key === 'node_proba') return; // shown separately below, not part of Statistics
       var v = datum[key];
-      if (typeof v === 'number' && !isNaN(v)) statRows += nodeInfoRow(STAT_LABELS[key] || key, v.toFixed(2));
+      if (typeof v === 'number' && !isNaN(v)) {
+        statRows += nodeInfoRow(STAT_LABELS[key] || key, (key === 'node_degree') ? v.toFixed(0) : v.toFixed(2));
+      }
     });
     if (statRows) html += '<div class="node-info-section-title">Statistics</div>' + statRows;
 
@@ -1293,7 +1296,7 @@ function d3graphscript(config = {
   // change (restart() -> applyStatStyling()) — overwriting d[<stat key>]
   // on each node so the rest of the styling pipeline needs no changes.
   var DYNAMIC_STAT_KEYS = ['node_proba', 'node_pagerank', 'node_hits_hub', 'node_hits_authority',
-    'node_degree_centrality', 'node_closeness_centrality', 'node_betweenness_centrality'];
+    'node_degree', 'node_degree_centrality', 'node_closeness_centrality', 'node_betweenness_centrality'];
 
   // Adjacency built fresh from the CURRENT graph.nodes/graph.links.
   //
@@ -1322,6 +1325,17 @@ function d3graphscript(config = {
     });
 
     return { indices: indices, out: out, inn: inn, n: indices.length };
+  }
+
+  // Raw degree: total in+out edge count. Distinct from Degree Centrality
+  // below, which is this same count divided by (n-1) — a legitimate [0,1]
+  // fraction by definition, not a bug, but not what "number of edges" means.
+  function computeDegree(adj) {
+    var result = {};
+    adj.indices.forEach(function(i) {
+      result[i] = adj.out[i].length + adj.inn[i].length;
+    });
+    return result;
   }
 
   function computeDegreeCentrality(adj) {
@@ -1528,17 +1542,16 @@ function d3graphscript(config = {
   }
 
   function computeDynamicStatValues(key, adj) {
-    var raw;
     switch (key) {
-      case 'node_degree_centrality':     raw = computeDegreeCentrality(adj); break;
-      case 'node_closeness_centrality':  raw = computeClosenessCentrality(adj); break;
-      case 'node_betweenness_centrality':raw = computeBetweennessCentrality(adj); break;
-      case 'node_pagerank':              raw = computePageRank(adj); break;
-      case 'node_hits_hub':              raw = computeHITS(adj).hub; break;
-      case 'node_hits_authority':        raw = computeHITS(adj).authority; break;
+      case 'node_degree_centrality':     return computeDegreeCentrality(adj);
+      case 'node_closeness_centrality':  return computeClosenessCentrality(adj);
+      case 'node_betweenness_centrality':return computeBetweennessCentrality(adj);
+      case 'node_pagerank':              return computePageRank(adj);
+      case 'node_hits_hub':              return computeHITS(adj).hub;
+      case 'node_hits_authority':        return computeHITS(adj).authority;
+      case 'node_degree':                return computeDegree(adj);
       default: return null;
     }
-    return normalizeMinMax(raw, adj.indices);
   }
 
   // Groups nodes into connected components using ONLY the edges currently
@@ -1608,26 +1621,38 @@ function d3graphscript(config = {
       var tag = this.tagName.toLowerCase();
       var baseR = parseFloat(d.node_size) || 8;
       var v = statHighlightActive ? d[currentStatKey] : null;
-      var hasVal = (typeof v === 'number' && !isNaN(v));
       var isSignificance = (currentStatKey === 'node_proba');
+      // Coloring/sizing need a [0,1]-ish magnitude. node_proba is already a
+      // p-value (meaningfully bounded to [0,1]) so it uses its raw value
+      // directly; every other stat uses the *_colorNorm shadow field
+      // computed alongside it in recomputeActiveStat() — d[currentStatKey]
+      // itself stays untouched/raw so the Node Info panel can show real
+      // magnitudes (actual PageRank, actual edge count, etc.) instead of a
+      // min-max-stretched 0-1 number.
+      var colorV = isSignificance ? v : (statHighlightActive ? d[currentStatKey + '_colorNorm'] : null);
+      var hasColorVal = (typeof colorV === 'number' && !isNaN(colorV));
       // node_proba is a p-value: lower = more significant. Size scales off
       // (1 - p) so more significant nodes render larger — color, below, is
       // handled separately via the threshold-based significanceColor().
-      var sizeVal = (hasVal && isSignificance) ? (1 - v) : v;
+      var sizeVal = (hasColorVal && isSignificance) ? (1 - colorV) : colorV;
       // 1.2x–2.5x range: even low scorers get a visibility bump, high scorers stand out more.
-      var scale = (statHighlightActive && hasVal) ? (1.2 + sizeVal * 1.3) : 1;
+      var scale = (statHighlightActive && hasColorVal) ? (1.2 + sizeVal * 1.3) : 1;
       // Clustering has no [0,1] magnitude to size by, but it does have a
       // categorical color per component — use that for fill instead of
       // falling back to the node's original color.
       var fillColor = isClustering
         ? clusterColorScale(networkClusters[d.index] % 20)
-        : ((statHighlightActive && hasVal)
-            ? (isSignificance ? significanceColor(v) : statColorScale(v))
-            : d.node_color);
+        : (isSignificance && statHighlightActive)
+            // Every node gets a definitive red/blue verdict while Significance
+            // is selected — nodes network_significance() never tested (proba
+            // is NaN) are treated as p=1 (not significant), landing them at
+            // the deep-blue end, rather than keeping their original color.
+            ? significanceColor(hasColorVal ? colorV : 1)
+            : ((statHighlightActive && hasColorVal) ? statColorScale(colorV) : d.node_color);
       // Bright yellow border on nodes past the significance threshold
       // (p < alpha); every other node (or non-significance stat) keeps its
       // normal configured border color.
-      var strokeColor = (statHighlightActive && hasVal && isSignificance && v < SIGNIFICANCE_ALPHA)
+      var strokeColor = (statHighlightActive && hasColorVal && isSignificance && colorV < SIGNIFICANCE_ALPHA)
         ? SIGNIFICANCE_BORDER_COLOR
         : d.node_color_edge;
 
@@ -1690,7 +1715,11 @@ function d3graphscript(config = {
       var adj = buildAdjacency();
       var values = computeDynamicStatValues(currentStatKey, adj);
       if (values) {
-        graph.nodes.forEach(function(d) { d[currentStatKey] = values[d.index]; });
+        var normValues = normalizeMinMax(values, adj.indices);
+        graph.nodes.forEach(function(d) {
+          d[currentStatKey] = values[d.index];
+          d[currentStatKey + '_colorNorm'] = normValues[d.index];
+        });
       }
     }
   }
