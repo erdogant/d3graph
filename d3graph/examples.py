@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:1000]
+df = df[0:5000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -17,7 +17,7 @@ adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'
 d3.graph(adjmat)
 
 # Compute node significance for specified network statistic
-d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
+# d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
