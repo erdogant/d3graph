@@ -22,7 +22,8 @@ keywords = [
     "data visualization",
     "web",
     "modular",
-    "customizable"
+    "customizable",
+    "Network significance"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -44,6 +45,7 @@ dependencies = [
     'markupsafe',
     'python-louvain',
     'datazets',
+    'distfit',
     ]
 
 [project.urls]

@@ -15,6 +15,7 @@ from sys import platform
 from tempfile import gettempdir
 from unicodedata import normalize
 import uuid
+from tqdm import tqdm
 
 from community import community_louvain
 import colourmap as cm
@@ -26,6 +27,7 @@ from ismember import ismember
 from jinja2 import Environment, PackageLoader
 from packaging import version
 import datazets as dz
+from distfit import distfit
 
 logger = logging.getLogger(__name__)
 
@@ -543,6 +545,7 @@ class d3graph:
                 'color': color of the node
                 'opacity': Opacity of the node
                 'size': size of the node
+                'proba': Significance (p-value) of the node from network_significance(). NaN until that method is run.
                 'fontcolor': color of the node text
                 'fontsize': node text size
                 'edge_size': edge_size of the node
@@ -682,6 +685,7 @@ class d3graph:
                                           'fontcolor': str(fontcolor[i]),
                                           'fontsize': str(fontsize[i]),
                                           'size': size[i],
+                                          'proba': np.nan,
                                           'edge_size': edge_size[i],
                                           'edge_color': edge_color[i],
                                           'group': group[i]}
@@ -956,6 +960,276 @@ class d3graph:
         # Set to config
         self.config['filepath'] = Path(filepath)
 
+    # Network statistics
+    def network_statistic(self, adjmat, statistic):
+        """
+        Calculate node-level network statistics.
+    
+        Parameters
+        ----------
+        adjmat : pd.DataFrame
+            Weighted adjacency matrix.
+    
+        statistic : str
+            One of:
+            - pagerank
+            - hits_hub
+            - hits_authority
+            - degree
+            - closeness
+            - betweenness
+    
+        Returns
+        -------
+        pd.Series
+        """
+    
+        if not isinstance(adjmat, pd.DataFrame):
+            raise TypeError("adjmat must be a pandas DataFrame.")
+    
+        if adjmat.shape[0] != adjmat.shape[1]:
+            raise ValueError("adjmat must be square.")
+    
+        G = nx.from_pandas_adjacency(adjmat, create_using=nx.DiGraph)
+        statistic = statistic.lower()
+    
+        if statistic == "pagerank":
+            values = nx.pagerank(G, weight="weight")
+        elif statistic in ["hits_hub", "hub"]:
+            hubs, authorities = nx.hits(G, max_iter=1000, normalized=True)
+            values = hubs
+        elif statistic in ["hits_authority", "authority"]:
+            hubs, authorities = nx.hits(G, max_iter=1000, normalized=True)
+            values = authorities
+        elif statistic == "degree":
+            values = dict(G.degree(weight="weight"))
+        elif statistic == "closeness":
+            values = nx.closeness_centrality(G, distance="weight")
+        elif statistic == "betweenness":
+            values = nx.betweenness_centrality(G, weight="weight")
+        else:
+            raise ValueError(f"Unknown statistic: {statistic}")
+    
+        return pd.Series(values, name=statistic)
+    
+    def network_randomize(self, adjmat, nswap=None, max_tries=None, seed=None):
+        """
+        Degree-preserving randomization using Maslov-Sneppen edge rewiring.
+    
+        Preserves:
+        - Out-degree for directed graphs
+        - In-degree for directed graphs
+        - Degree for undirected graphs
+        - Edge weights
+    
+        Parameters
+        ----------
+        adjmat : pd.DataFrame
+            Square adjacency matrix.
+    
+        nswap : int, optional
+            Number of successful edge swaps.
+    
+        max_tries : int, optional
+            Maximum number of attempted swaps.
+    
+        seed : int, optional
+            Random seed.
+    
+        Returns
+        -------
+        pd.DataFrame
+            Randomized adjacency matrix.
+        """
+    
+        if not isinstance(adjmat, pd.DataFrame):
+            raise TypeError("adjmat must be a pandas DataFrame.")
+    
+        if adjmat.shape[0] != adjmat.shape[1]:
+            raise ValueError("adjmat must be square.")
+    
+        index = adjmat.index
+        columns = adjmat.columns
+        A = adjmat.to_numpy(copy=True)
+    
+        # Store edges as list of tuples (more stable than numpy array)
+        edges = list(zip(*np.where(A > 0)))
+    
+        if len(edges) < 2:
+            return adjmat.copy()
+        if nswap is None:
+            nswap = len(edges) * 10
+        if max_tries is None:
+            max_tries = nswap * 20
+    
+        rng = np.random.default_rng(seed)
+        # O(1) lookup
+        edge_set = set(edges)
+        successful = 0
+        tries = 0
+    
+        while successful < nswap and tries < max_tries:
+            tries += 1
+            idx1, idx2 = rng.choice(len(edges), size=2, replace=False)
+            u, v = edges[idx1]
+            x, y = edges[idx2]
+            # Need four distinct nodes
+            if len({u, v, x, y}) < 4:
+                continue
+    
+            # New edges
+            e1 = (u, y)
+            e2 = (x, v)
+    
+            # No self loops
+            if u == y or x == v:
+                continue
+    
+            # Avoid duplicates
+            if e1 in edge_set or e2 in edge_set:
+                continue
+    
+            # Store weights
+            w1 = A[u, v]
+            w2 = A[x, y]
+    
+            # Perform swap
+            A[u, v] = 0
+            A[x, y] = 0
+    
+            A[u, y] = w1
+            A[x, v] = w2
+    
+            # Update edge tracking
+            edge_set.remove((u, v))
+            edge_set.remove((x, y))
+    
+            edge_set.add(e1)
+            edge_set.add(e2)
+    
+            edges[idx1] = e1
+            edges[idx2] = e2
+    
+            successful += 1
+    
+        return pd.DataFrame(A, index=index, columns=columns)
+
+    def network_significance(
+            self,
+            adjmat,
+            statistic,
+            n_top=100,
+            n_random=1000,
+            nswap=None,
+            alpha=0.05,
+            seed=None,
+            ):
+        """
+        Test significance of top scoring nodes against
+        degree-preserving randomized networks.
+    
+        Parameters
+        ----------
+        adjmat : pd.DataFrame
+            Weighted adjacency matrix.
+    
+        statistic : str
+            Network statistic:
+            pagerank, hits_hub, hits_authority,
+            degree, closeness, betweenness
+    
+        n_top : int
+            Number of highest scoring nodes tested.
+    
+        n_random : int
+            Number of randomized networks.
+    
+        nswap : int
+            Number of edge swaps per random network.
+    
+        alpha : float
+            Significance threshold.
+    
+        seed : int
+            Random seed.
+
+        Note
+        ----
+        Call this *after* set_node_properties(), not before: set_node_properties()
+        rebuilds self.node_properties from scratch on every call, so calling it
+        again after network_significance() would silently erase the computed
+        'proba' values.
+
+        Returns
+        -------
+        pd.DataFrame
+            Significance results.
+        """
+        rng = np.random.default_rng(seed)
+
+        # ----------------------------
+        # Reset all sizes to 1
+        # ----------------------------
+        # logger.info('The size of the node will be set based on the significance (default=1).')
+        # for x in self.node_properties.keys():
+        #     self.node_properties[x]['size'] = 1
+
+        # ----------------------------
+        # Real network scores
+        # ----------------------------
+        real_scores = self.network_statistic(adjmat, statistic)
+        top_nodes = real_scores.sort_values(ascending=False).head(n_top).index
+
+        # ----------------------------
+        # Null distributions
+        # ----------------------------
+        logger.info('Creating degree-preserving randomized networks')
+        null_scores = {node: [] for node in top_nodes}
+    
+        for i in tqdm(range(n_random)):
+            random_adj = self.network_randomize(adjmat, nswap=nswap, seed=rng.integers(0, 1_000_000))
+            scores = self.network_statistic(random_adj, statistic)
+            # Store only the relevant node-scores
+            for node in top_nodes:
+                null_scores[node].append(scores[node])
+
+        # ----------------------------
+        # Statistics
+        # ----------------------------
+        logger.info(f'Computing {statistic} significance for the top {len(top_nodes)} nodes.')
+        results = []
+        for node in tqdm(top_nodes):
+            # Get the real score
+            y = real_scores[node]
+            # Null distribution for this node
+            rand_scores = np.asarray(null_scores[node])
+            
+            # Initialize
+            model = distfit(distr="popular", method='parametric', alpha=alpha, verbose=None)
+        
+            # Fit null distribution
+            model_results = model.fit_transform(rand_scores)
+            
+            # Calculate probability of observing score >= observed
+            Pout = model.predict(y)
+            y_proba = Pout['y_proba'][0]
+
+            results.append({"node": node, 
+                            "score_real": y, 
+                            "score_random_mean": np.mean(rand_scores), 
+                            "proba": y_proba,
+                            "significant": y_proba < alpha,
+                            "statistic": statistic,
+                            "distribution": model_results['model']['name'],
+                           })
+
+            # Store in node
+            if self.node_properties.get(node):
+                self.node_properties[node]['proba'] = y_proba
+    
+        return pd.DataFrame(results).sort_values("proba", ascending=True).reset_index(drop=True)
+
+
     def import_example(self, data='energy', url=None, sep=','):
         """Import example dataset from github source.
 
@@ -1173,6 +1447,7 @@ def json_create(G: nx.Graph, compute_stats: bool = True) -> str:
         nodes[i]['node_color'] = nodes[i].pop('color')
         nodes[i]['node_opacity'] = nodes[i].pop('opacity')
         nodes[i]['node_size'] = nodes[i].pop('size')
+        nodes[i]['node_proba'] = nodes[i].pop('proba')
         nodes[i]['node_size_edge'] = nodes[i].pop('edge_size')
         nodes[i]['node_color_edge'] = nodes[i].pop('edge_color')
         nodes[i]['node_fontcolor'] = nodes[i].pop('fontcolor')
@@ -1743,46 +2018,6 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
     return adjmat
 
 
-# %%  Convert adjacency matrix to vector
-# def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
-#     """Convert adjacency matrix into vector with source and target.
-
-#     Parameters
-#     ----------
-#     adjmat : pd.DataFrame()
-#         Adjacency matrix.
-
-#     min_weight : float
-#         edges are returned with a minimum weight.
-
-#     Returns
-#     -------
-#     pd.DataFrame()
-#         nodes that are connected based on source and target
-
-#     Examples
-#     --------
-#     >>> source = ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain']
-#     >>> target = ['Sprinkler', 'Rain', 'Wet_Grass', 'Wet_Grass']
-#     >>> adjmat = vec2adjmat(source, target, weight=[1, 2, 1, 3])
-#     >>> vector = adjmat2vec(adjmat)
-
-#     """
-#     # Convert adjacency matrix into vector
-#     logger.info('Converting adjacency matrix into source-target..')
-#     adjmat = adjmat.stack().reset_index()
-#     # Set columns
-#     adjmat.columns = ['source', 'target', 'weight']
-#     # Remove self loops and no-connected edges
-#     Iloc1 = adjmat['source'] != adjmat['target']
-#     Iloc2 = adjmat['weight'] >= min_weight
-#     Iloc = Iloc1 & Iloc2
-#     # Take only connected nodes
-#     adjmat = adjmat.loc[Iloc, :]
-#     adjmat.reset_index(drop=True, inplace=True)
-#     return adjmat
-
-
 def adjmat2vec(adjmat, min_weight: float = 1.0) -> pd.DataFrame:
     """
     Fast conversion of adjacency matrix → edge list.
@@ -2073,6 +2308,8 @@ def import_example(data='energy', url=None, sep=','):
     else:
         return dz.get(data=data, url=url, sep=sep)
 
+
+# %%
 
 def get_support(support):
     """Support."""

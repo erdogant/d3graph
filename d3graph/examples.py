@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:5000]
+df = df[0:1000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -14,7 +14,9 @@ tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
 adjmat = adjmat*tmpadjmat
 
 # Create graph
-d3.graph(adjmat, opacity=None)
+d3.graph(adjmat)
+
+d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
@@ -25,6 +27,49 @@ d3.show(density_grid_size=60,
         show_slider=True,
         show_controls=True,
         )
+
+
+d3.node_properties[Pnodes['node'].loc[0]]
+
+    
+# %%
+from d3graph import d3graph, vec2adjmat
+import numpy as np
+
+d3 = d3graph()
+# Load example data
+df = d3.import_example('socialmedia')
+# Slice first 10000 rows
+df = df[0:1000]
+# Create adjmat
+adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
+# Update matrix with random weights
+tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
+adjmat = adjmat*tmpadjmat
+
+# Show original graph
+d3 = d3graph()
+d3.graph(adjmat)
+d3.show()
+
+# Randomize network
+out = d3.network_randomize(adjmat)
+scores_hits_hub_real = d3.network_statistic(adjmat, statistic='betweenness')
+scores_hits_hub_rand = d3.network_statistic(out, statistic='betweenness')
+
+Pnodes = test_network_statistic_significance(adjmat, 'pagerank')
+
+# %% CHECKS
+
+orig_in = (adjmat > 0).sum(axis=0)
+orig_out = (adjmat > 0).sum(axis=1)
+
+rand_in = (rand > 0).sum(axis=0)
+rand_out = (rand > 0).sum(axis=1)
+
+print(np.all(orig_in == rand_in))
+print(np.all(orig_out == rand_out))
+
 
 # %%
 from d3graph import d3graph, vec2adjmat

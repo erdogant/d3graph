@@ -89,6 +89,27 @@ function d3graphscript(config = {
     .domain([0, 0.5, 1])
     .range(["#2166ac", "#f7f7f7", "#b2182b"]);
 
+    // Significance gets its own coloring instead of the continuous
+    // statColorScale above: a smooth gradient makes it hard to tell at a
+    // glance whether a node actually cleared the significance bar, so this
+    // renders as two separate scales that meet at alpha with a visible
+    // color jump — reddish below alpha (more significant = redder, i.e.
+    // closer to p=0), blueish at/above it (less significant = bluer).
+    var SIGNIFICANCE_ALPHA = 0.05;
+    var significanceColorScaleBelow = d3.scale.linear()
+      .domain([0, SIGNIFICANCE_ALPHA])
+      .range(["#b2182b", "#fddbc7"]);
+    var significanceColorScaleAbove = d3.scale.linear()
+      .domain([SIGNIFICANCE_ALPHA, 1])
+      .range(["#d1e5f0", "#2166ac"]);
+    function significanceColor(proba) {
+      return (proba < SIGNIFICANCE_ALPHA) ? significanceColorScaleBelow(proba) : significanceColorScaleAbove(proba);
+    }
+    // Extra cue on top of color: nodes past the alpha threshold also get a
+    // bright yellow border, since fill color alone can be subtle to spot
+    // across many small nodes.
+    var SIGNIFICANCE_BORDER_COLOR = '#ffe600';
+
     // Categorical palette for network-clustering mode — one color per
     // connected-component id, cycling every 20 clusters.
     var clusterColorScale = d3.scale.category20();
@@ -609,6 +630,18 @@ function d3graphscript(config = {
       graph.links = graph.links.filter(function(d) { return d.edge_weight > initialThresh; });
     })();
 
+    // node_proba arrives from the server as a STRING (nodes2G() in d3graph.py
+    // stringifies every node attribute), including the literal text "nan" for
+    // untested nodes. Every other DYNAMIC_STAT_KEYS entry gets silently fixed
+    // the first time its radio is selected (recomputeActiveStat() overwrites
+    // it with a real client-computed float) — but node_proba can't be
+    // recomputed client-side (it depends on the server-side randomization
+    // test), so without this it would stay a string forever and fail every
+    // `typeof v === 'number'` check downstream (no coloring, no Node Info row).
+    graph.nodes.forEach(function(d) {
+      if (typeof d.node_proba === 'string') d.node_proba = parseFloat(d.node_proba);
+    });
+
     //Creates the graph data structure out of the json data
     force.nodes(graph.nodes)
       .links(graph.links)
@@ -1042,6 +1075,7 @@ function d3graphscript(config = {
   }
 
   var STAT_LABELS = {
+    node_proba: 'Significance',
     node_pagerank: 'PageRank',
     node_hits_hub: 'HITS (Hub)',
     node_hits_authority: 'HITS (Authority)',
@@ -1075,10 +1109,21 @@ function d3graphscript(config = {
 
     var statRows = '';
     DYNAMIC_STAT_KEYS.forEach(function(key) {
+      if (key === 'node_proba') return; // shown separately below, not part of Statistics
       var v = datum[key];
       if (typeof v === 'number' && !isNaN(v)) statRows += nodeInfoRow(STAT_LABELS[key] || key, v.toFixed(2));
     });
     if (statRows) html += '<div class="node-info-section-title">Statistics</div>' + statRows;
+
+    // Significance: only present for nodes network_significance() actually
+    // tested (untested nodes carry NaN from the server), so this section is
+    // omitted entirely rather than showing a misleading value.
+    var proba = datum.node_proba;
+    if (typeof proba === 'number' && !isNaN(proba)) {
+      html += '<div class="node-info-section-title">Significance</div>' +
+        nodeInfoRow('p-value', proba.toFixed(3)) +
+        nodeInfoRow('Significant (α=' + SIGNIFICANCE_ALPHA + ')', proba < SIGNIFICANCE_ALPHA ? 'Yes' : 'No');
+    }
 
     var connected = [];
     var seen = {};
@@ -1238,7 +1283,7 @@ function d3graphscript(config = {
   // applyStatStyling() runs — i.e. on stat selection AND on every slider
   // change (restart() -> applyStatStyling()) — overwriting d[<stat key>]
   // on each node so the rest of the styling pipeline needs no changes.
-  var DYNAMIC_STAT_KEYS = ['node_pagerank', 'node_hits_hub', 'node_hits_authority',
+  var DYNAMIC_STAT_KEYS = ['node_proba', 'node_pagerank', 'node_hits_hub', 'node_hits_authority',
     'node_degree_centrality', 'node_closeness_centrality', 'node_betweenness_centrality'];
 
   // Adjacency built fresh from the CURRENT graph.nodes/graph.links.
@@ -1555,14 +1600,27 @@ function d3graphscript(config = {
       var baseR = parseFloat(d.node_size) || 8;
       var v = statHighlightActive ? d[currentStatKey] : null;
       var hasVal = (typeof v === 'number' && !isNaN(v));
+      var isSignificance = (currentStatKey === 'node_proba');
+      // node_proba is a p-value: lower = more significant. Size scales off
+      // (1 - p) so more significant nodes render larger — color, below, is
+      // handled separately via the threshold-based significanceColor().
+      var sizeVal = (hasVal && isSignificance) ? (1 - v) : v;
       // 1.2x–2.5x range: even low scorers get a visibility bump, high scorers stand out more.
-      var scale = (statHighlightActive && hasVal) ? (1.2 + v * 1.3) : 1;
+      var scale = (statHighlightActive && hasVal) ? (1.2 + sizeVal * 1.3) : 1;
       // Clustering has no [0,1] magnitude to size by, but it does have a
       // categorical color per component — use that for fill instead of
       // falling back to the node's original color.
       var fillColor = isClustering
         ? clusterColorScale(networkClusters[d.index] % 20)
-        : ((statHighlightActive && hasVal) ? statColorScale(v) : d.node_color);
+        : ((statHighlightActive && hasVal)
+            ? (isSignificance ? significanceColor(v) : statColorScale(v))
+            : d.node_color);
+      // Bright yellow border on nodes past the significance threshold
+      // (p < alpha); every other node (or non-significance stat) keeps its
+      // normal configured border color.
+      var strokeColor = (statHighlightActive && hasVal && isSignificance && v < SIGNIFICANCE_ALPHA)
+        ? SIGNIFICANCE_BORDER_COLOR
+        : d.node_color_edge;
 
       if (tag === 'circle') {
         el.attr('r', baseR * scale);
@@ -1573,6 +1631,7 @@ function d3graphscript(config = {
       }
 
       el.style('fill', fillColor)
+        .style('stroke', strokeColor)
         .style('opacity', statHighlightActive ? 1 : d.node_opacity)
         .style('stroke-width', statHighlightActive ? (parseFloat(d.node_size_edge) || 1) * 1.5 : d.node_size_edge);
     });

@@ -8,3 +8,4 @@ packaging
 pandas
 python-louvain
 datazets
+distfit
