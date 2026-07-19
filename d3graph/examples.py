@@ -10,13 +10,14 @@ df = df[0:1000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
-tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
-adjmat = adjmat*tmpadjmat
+# tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
+# adjmat = adjmat*tmpadjmat
 
 # Create graph
 d3.graph(adjmat)
 
-d3.network_significance(adjmat, 'hits_authority', n_top=100, n_random=1000)
+# Compute node significance for specified network statistic
+d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=1000)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
@@ -27,9 +28,6 @@ d3.show(density_grid_size=60,
         show_slider=True,
         show_controls=True,
         )
-
-
-# d3.node_properties[Pnodes['node'].loc[0]]
 
     
 # %%
@@ -44,8 +42,8 @@ df = df[0:1000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
-tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
-adjmat = adjmat*tmpadjmat
+# tmpadjmat = np.random.randint(1, 10, size=adjmat.shape)
+# adjmat = adjmat*tmpadjmat
 
 # Show original graph
 d3 = d3graph()
@@ -54,7 +52,7 @@ d3.show()
 
 # Randomize network
 out = d3.network_randomize(adjmat)
-scores_hits_hub_real = d3.network_statistic(adjmat, statistic='betweenness')
+scores_hits_hub_real = d3.network_statistic(adjmat, statistic='degree')
 scores_hits_hub_rand = d3.network_statistic(out, statistic='betweenness')
 
 Pnodes = test_network_statistic_significance(adjmat, 'pagerank')
