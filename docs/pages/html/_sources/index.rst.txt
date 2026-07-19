@@ -67,6 +67,13 @@ Content
 
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Network Statistics
+   
+   network_statistics
+
+
+.. toctree::
   :maxdepth: 1
   :caption: Examples
 

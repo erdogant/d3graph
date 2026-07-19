@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Statistics &mdash; d3graph d3graph documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6c61b047"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Big Bang network" href="Examples.html" />
+    <link rel="prev" title="Slider Properties" href="Slider%20Properties.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            d3graph
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Abstract.html">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Abstract.html#schematic-overview">Schematic overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="D3.html">D3 Motivation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Data.html">Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data.html#output">Output</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Methods</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Core_Functionalities.html">Core Functionalities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Node%20properties.html">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Edge%20properties.html">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="On%20Click%20Actions.html">On Click Actions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Slider%20Properties.html">Slider Properties</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Network Statistics</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Network Statistics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pagerank">PageRank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hits-hub">HITS (Hub)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hits-authority">HITS (Authority)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#degree-centrality">Degree Centrality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#closeness-centrality">Closeness Centrality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#betweenness-centrality">Betweenness Centrality</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#network-clustering">Network Clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#statistical-testing">Statistical Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Big Bang network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#karate-club-network">Karate Club network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#social-media">Social Media</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Coding%20quality.html">Coding quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.check_logger"><code class="docutils literal notranslate"><span class="pre">check_logger()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.convert_verbose_to_new"><code class="docutils literal notranslate"><span class="pre">convert_verbose_to_new()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.create_unique_dataframe"><code class="docutils literal notranslate"><span class="pre">create_unique_dataframe()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.d3graph"><code class="docutils literal notranslate"><span class="pre">d3graph</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.data_checks"><code class="docutils literal notranslate"><span class="pre">data_checks()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.edges2G"><code class="docutils literal notranslate"><span class="pre">edges2G()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.get_hex_color"><code class="docutils literal notranslate"><span class="pre">get_hex_color()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.get_support"><code class="docutils literal notranslate"><span class="pre">get_support()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.json_create"><code class="docutils literal notranslate"><span class="pre">json_create()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.library_compatibility_checks"><code class="docutils literal notranslate"><span class="pre">library_compatibility_checks()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.make_graph"><code class="docutils literal notranslate"><span class="pre">make_graph()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.nodes2G"><code class="docutils literal notranslate"><span class="pre">nodes2G()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.remove_special_chars"><code class="docutils literal notranslate"><span class="pre">remove_special_chars()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.set_logger"><code class="docutils literal notranslate"><span class="pre">set_logger()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="d3graph.d3graph.html#d3graph.d3graph.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">d3graph</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Network Statistics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/network_statistics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="network-statistics">
+<h1>Network Statistics<a class="headerlink" href="#network-statistics" title="Link to this heading"></a></h1>
+<p>In networks, not all nodes contribute equally to the structure and information flow. Some nodes play a more central role because they connect many entities, bridge different communities, or represent important sources of information. Identifying these key nodes is one of the key tasks in network analysis and can provide valuable insights. In a social network, important nodes may represent influential users, trusted sources, or individuals who connect different groups. In a personal knowledge network, important nodes can reveal central concepts, frequently referenced documents, or ideas that form the foundation of your knowledge structure. However, importance is not a single concept; a node can be important because it has many connections, because it connects otherwise separated parts of the network, or because it is linked to other influential nodes.</p>
+<section id="pagerank">
+<h2>PageRank<a class="headerlink" href="#pagerank" title="Link to this heading"></a></h2>
+<p>PageRank identifies nodes that are important based on the importance of their connected neighbors. Unlike simple counting of connections, PageRank considers the quality of those connections: a link from an influential node contributes more than a link from a less important node. In social network analysis, PageRank can identify influential users, opinion leaders, or accounts that have a strong position in information flow. A user does not necessarily need many connections; being connected to other influential users can also increase their ranking. In a personal knowledge network, PageRank can reveal the most central concepts, documents, or notes in your knowledge base. These are the topics that are strongly connected to other important ideas and may represent the core themes of your personal knowledge system.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d3blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3Blocks</span>
+
+<span class="c1"># PageRank-focused</span>
+<span class="c1"># Many nodes point to A with strong weights → A has highest PageRank</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">,</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;I&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Most important node for PageRank: A</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">D3Blocks</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">d3graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;pagerank_graph.html&#39;</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">showfig</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="hits-hub">
+<h2>HITS (Hub)<a class="headerlink" href="#hits-hub" title="Link to this heading"></a></h2>
+<p>The HITS Hub score identifies nodes that act as strong collectors of information. A high hub score indicates that a node points towards many authoritative nodes. Hubs are typically not the source of information themselves but provide valuable connections to important resources. In social networks, high hub scores can identify users who actively share or reference influential accounts, acting as information aggregators. In a knowledge graph, hubs can represent overview notes, indexes, or personal dashboards that connect many important concepts. For example, a project overview document linking to research papers, meeting notes, and technical documentation may naturally become a high-scoring hub.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d3blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3Blocks</span>
+
+<span class="c1"># HITS-focused graph</span>
+<span class="c1"># Hubs (H1,H2) → Authorities (A1,A2,A3)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;H1&#39;</span><span class="p">,</span><span class="s1">&#39;H1&#39;</span><span class="p">,</span><span class="s1">&#39;H1&#39;</span><span class="p">,</span><span class="s1">&#39;H2&#39;</span><span class="p">,</span><span class="s1">&#39;H2&#39;</span><span class="p">,</span><span class="s1">&#39;H2&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A1&#39;</span><span class="p">,</span><span class="s1">&#39;A2&#39;</span><span class="p">,</span><span class="s1">&#39;A3&#39;</span><span class="p">,</span><span class="s1">&#39;A1&#39;</span><span class="p">,</span><span class="s1">&#39;A2&#39;</span><span class="p">,</span><span class="s1">&#39;A3&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Most important nodes:</span>
+<span class="c1">#   Authorities: A1, A2, A3</span>
+<span class="c1">#   Hubs: H1, H2</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">D3Blocks</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">d3graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;hits_graph.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="hits-authority">
+<h2>HITS (Authority)<a class="headerlink" href="#hits-authority" title="Link to this heading"></a></h2>
+<p>The HITS Authority score identifies nodes that contain valuable information based on the number and quality of incoming connections. A high authority score means that many important hubs reference this node. In social network analysis, authority scores can identify users whose content is frequently referenced or shared by influential accounts. These users may represent experts or trusted sources. In a personal knowledge graph, authority scores can reveal the most valuable documents, notes, or concepts in your collection. For example, a technical document that is repeatedly referenced by project notes, research summaries, and related concepts becomes an authoritative source within your personal knowledge system.</p>
+</section>
+<section id="degree-centrality">
+<h2>Degree Centrality<a class="headerlink" href="#degree-centrality" title="Link to this heading"></a></h2>
+<p>Degree centrality measures the number of direct connections a node has. It is one of the simplest network statistics and provides an immediate indication of how connected an entity is within the network. In social network analysis, degree centrality identifies highly connected individuals, such as users with many followers or many interactions. These nodes often represent popular or highly active participants. In a second brain network, degree centrality can reveal frequently referenced notes or concepts. A document connected to many other notes may represent a central topic, a frequently used resource, or a key area of interest. However, degree alone does not indicate importance because many connections may come from less relevant nodes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d3blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3Blocks</span>
+
+<span class="c1"># Degree-focused graph</span>
+<span class="c1"># X connects to many nodes with strong weights → highest degree centrality</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;G&#39;</span><span class="p">,</span><span class="s1">&#39;H&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Most important node for Degree Centrality: X</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">D3Blocks</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">d3graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;degree_graph.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="closeness-centrality">
+<h2>Closeness Centrality<a class="headerlink" href="#closeness-centrality" title="Link to this heading"></a></h2>
+<p>Closeness centrality measures how easily a node can reach all other nodes in the network. Nodes with high closeness values are positioned near the center of the network and can efficiently spread or access information. In social networks, closeness centrality can identify users who are well positioned to communicate information throughout the network. These users may act as efficient information spreaders because they have relatively short paths to many others. In a personal knowledge graph, closeness can reveal concepts that connect different areas of knowledge. A note with high closeness may represent a bridge between multiple topics, allowing you to navigate quickly from one part of your knowledge base to another.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d3blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3Blocks</span>
+
+<span class="c1"># Closeness-focused graph</span>
+<span class="c1"># C is the center of a star → shortest paths to all nodes → highest closeness</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Most important node for Closeness Centrality: C</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">D3Blocks</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">d3graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;closeness_graph.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="betweenness-centrality">
+<h2>Betweenness Centrality<a class="headerlink" href="#betweenness-centrality" title="Link to this heading"></a></h2>
+<p>Betweenness centrality identifies nodes that frequently appear on the shortest paths between other nodes. These nodes often act as bridges connecting different parts of a network. In social network analysis, high betweenness nodes can represent influential connectors, such as people who link different communities or departments. Removing these nodes may significantly affect information flow through the network. In a second brain network, betweenness centrality can identify concepts that connect otherwise separate knowledge areas. For example, a note about “machine learning” may connect mathematics, programming, statistics, and artificial intelligence topics, acting as a bridge between different knowledge domains.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">d3blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">D3Blocks</span>
+
+<span class="c1"># Betweenness-focused graph</span>
+<span class="c1"># M is the only connector between two clusters → highest betweenness</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;source&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Most important node for Betweenness Centrality: M</span>
+
+<span class="n">d3</span> <span class="o">=</span> <span class="n">D3Blocks</span><span class="p">()</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">d3graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;betweenness_graph.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="network-clustering">
+<h1>Network Clustering<a class="headerlink" href="#network-clustering" title="Link to this heading"></a></h1>
+<p>Network clustering identifies groups of nodes that are more strongly connected with each other than with the rest of the network. These groups represent communities or natural structures that emerge from the relationships in the data. In social network analysis, clustering can reveal groups of friends, professional communities, or interest-based communities without requiring predefined labels. In a personal knowledge graph, clustering can automatically discover knowledge domains within your notes and documents. For example, a large collection of personal files may naturally separate into clusters such as programming, research, travel, finance, or hobbies. This provides a data-driven view of how your own knowledge is organized and can reveal unexpected relationships between topics.</p>
+</section>
+<section id="statistical-testing">
+<h1>Statistical Testing<a class="headerlink" href="#statistical-testing" title="Link to this heading"></a></h1>
+<p>Distinguishing meaningful structures from random patterns is one of the fundamental challenges in network analysis. A highly connected node or dense cluster may appear important, but these patterns can also arise purely by chance. To determine whether an observed network property is statistically significant, the network can be compared against a collection of randomized networks that preserve key characteristics, such as the degree distribution. By generating a null distribution for network statistics such as PageRank, HITS scores, or clustering coefficients, it becomes possible to assign statistical significance to the observed values. Within D3graph, these significant nodes or structures can subsequently be highlighted in the interactive visualization, allowing users to focus on relationships that are unlikely to have occurred by random chance and are therefore more likely to represent meaningful underlying organization.
+To create a null distribution for a network, we can repeatedly generate randomized versions of the original network while preserving one or more important structural properties. The most common approach is degree-preserving randomization, in which edges are randomly rewired but each node keeps the same number of connections (its degree).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">d3graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">d3graph</span><span class="p">,</span> <span class="n">vec2adjmat</span>
+
+<span class="c1"># Initialize</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="n">d3graph</span><span class="p">()</span>
+
+<span class="c1"># Load example data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">d3</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;socialmedia&#39;</span><span class="p">)</span>
+
+<span class="c1"># Slice first 1000 rows for demonstration purposes</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">]</span>
+
+<span class="c1"># Create adjmat</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create graph</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+
+<span class="c1"># Compute node significance for specified network statistic</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">network_significance</span><span class="p">(</span><span class="n">adjmat</span><span class="p">,</span> <span class="s1">&#39;pagerank&#39;</span><span class="p">,</span> <span class="n">n_top</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_random</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Show graph with custom specific settings</span>
+<span class="n">d3</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Slider%20Properties.html" class="btn btn-neutral float-left" title="Slider Properties" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples.html" class="btn btn-neutral float-right" title="Big Bang network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

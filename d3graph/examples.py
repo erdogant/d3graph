@@ -17,7 +17,7 @@ adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'
 d3.graph(adjmat)
 
 # Compute node significance for specified network statistic
-d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=1000)
+d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
