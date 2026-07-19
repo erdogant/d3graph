@@ -16,7 +16,7 @@ adjmat = adjmat*tmpadjmat
 # Create graph
 d3.graph(adjmat)
 
-d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
+d3.network_significance(adjmat, 'hits_authority', n_top=100, n_random=1000)
 
 # Show graph with custom specific settings
 d3.show(density_grid_size=60,
@@ -29,7 +29,7 @@ d3.show(density_grid_size=60,
         )
 
 
-d3.node_properties[Pnodes['node'].loc[0]]
+# d3.node_properties[Pnodes['node'].loc[0]]
 
     
 # %%

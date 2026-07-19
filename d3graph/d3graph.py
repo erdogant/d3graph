@@ -1168,13 +1168,6 @@ class d3graph:
         rng = np.random.default_rng(seed)
 
         # ----------------------------
-        # Reset all sizes to 1
-        # ----------------------------
-        # logger.info('The size of the node will be set based on the significance (default=1).')
-        # for x in self.node_properties.keys():
-        #     self.node_properties[x]['size'] = 1
-
-        # ----------------------------
         # Real network scores
         # ----------------------------
         real_scores = self.network_statistic(adjmat, statistic)
@@ -1203,7 +1196,9 @@ class d3graph:
             y = real_scores[node]
             # Null distribution for this node
             rand_scores = np.asarray(null_scores[node])
-            
+            # Set very small values to 0
+            rand_scores = np.where(np.abs(rand_scores) < 1e-10, 0, rand_scores)
+
             # Initialize
             model = distfit(distr="popular", method='parametric', alpha=alpha, verbose=None)
         
@@ -1212,8 +1207,11 @@ class d3graph:
             
             # Calculate probability of observing score >= observed
             Pout = model.predict(y)
+            # Get Probability
             y_proba = Pout['y_proba'][0]
-
+            # FDR Multiple test correction
+            y_proba = y_proba * n_top
+            # Store
             results.append({"node": node, 
                             "score_real": y, 
                             "score_random_mean": np.mean(rand_scores), 
