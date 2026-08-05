@@ -8,6 +8,7 @@ __pycache__/
 
 .pypirc
 d3graph.html
+3d
 
 # Distribution / packaging
 .Python
