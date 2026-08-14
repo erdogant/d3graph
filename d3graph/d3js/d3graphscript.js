@@ -63,6 +63,20 @@ function d3graphscript(config = {
     // node structure/clustering without redrawing or refiltering anything.
     var edgesVisible = true;
 
+    // ---- VISUAL SCALE MULTIPLIERS (physics panel sliders) ----
+    // Independent of the per-node data values; multiplied in at render time so
+    // changing them never mutates the underlying data and is instantly reversible.
+    var edgeWidthMult = 1.0;   // 0.1 – 5.0, driven by the "Edge Width" slider
+    var nodeSizeMult  = 1.0;   // 0.1 – 5.0, driven by the "Node Size" slider
+
+    // ---- PERFORMANCE: cached quadtree for collision detection ----
+    // Rebuilding a quadtree from scratch every single tick is O(N log N) and
+    // dominates frame time on graphs with thousands of nodes.  We reuse one
+    // quadtree across the whole tick instead — the quadtree is still built once
+    // per tick (nodes moved since last tick), but NOT once per node per tick.
+    var _collideQuadtree = null;
+    var _collideTickId   = -1;   // matches tickCount so we rebuild once per tick
+
     // ---- STATS PANEL (recolor nodes by a network statistic) ----
     // node_pagerank / node_hits_hub / node_hits_authority are precomputed
     // server-side (networkx) and normalized to [0, 1]; the panel just picks
@@ -418,48 +432,104 @@ function d3graphscript(config = {
     // pan/zoom transform. No-ops when the graph is small enough to stay on SVG.
     function drawCanvasEdges() {
       if (!useCanvasEdges || !ctx || !edgesVisible) return;
+
+      var sc = currentTransform.scale;
+      var tx = currentTransform.translate[0];
+      var ty = currentTransform.translate[1];
+
+      // Compute viewport bounds in graph-space so we can skip edges whose
+      // both endpoints are well outside the visible area (cheap early-out).
+      var vpMargin = 20 / sc; // a small buffer in graph units
+      var vpMinX = (-tx / sc) - vpMargin;
+      var vpMaxX = ((canvasEl.width  - tx) / sc) + vpMargin;
+      var vpMinY = (-ty / sc) - vpMargin;
+      var vpMaxY = ((canvasEl.height - ty) / sc) + vpMargin;
+
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-      ctx.setTransform(currentTransform.scale, 0, 0, currentTransform.scale, currentTransform.translate[0], currentTransform.translate[1]);
-      for (var i = 0; i < graph.links.length; i++) {
-        var d = graph.links[i];
+      ctx.setTransform(sc, 0, 0, sc, tx, ty);
+
+      // Batch edges by (strokeStyle + lineWidth + globalAlpha + shadowBlur +
+      // dash pattern) to minimise expensive canvas state changes.  Instead of
+      // setting style then stroking once per edge, we bucket all edges that
+      // share the same style, then set the style once and stroke the whole
+      // bucket in a single path.  On a 20 000-edge graph this typically
+      // reduces unique state-change sequences from 20 000 to a handful.
+
+      // Bucket map: key → { path points, ctx state }
+      // We collect lines per bucket, then replay with a single ctx state set.
+      var buckets = {}; // key → { a, lw, sw, sb, sc_str, dash, lines: [[x1,y1,x2,y2],...] }
+
+      var links = graph.links;
+      var nLinks = links.length;
+
+      for (var i = 0; i < nLinks; i++) {
+        var d = links[i];
         if (!d.source || !d.target || typeof d.source.x !== 'number') continue;
-        ctx.beginPath();
-        ctx.moveTo(d.source.x, d.source.y);
-        ctx.lineTo(d.target.x, d.target.y);
-        ctx.strokeStyle = d.edge_color || '#999';
+
+        var sx = d.source.x, sy = d.source.y;
+        var ex = d.target.x, ey = d.target.y;
+
+        // Viewport cull: skip if both endpoints are outside on the same side.
+        if ((sx < vpMinX && ex < vpMinX) || (sx > vpMaxX && ex > vpMaxX) ||
+            (sy < vpMinY && ey < vpMinY) || (sy > vpMaxY && ey > vpMaxY)) continue;
+
         var baseOpacity = (d.edge_opacity !== undefined && d.edge_opacity !== null) ? d.edge_opacity : 0.6;
-        var baseWidth = d.edge_width || 1;
-        ctx.setLineDash(d.edge_style === 'dashed' ? [6, 3] : d.edge_style === 'dotted' ? [1.5, 3] : []);
+        var baseWidth   = (d.edge_width || 1) * edgeWidthMult;
+        var col         = d.edge_color || '#999';
+        var dashStyle   = d.edge_style;
+
+        var alpha, lw, shadowBlur, shadowColor;
 
         if (highlightedNodeIndex !== null) {
-          // Click-highlight takes priority over the stat-driven boost below —
-          // same precedence SVG-mode edges get in applyNeighborHighlightStyling().
-          // When highlightedComponentSet is set (highlightFullNetwork), an edge
-          // counts as connected if BOTH its ends are anywhere in the clicked
-          // node's connected component, not just directly touching it.
           var isConnected = highlightedComponentSet
             ? (highlightedComponentSet[d.source.index] && highlightedComponentSet[d.target.index])
             : (d.source.index === highlightedNodeIndex || d.target.index === highlightedNodeIndex);
           if (isConnected) {
-            ctx.globalAlpha = 1;
-            ctx.lineWidth = baseWidth * EDGE_GLOW_WIDTH_MULT;
-            ctx.shadowColor = EDGE_GLOW_COLOR;
-            ctx.shadowBlur = EDGE_GLOW_CANVAS_BLUR;
+            alpha = 1; lw = baseWidth * EDGE_GLOW_WIDTH_MULT;
+            shadowBlur = EDGE_GLOW_CANVAS_BLUR; shadowColor = EDGE_GLOW_COLOR;
           } else {
-            ctx.globalAlpha = NEIGHBOR_DIM_OPACITY;
-            ctx.lineWidth = baseWidth;
-            ctx.shadowBlur = 0;
+            alpha = NEIGHBOR_DIM_OPACITY; lw = baseWidth;
+            shadowBlur = 0; shadowColor = '';
           }
         } else {
-          ctx.globalAlpha = statHighlightActive ? Math.min(1, baseOpacity * EDGE_HIGHLIGHT_OPACITY_MULT) : baseOpacity;
-          ctx.lineWidth = statHighlightActive ? baseWidth * EDGE_HIGHLIGHT_WIDTH_MULT : baseWidth;
-          ctx.shadowBlur = 0;
+          alpha      = statHighlightActive ? Math.min(1, baseOpacity * EDGE_HIGHLIGHT_OPACITY_MULT) : baseOpacity;
+          lw         = statHighlightActive ? baseWidth * EDGE_HIGHLIGHT_WIDTH_MULT : baseWidth;
+          shadowBlur = 0; shadowColor = '';
         }
 
+        // Round to 2 decimal places for bucketing to avoid float key explosion.
+        var key = col + '|' + (Math.round(alpha * 100)) + '|' + (Math.round(lw * 100)) +
+                  '|' + shadowBlur + '|' + (shadowColor || '') + '|' + (dashStyle || '');
+        if (!buckets[key]) {
+          buckets[key] = { col: col, alpha: alpha, lw: lw,
+                           shadowBlur: shadowBlur, shadowColor: shadowColor,
+                           dash: dashStyle === 'dashed' ? [6, 3] : dashStyle === 'dotted' ? [1.5, 3] : [],
+                           lines: [] };
+        }
+        buckets[key].lines.push(sx, sy, ex, ey);
+      }
+
+      // Replay each bucket as a single compound path — one state setup, one stroke.
+      for (var key in buckets) {
+        var b = buckets[key];
+        ctx.strokeStyle  = b.col;
+        ctx.globalAlpha  = b.alpha;
+        ctx.lineWidth    = b.lw;
+        ctx.shadowBlur   = b.shadowBlur;
+        ctx.shadowColor  = b.shadowColor || '';
+        ctx.setLineDash(b.dash);
+
+        ctx.beginPath();
+        var pts = b.lines;
+        for (var j = 0, jn = pts.length; j < jn; j += 4) {
+          ctx.moveTo(pts[j],     pts[j + 1]);
+          ctx.lineTo(pts[j + 2], pts[j + 3]);
+        }
         ctx.stroke();
       }
+
       ctx.restore();
     }
 
@@ -855,23 +925,31 @@ function d3graphscript(config = {
 
 
   // collision detection
-
-  var padding = 1, // separation between circles
-    radius = 8;
+  // Optimisation: build the quadtree ONCE per tick (stored in _collideQuadtree)
+  // rather than once per visited node.  On a 5 000-node graph this alone cuts
+  // the per-tick cost of collision from O(N² log N) rebuilds to one O(N log N)
+  // build + O(N log N) queries.
+  var padding = 1; // separation between circles
 
   function collide(alpha) {
-    var quadtree = d3.geom.quadtree(graph.nodes);
+    // Rebuild the shared quadtree only when we have advanced to a new tick.
+    if (_collideTickId !== tickCount) {
+      _collideQuadtree = d3.geom.quadtree(graph.nodes);
+      _collideTickId   = tickCount;
+    }
+    var quadtree = _collideQuadtree;
     return function(d) {
-      var rb = 2 * radius + padding,
-        nx1 = d.x - rb,
-        nx2 = d.x + rb,
-        ny1 = d.y - rb,
-        ny2 = d.y + rb;
+      // Use the node's actual rendered radius (scaled by nodeSizeMult) so
+      // collision boundaries match what the user sees on screen.
+      var r  = (parseFloat(d.node_size) || 8) * nodeSizeMult;
+      var rb = r * 2 + padding;
+      var nx1 = d.x - rb, nx2 = d.x + rb,
+          ny1 = d.y - rb, ny2 = d.y + rb;
       quadtree.visit(function(quad, x1, y1, x2, y2) {
         if (quad.point && (quad.point !== d)) {
           var x = d.x - quad.point.x,
-            y = d.y - quad.point.y,
-            l = Math.sqrt(x * x + y * y);
+              y = d.y - quad.point.y,
+              l = Math.sqrt(x * x + y * y);
           if (l < rb) {
             l = (l - rb) / l * alpha;
             d.x -= x *= l;
