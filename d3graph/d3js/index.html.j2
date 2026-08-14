@@ -92,6 +92,14 @@
         <label for="linkTensionSlider">Edge Tension <span id="linkTensionValue">{{ link_tension }}</span></label>
         <input type="range" id="linkTensionSlider" min="0" max="5" step="0.1" value="{{ link_tension }}">
     </div>
+    <div class="physics-control">
+        <label for="edgeWidthMultSlider">Edge Width <span id="edgeWidthMultValue">1</span>×</label>
+        <input type="range" id="edgeWidthMultSlider" min="0.1" max="5" step="0.1" value="1">
+    </div>
+    <div class="physics-control">
+        <label for="nodeSizeMultSlider">Node Size <span id="nodeSizeMultValue">1</span>×</label>
+        <input type="range" id="nodeSizeMultSlider" min="0.1" max="5" step="0.1" value="1">
+    </div>
     <button id="physicsResetButton" class="button-switch">Reset to Default</button>
     </div>
 </div>

@@ -601,7 +601,7 @@ function d3graphscript(config = {
         linkEnter.append("title").text(function(d) { return d.tooltip; });
         link.attr("marker-end", function(d) {
           if (config.directed) { return 'url(#marker_' + d.marker_end + ')' } });
-        link.style("stroke-width", function(d) { return d.edge_width; });
+        link.style("stroke-width", function(d) { return (parseFloat(d.edge_width) || 1) * edgeWidthMult; });
         link.style("stroke", function(d) { return d.edge_color; });
         link.style("stroke-dasharray", function(d) { return d.edge_style; });
         link.style("opacity", function(d) { return d.edge_opacity; });
@@ -744,6 +744,8 @@ function d3graphscript(config = {
       //   path              →  transform translate(x, y)
       // Scoped to the bound `node` selection instead of re-querying the
       // entire DOM every tick (was: d3.selectAll(".node-shape")).
+      // nodeSizeMult is applied here for position-independent shapes (path),
+      // and through renderStatStyling / applyNodeSizeScale for radius attrs.
       node.select(".node-shape").each(function(d) {
         var el  = d3.select(this);
         var tag = this.tagName.toLowerCase();
@@ -763,6 +765,48 @@ function d3graphscript(config = {
         .attr("text-anchor", "middle");
 
       if (densityVisible) drawDensityLayer();
+    }
+
+    // One-shot pass to apply the visual scale multipliers to all SVG nodes and
+    // edges without touching positions.  Called when a slider changes, not
+    // every tick — so the cost is negligible compared to the tick loop.
+    function applyVisualScaleMultipliers() {
+      // Node sizes
+      node.select(".node-shape").each(function(d) {
+        var el  = d3.select(this);
+        var tag = this.tagName.toLowerCase();
+        var baseR = parseFloat(d.node_size) || 8;
+        // Also factor in any stat-driven scaling that renderStatStyling applied.
+        var statScale = 1;
+        if (currentStatKey && currentStatKey !== 'network_clustering') {
+          var v = d[currentStatKey + '_colorNorm'];
+          if (typeof v === 'number' && !isNaN(v)) {
+            var isSignificance = (currentStatKey === 'node_proba');
+            var sizeVal = isSignificance ? (1 - (d[currentStatKey] || 0)) : v;
+            statScale = 1.2 + sizeVal * 1.3;
+          }
+        }
+        var r = baseR * nodeSizeMult * statScale;
+        if (tag === 'circle') {
+          el.attr('r', r);
+        } else if (tag === 'ellipse') {
+          el.attr('rx', r * 1.6).attr('ry', r);
+        } else if (tag === 'path') {
+          el.attr('d', shapePathD(d.node_marker, r));
+        }
+      });
+
+      // SVG edge widths
+      if (!useCanvasEdges) {
+        link.style("stroke-width", function(d) {
+          var w = parseFloat(d.edge_width) || 1;
+          w *= edgeWidthMult;
+          if (statHighlightActive) w *= EDGE_HIGHLIGHT_WIDTH_MULT;
+          return w;
+        });
+      } else {
+        drawCanvasEdges();
+      }
     }
 
     force.on("tick", function() {
@@ -1007,7 +1051,7 @@ function d3graphscript(config = {
           var statValue = currentStatKey ? d[currentStatKey] : null;
           var hasStatValue = currentStatKey && typeof statValue === "number" && !isNaN(statValue);
           var statScale = hasStatValue ? 1.2 + statValue * 1.3 : 1;
-          var clickScale = statScale * {{ CLICK_SIZE }};
+          var clickScale = statScale * {{ CLICK_SIZE }} * nodeSizeMult;
 
           if (tag === "circle") {
             el.attr("r", baseR * clickScale);
@@ -1656,12 +1700,13 @@ function d3graphscript(config = {
         ? SIGNIFICANCE_BORDER_COLOR
         : d.node_color_edge;
 
+      var scaledR = baseR * scale * nodeSizeMult;
       if (tag === 'circle') {
-        el.attr('r', baseR * scale);
+        el.attr('r', scaledR);
       } else if (tag === 'ellipse') {
-        el.attr('rx', baseR * 1.6 * scale).attr('ry', baseR * scale);
+        el.attr('rx', scaledR * 1.6).attr('ry', scaledR);
       } else if (tag === 'path') {
-        el.attr('d', shapePathD(d.node_marker, baseR * scale));
+        el.attr('d', shapePathD(d.node_marker, scaledR));
       }
 
       el.style('fill', fillColor)
@@ -1673,7 +1718,7 @@ function d3graphscript(config = {
     // SVG-mode edges: bump width/opacity directly on the current selection.
     // Canvas-mode edges read statHighlightActive inside drawCanvasEdges().
     link.style("stroke-width", function(d) {
-      var w = parseFloat(d.edge_width) || 1;
+      var w = (parseFloat(d.edge_width) || 1) * edgeWidthMult;
       return statHighlightActive ? w * EDGE_HIGHLIGHT_WIDTH_MULT : w;
     });
     link.style("opacity", function(d) {
@@ -1863,26 +1908,53 @@ function d3graphscript(config = {
   wirePhysicsSlider('collisionSlider', 'collisionValue', setCollision);
   wirePhysicsSlider('linkTensionSlider', 'linkTensionValue', setLinkTension);
 
+  // ---- Edge Width multiplier slider ----
+  function setEdgeWidthMult(value) {
+    edgeWidthMult = value;
+    // Cheap visual-only update; no need to reheat the simulation.
+    applyVisualScaleMultipliers();
+  }
+  wirePhysicsSlider('edgeWidthMultSlider', 'edgeWidthMultValue', setEdgeWidthMult);
+
+  // ---- Node Size multiplier slider ----
+  function setNodeSizeMult(value) {
+    nodeSizeMult = value;
+    // Invalidate cached quadtree so collision detection uses updated radii.
+    _collideTickId = -1;
+    applyVisualScaleMultipliers();
+  }
+  wirePhysicsSlider('nodeSizeMultSlider', 'nodeSizeMultValue', setNodeSizeMult);
+
   var physicsResetBtn = document.getElementById('physicsResetButton');
   if (physicsResetBtn) {
     physicsResetBtn.addEventListener('click', function() {
       setCharge(DEFAULT_CHARGE);
       setCollision(DEFAULT_COLLISION);
       setLinkTension(DEFAULT_LINK_TENSION);
+      setEdgeWidthMult(1.0);
+      setNodeSizeMult(1.0);
 
-      var chargeSlider = document.getElementById('chargeSlider');
+      var chargeSlider    = document.getElementById('chargeSlider');
       var collisionSlider = document.getElementById('collisionSlider');
-      var tensionSlider = document.getElementById('linkTensionSlider');
-      if (chargeSlider) chargeSlider.value = DEFAULT_CHARGE;
+      var tensionSlider   = document.getElementById('linkTensionSlider');
+      var ewSlider        = document.getElementById('edgeWidthMultSlider');
+      var nsSlider        = document.getElementById('nodeSizeMultSlider');
+      if (chargeSlider)    chargeSlider.value    = DEFAULT_CHARGE;
       if (collisionSlider) collisionSlider.value = DEFAULT_COLLISION;
-      if (tensionSlider) tensionSlider.value = DEFAULT_LINK_TENSION;
+      if (tensionSlider)   tensionSlider.value   = DEFAULT_LINK_TENSION;
+      if (ewSlider)        ewSlider.value        = 1.0;
+      if (nsSlider)        nsSlider.value        = 1.0;
 
-      var chargeVal = document.getElementById('chargeValue');
+      var chargeVal    = document.getElementById('chargeValue');
       var collisionVal = document.getElementById('collisionValue');
-      var tensionVal = document.getElementById('linkTensionValue');
-      if (chargeVal) chargeVal.textContent = DEFAULT_CHARGE;
+      var tensionVal   = document.getElementById('linkTensionValue');
+      var ewVal        = document.getElementById('edgeWidthMultValue');
+      var nsVal        = document.getElementById('nodeSizeMultValue');
+      if (chargeVal)    chargeVal.textContent    = DEFAULT_CHARGE;
       if (collisionVal) collisionVal.textContent = DEFAULT_COLLISION;
-      if (tensionVal) tensionVal.textContent = DEFAULT_LINK_TENSION;
+      if (tensionVal)   tensionVal.textContent   = DEFAULT_LINK_TENSION;
+      if (ewVal)        ewVal.textContent        = '1';
+      if (nsVal)        nsVal.textContent        = '1';
     });
   }
 
