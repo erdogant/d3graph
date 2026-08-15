@@ -46,6 +46,7 @@ dependencies = [
     'python-louvain',
     'datazets',
     'distfit',
+    'tqdm',
     ]
 
 [project.urls]

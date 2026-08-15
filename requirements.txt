@@ -9,3 +9,4 @@ pandas
 python-louvain
 datazets
 distfit
+tqdm
