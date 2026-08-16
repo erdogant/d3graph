@@ -20,6 +20,10 @@
      the slider). -->
 {% if show_controls or max_slider > min_slider %}
 <div class="header-row">
+    <div class="search-wrap">
+        <input class="search-input" id="searchInput" type="search" placeholder="Find a node…" autocomplete="off" spellcheck="false" />
+        <div class="search-results" id="searchResults"></div>
+    </div>
     {% if max_slider > min_slider %}
     {{ slider_comment_start }}
     <div class="slider-container">

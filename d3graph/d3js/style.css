@@ -435,3 +435,97 @@ h3 {
     background: #222;
     border: 2px solid #eee;
 }
+/* ---- Search bar ---- */
+.search-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  grid-column: 1;               /* left slot of .header-row grid */
+  justify-self: start;
+  margin: 0;
+}
+.search-input {
+  width: 200px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #222;
+  font-size: 13px;
+  font-family: "Helvetica", Arial, sans-serif;
+  outline: none;
+  transition: border-color 0.15s, width 0.2s;
+}
+.search-input:focus {
+  border-color: #1ABC9C;
+  width: 260px;
+}
+.dark-mode .search-input {
+  background: #333;
+  color: #eee;
+  border-color: #555;
+}
+.dark-mode .search-input:focus {
+  border-color: #1ABC9C;
+}
+.search-results {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 200px;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 2000;
+  font-family: "Helvetica", Arial, sans-serif;
+  font-size: 13px;
+}
+.search-results.open { display: block; }
+.dark-mode .search-results {
+  background: #2a2a2a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.search-item {
+  padding: 7px 12px;
+  cursor: pointer;
+  color: #222;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  line-height: 1.3;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover,
+.search-item.active { background: #e8f8f5; color: #111; }
+.dark-mode .search-item { color: #eee; border-bottom-color: rgba(255,255,255,0.07); }
+.dark-mode .search-item:hover,
+.dark-mode .search-item.active { background: #1e4d42; }
+.search-item .meta {
+  font-size: 11px;
+  color: #888;
+  margin-top: 1px;
+}
+.dark-mode .search-item .meta { color: #aaa; }
+
+/* Search-hit highlight ring on the found node (SVG overlay circle) */
+.search-ring-yellow {
+  fill: none;
+  stroke: #ffe600;
+  stroke-width: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.search-ring-border {
+  fill: none;
+  stroke: rgba(0,0,0,0.25);
+  stroke-width: 5px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.search-hit .search-ring-yellow,
+.search-hit .search-ring-border { opacity: 1; }

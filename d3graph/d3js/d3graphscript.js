@@ -58,6 +58,7 @@ function d3graphscript(config = {
     var useCanvasEdges = false;
     var canvasEl, ctx;
     var currentTransform = { scale: 1, translate: [0, 0] };
+    var zoomBehavior = null; // set when SVG is created; used by _jumpToNode to sync state
     // Master on/off switch for edges (independent of the weight/component
     // sliders) — lets the user clear visual clutter on large graphs to see
     // node structure/clustering without redrawing or refiltering anything.
@@ -140,6 +141,9 @@ function d3graphscript(config = {
     // structure pops. highlightedNodeIndex is null when nothing is
     // highlighted, or the .index of the currently-highlighted node.
     var highlightedNodeIndex = null;
+
+    // ---- SEARCH ----
+    var searchHighlightedIndex = null; // node .index of the current search hit
     // True (default): clicking a node highlights every node/edge in its whole
     // connected component, however many hops away. False: only its directly-
     // connected (one-hop) neighbors/edges light up, the old behavior.
@@ -414,17 +418,15 @@ function d3graphscript(config = {
       .style("top", 0)
       .style("left", 0)
       .style("background-color", "transparent")
-      .call(d3.behavior.zoom().on("zoom", function () {
+      .call((zoomBehavior = d3.behavior.zoom().on("zoom", function () {
         panOrZoomOccurred = true;
         svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
-        // Single class toggle (cheap) rather than iterating every label on
-        // every zoom/pan event — CSS handles hiding all descendant <text>.
         svg.classed("labels-hidden", d3.event.scale < labelZoomThreshold);
         currentTransform.scale = d3.event.scale;
         currentTransform.translate = d3.event.translate;
         drawCanvasEdges();
         drawDensityLayer();
-      }))
+      })))
       .on("dblclick.zoom", null)
       .append("g")
 
@@ -764,6 +766,17 @@ function d3graphscript(config = {
     // Append the correct shape per node (circle, ellipse, rect, triangle, etc.)
     appendShape(node);
     
+    // Search highlight rings — two concentric circles behind each node,
+    // made visible via the .search-hit CSS class on the parent <g>.
+    // They live in graph-space (same SVG coordinate system as nodes) and
+    // are repositioned every tick alongside node shapes in updatePositions().
+    node.each(function() {
+      var g = d3.select(this);
+      var rings = g.insert('g', ':first-child').attr('class', 'search-rings');
+      rings.append('circle').attr('class', 'search-ring search-ring-border');
+      rings.append('circle').attr('class', 'search-ring search-ring-yellow');
+    });
+
     // Text in nodes
     node.append("text")
       .attr("dx",  function(d) { return config.node_text_inside ? 0 : 10; })
@@ -826,6 +839,12 @@ function d3graphscript(config = {
         }
       });
 
+      // Search ring positions — cheap: two attr sets per node per tick.
+      node.select('.search-rings').each(function(d) {
+        var r = (parseFloat(d.node_size) || 8) * nodeSizeMult + 5;
+        d3.select(this).selectAll('.search-ring').attr('cx', d.x).attr('cy', d.y).attr('r', r);
+      });
+
       // Scoped to node labels only (was: d3.selectAll("text"), which also
       // re-matched every link-text element on every tick).
       node.select("text").attr("x", function(d) { return d.x; })
@@ -864,6 +883,12 @@ function d3graphscript(config = {
         } else if (tag === 'path') {
           el.attr('d', shapePathD(d.node_marker, r));
         }
+      });
+
+      // Search ring radii
+      node.select('.search-rings').each(function(d) {
+        var r = (parseFloat(d.node_size) || 8) * nodeSizeMult + 5;
+        d3.select(this).selectAll('.search-ring').attr('r', r);
       });
 
       // SVG edge widths
@@ -2185,5 +2210,178 @@ function d3graphscript(config = {
     }
     
     window.addEventListener("resize", resizeGraph);
+
+  // =========================================================================
+  // SEARCH
+  // Matches node_name (label) and name (id) fields.  Results are ranked:
+  // prefix matches first, then substring; ties broken by shorter name.
+  // Selecting a result highlights the node with a yellow ring AND selects it
+  // into the Node Info panel (same as clicking it directly).
+  // =========================================================================
+  var searchInputEl   = document.getElementById('searchInput');
+  var searchResultsEl = document.getElementById('searchResults');
+  if (searchInputEl && searchResultsEl) {
+    var _searchActiveIdx = -1;
+    var _searchMatches   = []; // array of node datum objects
+
+    function _clearSearchHighlight() {
+      searchHighlightedIndex = null;
+      node.classed('search-hit', false);
+    }
+
+    function _highlightSearchNode(datum) {
+      searchHighlightedIndex = datum.index;
+      node.classed('search-hit', function(d) { return d.index === datum.index; });
+    }
+
+    function _jumpToNode(datum) {
+      // 1. Highlight ring
+      _highlightSearchNode(datum);
+
+      // 2. Pan the SVG so the node is centred in the viewport at the current scale.
+      var s  = currentTransform.scale  || 1;
+      var cx = (width  || window.innerWidth)  / 2;
+      var cy = (height || window.innerHeight) / 2;
+      var tx = cx - datum.x * s;
+      var ty = cy - datum.y * s;
+
+      // KEY FIX: tell the zoom behaviour about the new translate/scale BEFORE
+      // the transition fires.  Without this, the next user scroll/drag fires
+      // the zoom handler with the behaviour's stale internal state, snapping
+      // the view back to wherever it was before the jump.
+      if (zoomBehavior) {
+        zoomBehavior.translate([tx, ty]).scale(s);
+      }
+      currentTransform.scale     = s;
+      currentTransform.translate = [tx, ty];
+
+      // Animate the SVG <g> to the new position.
+      var svgG = d3.select(svg.node().parentNode).select('svg g');
+      svg.transition().duration(500)
+        .attr('transform', 'translate(' + tx + ',' + ty + ') scale(' + s + ')')
+        .each('end', function() {
+          // Redraw canvas overlays at the final position once animation settles.
+          drawCanvasEdges();
+          drawDensityLayer();
+        });
+      svg.classed('labels-hidden', s < labelZoomThreshold);
+      // Immediate redraw for canvas edges (they stay correct during animation
+      // because currentTransform is already updated above).
+      drawCanvasEdges();
+
+      // 3. Select the node into the click-highlight / Node Info panel —
+      //    identical to the user clicking it directly.
+      if (highlightedNodeIndex !== datum.index) {
+        navigateNodeInfo(datum, null, false);
+      }
+
+      // 4. Close dropdown
+      searchResultsEl.classList.remove('open');
+      searchInputEl.value  = datum.node_name || datum.name || '';
+      searchInputEl.blur();
+    }
+
+    function _renderSearchResults(query) {
+      var q = query.trim().toLowerCase();
+      _searchActiveIdx = -1;
+      if (!q) {
+        _searchMatches = [];
+        searchResultsEl.innerHTML = '';
+        searchResultsEl.classList.remove('open');
+        return;
+      }
+
+      // Build candidate list from live graph.nodes (respects current slider state)
+      var all = graph.nodes;
+      _searchMatches = all.filter(function(d) {
+        var label = (d.node_name || d.name || '').toLowerCase();
+        return label.indexOf(q) !== -1;
+      }).sort(function(a, b) {
+        var al = (a.node_name || a.name || '').toLowerCase();
+        var bl = (b.node_name || b.name || '').toLowerCase();
+        var ap = al.indexOf(q) === 0 ? 0 : 1;
+        var bp = bl.indexOf(q) === 0 ? 0 : 1;
+        if (ap !== bp) return ap - bp;
+        return al.length - bl.length || al.localeCompare(bl);
+      }).slice(0, 12);
+
+      if (!_searchMatches.length) {
+        searchResultsEl.innerHTML = '<div class="search-item" style="opacity:0.5;cursor:default">No matches</div>';
+        searchResultsEl.classList.add('open');
+        return;
+      }
+      searchResultsEl.innerHTML = _searchMatches.map(function(d, i) {
+        var label = d.node_name || d.name || ('Node ' + d.index);
+        var meta  = 'idx ' + d.index;
+        if (d.group !== undefined && d.group !== null && String(d.group) !== '-1' && String(d.group) !== '') {
+          meta += ' · g' + d.group;
+        }
+        return '<div class="search-item" data-idx="' + i + '">' +
+               escapeHtml(label) +
+               '<div class="meta">' + escapeHtml(meta) + '</div></div>';
+      }).join('');
+      searchResultsEl.classList.add('open');
+    }
+
+    searchInputEl.addEventListener('input', function() {
+      _renderSearchResults(searchInputEl.value);
+    });
+    searchInputEl.addEventListener('focus', function() {
+      if (searchInputEl.value.trim()) _renderSearchResults(searchInputEl.value);
+    });
+    searchInputEl.addEventListener('keydown', function(e) {
+      var open = searchResultsEl.classList.contains('open') && _searchMatches.length;
+      if (!open) {
+        if (e.key === 'Enter' && searchInputEl.value.trim()) {
+          if (_searchMatches.length) _jumpToNode(_searchMatches[0]);
+        }
+        return;
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        _searchActiveIdx = Math.min(_searchMatches.length - 1, _searchActiveIdx + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        _searchActiveIdx = Math.max(0, _searchActiveIdx - 1);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        var d = _searchMatches[_searchActiveIdx >= 0 ? _searchActiveIdx : 0];
+        if (d) _jumpToNode(d);
+        return;
+      } else if (e.key === 'Escape') {
+        searchResultsEl.classList.remove('open');
+        searchInputEl.blur();
+        return;
+      } else { return; }
+
+      // Highlight active item
+      searchResultsEl.querySelectorAll('.search-item').forEach(function(el, i) {
+        el.classList.toggle('active', i === _searchActiveIdx);
+        if (i === _searchActiveIdx) el.scrollIntoView({ block: 'nearest' });
+      });
+    });
+
+    searchResultsEl.addEventListener('mousedown', function(e) {
+      // mousedown fires before blur so the list stays open long enough to register
+      var item = e.target.closest('.search-item');
+      if (!item) return;
+      e.preventDefault();
+      var idx = parseInt(item.getAttribute('data-idx'), 10);
+      if (!isNaN(idx) && _searchMatches[idx]) _jumpToNode(_searchMatches[idx]);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-wrap')) searchResultsEl.classList.remove('open');
+    });
+
+    // Clear search highlight when the user clicks empty background
+    var _origBgClick = container.on('click');
+    container.on('click', function() {
+      if (panOrZoomOccurred) { panOrZoomOccurred = false; return; }
+      _clearSearchHighlight();
+      clearNeighborHighlight();
+    });
+  } // end search block
 
 }
