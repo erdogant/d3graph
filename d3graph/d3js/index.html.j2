@@ -20,10 +20,18 @@
      the slider). -->
 {% if show_controls or max_slider > min_slider %}
 <div class="header-row">
+    
+    <div class="top-panel-left">
+        <a href="https://d3blocks.github.io/d3blocks/" title="D3Blocks">
+            <img src="https://raw.githubusercontent.com/d3blocks/d3blocks/main/logo.png" alt="D3Blocks" style="width:150px;height:auto;display:block;pointer-events:auto" />
+        </a>
+    </div>
+
     <div class="search-wrap">
         <input class="search-input" id="searchInput" type="search" placeholder="Find a node…" autocomplete="off" spellcheck="false" />
         <div class="search-results" id="searchResults"></div>
     </div>
+
     {% if max_slider > min_slider %}
     {{ slider_comment_start }}
     <div class="slider-container">
@@ -37,11 +45,13 @@
     {{ slider_comment_stop }}
     {% endif %}
 {% if show_controls %}
+
 <div class="top-panel">
     <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
     <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
     <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
 </div>
+
 {% endif %}
 </div>
 {% endif %}
@@ -50,6 +60,7 @@
 <!-- Side panel: data/image export actions, previously loose buttons in the
      top-panel row Ã¢â‚¬â€ grouped here since they're one-off actions rather than
      persistent view controls, and it keeps the top-panel row shorter. -->
+
 <div class="stats-panel collapsed" id="exportPanel">
     <div class="stats-panel-title">Export<span class="stats-panel-toggle" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></div>
     <div class="stats-panel-body">
