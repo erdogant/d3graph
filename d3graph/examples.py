@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:1000]
+df = df[0:2000]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -55,29 +55,14 @@ out = d3.network_randomize(adjmat)
 scores_hits_hub_real = d3.network_statistic(adjmat, statistic='degree')
 scores_hits_hub_rand = d3.network_statistic(out, statistic='betweenness')
 
-Pnodes = test_network_statistic_significance(adjmat, 'pagerank')
-
-# %% CHECKS
-
-orig_in = (adjmat > 0).sum(axis=0)
-orig_out = (adjmat > 0).sum(axis=1)
-
-rand_in = (rand > 0).sum(axis=0)
-rand_out = (rand > 0).sum(axis=1)
-
-print(np.all(orig_in == rand_in))
-print(np.all(orig_out == rand_out))
-
-
 # %%
 from d3graph import d3graph, vec2adjmat
 import pandas as pd
 import time
 
-
 df = pd.read_csv('https://github.com/d3blocks/d3blocks/files/11995798/Df.csv', sep=',', index_col=False)
 del df['Unnamed: 0']
-df = df[0:10000]
+df = df[0:1000]
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 
 d3 = d3graph()
@@ -100,7 +85,6 @@ output_path = Path.cwd() / 'd3graph.html'
 df = import_example('stormofswords')
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 
-
 # sticky=True (default) — drag to pin, right-click to release
 d3 = d3graph(sticky=True)
 d3.set_path(output_path)
@@ -114,8 +98,6 @@ d3 = d3graph(adjmat, sticky=False)
 d3.show()
 
 # %%
-
-
 from d3graph import d3graph, import_example, vec2adjmat
 
 d3 = d3graph()
