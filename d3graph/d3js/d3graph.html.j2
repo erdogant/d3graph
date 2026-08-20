@@ -21,15 +21,19 @@
 {% if show_controls or max_slider > min_slider %}
 <div class="header-row">
     
-    <div class="top-panel-left">
-        <a href="https://d3blocks.github.io/d3blocks/" title="D3Blocks">
-            <img src="https://raw.githubusercontent.com/d3blocks/d3blocks/main/logo.png" alt="D3Blocks" style="width:150px;height:auto;display:block;pointer-events:auto" />
-        </a>
+    <div class="header-row-left">
+        <div class="top-panel-left">
+            <a href="https://d3blocks.github.io/d3blocks/" title="D3Blocks">
+                <img src="https://raw.githubusercontent.com/d3blocks/d3blocks/main/logo.png" alt="D3Blocks" style="width:150px;height:auto;display:block;pointer-events:auto" />
+            </a>
+        </div>
     </div>
 
-    <div class="search-wrap">
-        <input class="search-input" id="searchInput" type="search" placeholder="Find a node…" autocomplete="off" spellcheck="false" />
-        <div class="search-results" id="searchResults"></div>
+    <div class="header-row-left">
+        <div class="search-wrap">
+            <input class="search-input" id="searchInput" type="search" placeholder="Find a node…" autocomplete="off" spellcheck="false" />
+            <div class="search-results" id="searchResults"></div>
+        </div>
     </div>
 
     {% if max_slider > min_slider %}
@@ -88,7 +92,7 @@
 <!-- Layout panel (Force-directed / Circular / Grid) removed from the UI -
      circular/grid felt too static to be useful. The underlying setLayout()/
 
-     layoutCircular()/layoutGrid() functions are still in d3graphscript.js,
+     layoutCircular()/layoutGrid() functions are still in d3graph.js,
      just unwired, in case this is worth revisiting later. -->
 
 <!-- Side panel: interactively tune the force simulation -->
@@ -159,7 +163,7 @@
 
     <script>
         {% include "d3.v3.js" %}
-        {% include "d3graphscript.js" %}
+        {% include "d3graph.js" %}
 
         graph = {{ json_data }}
 

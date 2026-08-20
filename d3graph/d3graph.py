@@ -98,7 +98,7 @@ class d3graph:
         # Set paths
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
         self.config['d3_library'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3.v3.js'))
-        self.config['d3_script'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3graphscript.js'))
+        self.config['d3_script'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3graph.js'))
         self.config['css'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/style.css'))
 
     def _clean(self, clean_config: bool = True) -> None:
@@ -908,7 +908,7 @@ class d3graph:
             jinja_env = Environment(loader=PackageLoader(package_name=__name__, package_path='d3js'))
         except:
             jinja_env = Environment(loader=PackageLoader(package_name='d3graph', package_path='d3js'))
-        index_template = jinja_env.get_template('index.html.j2')
+        index_template = jinja_env.get_template('d3graph.html.j2')
         html = index_template.render(content)
 
         index_file = self.config['filepath']

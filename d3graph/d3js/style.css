@@ -362,11 +362,27 @@ h3 {
 .header-row {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
-    align-items: start;
+    align-items: center;
     gap: 8px;
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    /* 60% transparent (40% opaque) bar behind the logo/search/slider/buttons */
+    background: rgba(255, 255, 255, 0.4);
+}
+.dark-mode .header-row {
+    background: rgba(34, 34, 34, 0.4);
+}
+/* Groups the logo + search bar into a single grid cell (column 1) so they
+   can't be auto-placed into column 1 on their own and force the slider
+   (column 2) / buttons (column 3) down onto a second row. */
+.header-row-left {
+    grid-column: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-self: start;
+    min-width: 0;
 }
 .header-row .slider-container {
     grid-column: 2;
@@ -440,8 +456,6 @@ h3 {
   position: relative;
   display: inline-flex;
   align-items: center;
-  grid-column: 1;               /* left slot of .header-row grid */
-  justify-self: start;
   margin: 0;
 }
 .search-input {
