@@ -99,7 +99,7 @@ class d3graph:
         self.config['curpath'] = os.path.dirname(os.path.abspath(__file__))
         self.config['d3_library'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3.v3.js'))
         self.config['d3_script'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3graph.js'))
-        self.config['css'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/style.css'))
+        self.config['css'] = os.path.abspath(os.path.join(self.config['curpath'], 'd3js/d3graph.css'))
 
     def _clean(self, clean_config: bool = True) -> None:
         """Clean previous results to ensure correct working."""

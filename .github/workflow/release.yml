@@ -1,0 +1,55 @@
+name: Publish to PyPI
+
+# Publishes when a GitHub release is published (e.g. by irelease).
+# Uses PyPI Trusted Publishing (OIDC): no API token or secret needed, but the
+# publisher must be registered once on PyPI under
+# Manage project -> Publishing -> GitHub: owner=erdogant, repo=d3graph,
+# workflow=release.yml, environment=pypi.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Check metadata
+        run: uvx twine check --strict dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    # Only the canonical repository publishes. Forks that cut their own
+    # GitHub release still build and check the artifacts, but skip the upload.
+    if: github.repository_owner == 'erdogant'
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/d3graph
+    permissions:
+      # OIDC token for PyPI Trusted Publishing
+      id-token: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
