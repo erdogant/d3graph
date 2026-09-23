@@ -133,6 +133,7 @@ class d3graph:
              show_side_panel: bool = True,
              show_top_panel: bool = True,
              highlight_full_network: bool = True,
+             return_html: bool = False,
              ) -> None:
         """Build and show the graph.
 
@@ -291,7 +292,10 @@ class d3graph:
         # Create html with json file embedded
         html = self.write_html(json_data, overwrite=overwrite)
         # Display the chart
-        return self.display(html)
+        self.display(html)
+        # return html
+        if return_html:
+            return html
 
     def display(self, html):
         """Display."""

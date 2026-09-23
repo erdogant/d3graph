@@ -20,7 +20,7 @@ d3.graph(adjmat)
 # d3.network_significance(adjmat, 'pagerank', n_top=100, n_random=100)
 
 # Show graph with custom specific settings
-d3.show(density_grid_size=60,
+html = d3.show(density_grid_size=60,
         density_blur=15, # Smaller is more dense heatmap
         density_opacity=0.8,
         dark_mode=True,
@@ -28,6 +28,7 @@ d3.show(density_grid_size=60,
         show_top_panel=True,
         show_side_panel=True,
         show_slider=True,
+        return_html=True,
         )
 
     
