@@ -14,11 +14,11 @@
 <body style="background-color: {{ background_color }};{% if dark_mode %} color: #eee;{% endif %}"{% if dark_mode %} class="dark-mode"{% endif %}>
 
 <!-- Top row: edge-threshold slider (centered) + top-panel buttons (right).
-     The slider's visibility is governed by show_slider, not show_controls,
-     so it still renders even when show_controls=False (e.g. embedding this
+     The slider's visibility is governed by show_slider, not show_side_panel,
+     so it still renders even when show_side_panel=False (e.g. embedding this
      HTML into a page that supplies its own button chrome but still wants
      the slider). -->
-{% if show_controls or max_slider > min_slider %}
+{% if show_side_panel or max_slider > min_slider %}
 <div class="header-row">
     
     <div class="header-row-left">
@@ -48,7 +48,7 @@
     </div>
     {{ slider_comment_stop }}
     {% endif %}
-{% if show_controls %}
+{% if show_side_panel %}
 
 <div class="top-panel">
     <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
@@ -60,7 +60,7 @@
 </div>
 {% endif %}
 
-{% if show_controls %}
+{% if show_side_panel %}
 <!-- Side panel: data/image export actions, previously loose buttons in the
      top-panel row Ã¢â‚¬â€ grouped here since they're one-off actions rather than
      persistent view controls, and it keeps the top-panel row shorter. -->

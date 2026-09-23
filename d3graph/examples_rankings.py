@@ -123,7 +123,7 @@ d3.show(
     dark_mode=True,
     show_density=True,
     show_slider=True,
-    show_controls=True,
+    show_side_panel=True,
 )
 
 # %%
@@ -238,7 +238,7 @@ d3.show(
     dark_mode=True,
     show_density=True,
     show_slider=True,
-    show_controls=True,
+    show_side_panel=True,
 )
 
 # %%

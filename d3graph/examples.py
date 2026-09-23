@@ -26,7 +26,7 @@ d3.show(density_grid_size=60,
         dark_mode=True,
         show_density=True,
         show_slider=True,
-        show_controls=True,
+        show_side_panel=True,
         )
 
     
@@ -91,7 +91,7 @@ d3.set_path(output_path)
 d3.config['filepath']
 
 d3.graph(adjmat)
-d3.show(show_controls=True)
+d3.show(show_side_panel=True)
 
 # sticky=False — classic spring-back behaviour
 d3 = d3graph(adjmat, sticky=False)

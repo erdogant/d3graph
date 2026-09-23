@@ -130,7 +130,7 @@ class d3graph:
              density_grid_size: int = 60,
              density_blur: int = 15,
              density_opacity: float = 0.8,
-             show_controls: bool = True,
+             show_side_panel: bool = True,
              highlight_full_network: bool = True,
              ) -> None:
         """Build and show the graph.
@@ -211,7 +211,7 @@ class d3graph:
             blocky grid.
         density_opacity : float, (default: 0.6)
             Maximum heatmap opacity, reached at the highest-density grid cell.
-        show_controls : bool, (default: True)
+        show_side_panel : bool, (default: True)
             Whether to render the top-panel buttons (Dark Mode, Hide Edges, Show Density,
             Save) at all. Set to False when embedding the generated HTML into an existing
             page/app that provides its own UI chrome and doesn't need d3graph's built-in
@@ -255,7 +255,7 @@ class d3graph:
         self.config['density_grid_size'] = density_grid_size
         self.config['density_blur'] = density_blur
         self.config['density_opacity'] = density_opacity
-        self.config['show_controls'] = show_controls
+        self.config['show_side_panel'] = show_side_panel
         self.config['highlight_full_network'] = highlight_full_network
 
         # Allow show() to override the link_tension set at __init__ time
@@ -273,7 +273,7 @@ class d3graph:
         # Make slider
         self.setup_slider()
         # Create json
-        json_data = json_create(self.G, compute_stats=self.config.get('show_controls', True))
+        json_data = json_create(self.G, compute_stats=self.config.get('show_side_panel', True))
         # Create html with json file embedded
         html = self.write_html(json_data, overwrite=overwrite)
         # Display the chart
@@ -886,7 +886,7 @@ class d3graph:
                    'density_grid_size': self.config.get('density_grid_size', 40),
                    'density_blur': self.config.get('density_blur', 8),
                    'density_opacity': self.config.get('density_opacity', 0.6),
-                   'show_controls': self.config.get('show_controls', True),
+                   'show_side_panel': self.config.get('show_side_panel', True),
                    'highlight_full_network': self.config.get('highlight_full_network', True),
                    'save_button': self.config['save_button'],
                    'node_text_inside': self.config.get('node_text_inside', False),
@@ -1358,7 +1358,7 @@ def json_create(G: nx.Graph, compute_stats: bool = True) -> str:
         per node and embed them as node_pagerank / node_hits_hub / node_hits_authority /
         node_degree_centrality / node_closeness_centrality / node_betweenness_centrality,
         normalized to [0, 1], for the interactive stats side panel. Skipped when the
-        panel won't be shown (show_controls=False) to avoid the wasted computation.
+        panel won't be shown (show_side_panel=False) to avoid the wasted computation.
         Betweenness is approximated (sampled) above 500 nodes to bound generation time.
 
     Returns
