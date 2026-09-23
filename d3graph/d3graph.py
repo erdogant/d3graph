@@ -116,7 +116,7 @@ class d3graph:
              show_slider: bool = True,
              set_slider: bool = 0,
              click={'fill': None, 'stroke': 'black', 'size': 1.3, 'stroke-width': 3},
-             background_color = '#FFFFFF',
+             color_background = None,
              dark_mode = True,
              notebook: bool = False,
              save_button: bool = True,
@@ -162,8 +162,10 @@ class d3graph:
                 * {'fill': 'red', 'stroke': 'black', 'size': 1.3, 'stroke-width': 3}
                 * {'fill': None, 'stroke': '#FFF000', 'size': 2, 'stroke-width': 1}
                 * None : No action on click.
-        background_color : str, optional
-            The background color of the HTML page and SVG. Default is '#FFFFFF'.
+        color_background : list or str, optional
+                Background for page, top panel, and side panels.
+                ``[dark_hex, light_hex]``, or a named preset (e.g. ``'streamlit'``).
+                None uses theme defaults.
         dark_mode : bool, optional
             If True, enables dark mode for the visualization. Default is False.
         notebook : bool
@@ -237,6 +239,10 @@ class d3graph:
             logger.warning('No graph detected. <return> Hint: "d3.graph(df)"')
             return None
 
+        # Resolve color
+        bg_dark, bg_light = resolve_color_background(color_background)
+
+        # Save to config
         self.config['figsize'] = figsize
         self.config['network_title'] = title
         self.config['show_slider'] = show_slider
@@ -245,7 +251,7 @@ class d3graph:
         self.config['notebook'] = notebook
         self.config['click'] = click
         self.config['save_button'] = save_button
-        self.config['background_color'] = background_color
+        self.config['color_background'] = [bg_dark, bg_light]
         self.config['dark_mode'] = dark_mode
         self.config['node_text_inside'] = node_text_inside
         self.config['max_ticks'] = max_ticks
@@ -900,7 +906,8 @@ class d3graph:
                    'slider_comment_stop': show_slider[1],
                    'SET_SLIDER': self.config['set_slider'],
                    'SUPPORT': support,
-                   'background_color': self.config['background_color'],
+                   'COLOR_BACKGROUND_DARK': self.config['color_background'][0],
+                   'COLOR_BACKGROUND_LIGHT': self.config['color_background'][1],
                    'dark_mode': self.config['dark_mode'],
                    }
 
@@ -2266,6 +2273,39 @@ def _set_node_fontcolor(self, fontcolor, color, node_names, nodecount):
     if len(fontcolor) != nodecount: raise ValueError("[fontcolor] must be of same length as the number of nodes")
     # return
     return fontcolor
+
+
+def resolve_color_background(color_background):
+    """Normalize color_background to (dark_hex, light_hex).
+
+    Accepts:
+      * None → theme defaults
+      * 'streamlit' → Streamlit app theme
+      * 'darkblue' → dark navy / soft light blue-gray
+      * [dark, light] list/tuple of two hex strings
+      * single hex str → same color for both modes (backwards compatible)
+    """
+    # Theme defaults for center / top / side panel backgrounds (match scatter.css --bg).
+    _DEFAULT_BG_DARK = '#222222'
+    _DEFAULT_BG_LIGHT = '#ffffff'
+
+    if color_background is None:
+        return _DEFAULT_BG_DARK, _DEFAULT_BG_LIGHT
+    if isinstance(color_background, str) and color_background == 'streamlit':
+        return "#0E1117", "#FFFFFF"
+    if isinstance(color_background, str) and color_background == 'darkblue':
+        return "#12141c", "#e8eef5"
+    if isinstance(color_background, str):
+        c = color_background.strip()
+        if not c:
+            return _DEFAULT_BG_DARK, _DEFAULT_BG_LIGHT
+        return c, c
+    if isinstance(color_background, (list, tuple)) and len(color_background) >= 2:
+        dark = color_background[0] if color_background[0] else _DEFAULT_BG_DARK
+        light = color_background[1] if color_background[1] else _DEFAULT_BG_LIGHT
+        return dark, light
+    return _DEFAULT_BG_DARK, _DEFAULT_BG_LIGHT
+
 
 def import_example(data='energy', url=None, sep=','):
     """Import example dataset from github source.

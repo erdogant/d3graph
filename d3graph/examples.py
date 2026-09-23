@@ -6,7 +6,7 @@ d3 = d3graph()
 # Load example data
 df = d3.import_example('socialmedia')
 # Slice first 10000 rows
-df = df[0:2000]
+df = df[0:500]
 # Create adjmat
 adjmat = vec2adjmat(source=df['source'], target=df['target'], weight=df['weight'])
 # Update matrix with random weights
@@ -25,8 +25,9 @@ d3.show(density_grid_size=60,
         density_opacity=0.8,
         dark_mode=True,
         show_density=True,
-        show_slider=True,
+        show_top_panel=True,
         show_side_panel=True,
+        show_slider=True,
         )
 
     
@@ -409,8 +410,8 @@ adjmat = vec2adjmat(df['source'], df['target'], weight=df['weight'], symmetric=T
 d3.graph(adjmat, color='cluster')
 
 # d3.show(filepath=r'c:\temp\network_big.html', figsize=[750, 400])
-d3.show(filepath=r'c:\temp\network_big_light.html', background_color='#FFFFFF', set_slider=300)
-# d3.show(filepath=r'c:\temp\network_big_dark.html', background_color='#000000')
+d3.show(filepath=r'c:\temp\network_big_light.html', color_background='#FFFFFF', set_slider=300)
+# d3.show(filepath=r'c:\temp\network_big_dark.html', color_background='#000000')
 
 # d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=True)
 # d3.show(filepath=r'c:\temp\network_big_light.html', dark_mode=False)

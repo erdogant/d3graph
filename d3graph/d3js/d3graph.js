@@ -8,7 +8,7 @@ function d3graphscript(config = {
     collision: 0.5,
     link_tension: 1,
     sticky: false,
-    background_color: '#FFFFFF',
+    color_background: '#FFFFFF',
     node_text_inside: false,
     max_ticks: 300,
     label_zoom_threshold: 0.6,
@@ -35,7 +35,7 @@ function d3graphscript(config = {
         height = window.innerHeight - headerHeight;
     }
 
-    var background_color = config.background_color || '#FFFFFF';
+    var color_background = config.color_background || '#FFFFFF';
     var sticky = config.sticky || false;
     // Cap how many simulation ticks run before auto-stopping, instead of
     // letting a large graph's force layout cool down naturally over
@@ -181,7 +181,7 @@ function d3graphscript(config = {
     var densityCanvasEl, densityCtx, densityOffscreen;
     
     // Set the body background color
-    document.body.style.backgroundColor = background_color;
+    document.body.style.backgroundColor = color_background;
     
     //Set up the colour scale
     var color = d3.scale.category20();
@@ -385,7 +385,7 @@ function d3graphscript(config = {
       .style("position", "relative")
       .style("width", width + "px")
       .style("height", height + "px")
-      .style("background-color", background_color);
+      .style("background-color", color_background);
 
     // Density (clustering heatmap) layer — created first so it stacks
     // beneath both the edge canvas and the SVG node layer.

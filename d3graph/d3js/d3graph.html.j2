@@ -10,17 +10,51 @@
     <style type="text/css">
         {% include "d3graph.css" %}
     </style>
+    <!-- Page + header row + side panels: per-theme backgrounds from
+         color_background (resolved to dark/light hex in Python).
+         Theme toggle (body.dark-mode) switches which color is used. -->
+    <style>
+      body {
+        background: {{ COLOR_BACKGROUND_LIGHT }};
+      }
+      body .header-row {
+        background: {{ COLOR_BACKGROUND_LIGHT }};
+      }
+      body .stats-panel {
+        background: {{ COLOR_BACKGROUND_LIGHT }};
+      }
+      body.dark-mode {
+        background: {{ COLOR_BACKGROUND_DARK }};
+        color: #eee;
+      }
+      body.dark-mode .header-row {
+        background: {{ COLOR_BACKGROUND_DARK }};
+      }
+      body.dark-mode .stats-panel {
+        background: {{ COLOR_BACKGROUND_DARK }};
+      }
+      body.dark-mode #graphContainer {
+        background-color: {{ COLOR_BACKGROUND_DARK }};
+      }
+    </style>
 </head>
-<body style="background-color: {{ background_color }};{% if dark_mode %} color: #eee;{% endif %}"{% if dark_mode %} class="dark-mode"{% endif %}>
+<body{% if dark_mode %} class="dark-mode"{% endif %}>
 
-<!-- Top row: edge-threshold slider (centered) + top-panel buttons (right).
-     The slider's visibility is governed by show_slider, not show_side_panel,
-     so it still renders even when show_side_panel=False (e.g. embedding this
-     HTML into a page that supplies its own button chrome but still wants
-     the slider). -->
-{% if show_side_panel or max_slider > min_slider %}
+<!-- Header row visibility:
+     - show_top_panel=True  → logo, search, buttons (and slider if show_slider)
+     - show_top_panel=False → no logo / search / buttons
+     - show_slider=True and a usable weight range → slider only (even when
+       show_top_panel is False), so embeds can keep the threshold control
+       without the rest of the top chrome.
+     Side panels are independent (show_side_panel) and do not force this row.
+     NOTE: show_slider must be passed as a real bool from Python (not only via
+     HTML comment wrappers), otherwise Jinja treats it as undefined/falsy and
+     the slider never renders. -->
+{% set _show_slider = show_slider if show_slider is defined else true %}
+{% if show_top_panel or (_show_slider and max_slider > min_slider) %}
 <div class="header-row">
-    
+
+    {% if show_top_panel %}
     <div class="header-row-left">
         <div class="top-panel-left">
             <a href="https://d3blocks.github.io/d3blocks/" title="D3Blocks" target="_blank" rel="noopener noreferrer">
@@ -177,7 +211,9 @@
                 collision: {{ collision }},
                 link_tension: {{ link_tension }},
                 sticky: {{ sticky | lower }},
-                background_color: '{{ background_color }}',
+                color_background: '{{ COLOR_BACKGROUND_DARK if dark_mode else COLOR_BACKGROUND_LIGHT }}',
+                COLOR_BACKGROUND_DARK: '{{ COLOR_BACKGROUND_DARK }}',
+                COLOR_BACKGROUND_LIGHT: '{{ COLOR_BACKGROUND_LIGHT }}',
                 node_text_inside: {{ node_text_inside | lower }},
                 max_ticks: {{ max_ticks }},
                 canvas_edge_threshold: {{ canvas_edge_threshold }},
@@ -262,24 +298,26 @@
             });
         });
 
-        // Dark mode toggle logic
+        // Dark mode toggle logic — backgrounds come from color_background
+        // (resolved in Python to COLOR_BACKGROUND_DARK / COLOR_BACKGROUND_LIGHT).
         const darkSwitch = document.getElementById('darkModeSwitch');
+        const BG_DARK = '{{ COLOR_BACKGROUND_DARK }}';
+        const BG_LIGHT = '{{ COLOR_BACKGROUND_LIGHT }}';
         let darkMode = {{ 'true' if dark_mode else 'false' }};
-        let originalBg = document.body.style.backgroundColor;
         function setDarkMode(on) {
             if (on) {
                 document.body.classList.add('dark-mode');
-                document.body.style.backgroundColor = '#222';
+                document.body.style.backgroundColor = BG_DARK;
                 document.body.style.color = '#eee';
                 let graphBg = document.getElementById('graphContainer');
-                if (graphBg) graphBg.style.backgroundColor = '#222';
+                if (graphBg) graphBg.style.backgroundColor = BG_DARK;
                 if (darkSwitch) darkSwitch.textContent = '☀ Light Mode';
             } else {
                 document.body.classList.remove('dark-mode');
-                document.body.style.backgroundColor = originalBg;
+                document.body.style.backgroundColor = BG_LIGHT;
                 document.body.style.color = '';
                 let graphBg = document.getElementById('graphContainer');
-                if (graphBg) graphBg.style.backgroundColor = originalBg;
+                if (graphBg) graphBg.style.backgroundColor = BG_LIGHT;
                 if (darkSwitch) darkSwitch.textContent = '🌙 Dark Mode';
             }
             if (window.d3graphSetDarkMode) window.d3graphSetDarkMode(on);

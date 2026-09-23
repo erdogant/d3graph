@@ -197,7 +197,8 @@ h3 {
 
 
 .dark-mode {
-    background-color: #222 !important;
+    /* Background is set via COLOR_BACKGROUND_DARK in d3graph.html.j2
+       (from color_background / resolve_color_background). */
     color: #eee !important;
 }
 
@@ -333,7 +334,7 @@ h3 {
 }
 
 .dark-mode #graphContainer {
-    background-color: #222 !important;
+    /* Background is set via COLOR_BACKGROUND_DARK in d3graph.html.j2. */
 }
 .dark-mode .button-switch {
     background: #333;
