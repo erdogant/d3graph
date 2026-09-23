@@ -131,6 +131,7 @@ class d3graph:
              density_blur: int = 15,
              density_opacity: float = 0.8,
              show_side_panel: bool = True,
+             show_top_panel: bool = True,
              highlight_full_network: bool = True,
              ) -> None:
         """Build and show the graph.
@@ -214,13 +215,19 @@ class d3graph:
         density_opacity : float, (default: 0.6)
             Maximum heatmap opacity, reached at the highest-density grid cell.
         show_side_panel : bool, (default: True)
-            Whether to render the top-panel buttons (Dark Mode, Hide Edges, Show Density,
-            Save) at all. Set to False when embedding the generated HTML into an existing
+            Whether to render the side panels (Export, Network Statistic, Physics, etc.)
+            at all. Set to False when embedding the generated HTML into an existing
             page/app that provides its own UI chrome and doesn't need d3graph's built-in
-            controls - the buttons (and their JS wiring) are omitted entirely rather than
-            just hidden, so there's no extra DOM/clutter in the embed. The weight/component
-            sliders are controlled separately via show_slider; the Save button specifically
-            is also controlled via save_button, independent of this.
+            side controls - the panels (and their JS wiring) are omitted entirely rather
+            than just hidden, so there's no extra DOM/clutter in the embed. The
+            weight/component sliders are controlled separately via show_slider; the Save
+            button specifically is also controlled via save_button, independent of this.
+        show_top_panel : bool, (default: True)
+            Whether to render the top chrome (logo, search field, and the Dark Mode /
+            Hide Edges / Show Density buttons). Independent of show_side_panel and
+            show_slider. Set to False when embedding into a page that supplies its own
+            button chrome. When False and show_slider is True, only the edge-threshold
+            slider is shown in the header row.
         highlight_full_network : bool, (default: True)
             Controls how much of the graph lights up when a node is clicked.
             True: The entire connected network reachable from the clicked node (every node
@@ -262,6 +269,7 @@ class d3graph:
         self.config['density_blur'] = density_blur
         self.config['density_opacity'] = density_opacity
         self.config['show_side_panel'] = show_side_panel
+        self.config['show_top_panel'] = show_top_panel
         self.config['highlight_full_network'] = highlight_full_network
 
         # Allow show() to override the link_tension set at __init__ time
@@ -893,6 +901,10 @@ class d3graph:
                    'density_blur': self.config.get('density_blur', 8),
                    'density_opacity': self.config.get('density_opacity', 0.6),
                    'show_side_panel': self.config.get('show_side_panel', True),
+                   'show_top_panel': self.config.get('show_top_panel', True),
+                   # Boolean flag required by the template (HTML comment wrappers
+                   # alone are not enough — Jinja needs a real truthy value).
+                   'show_slider': bool(self.config.get('show_slider', True)),
                    'highlight_full_network': self.config.get('highlight_full_network', True),
                    'save_button': self.config['save_button'],
                    'node_text_inside': self.config.get('node_text_inside', False),

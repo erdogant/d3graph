@@ -69,9 +69,9 @@
             <div class="search-results" id="searchResults"></div>
         </div>
     </div>
+    {% endif %}
 
-    {% if max_slider > min_slider %}
-    {{ slider_comment_start }}
+    {% if _show_slider and max_slider > min_slider %}
     <div class="slider-container">
         <form style="margin:0;">
             <span class="slider-label">Edge Threshold: <span id="thresholdValue">{{ SET_SLIDER }}</span></span>
@@ -80,17 +80,16 @@
             <span class="slider-label">{{ max_slider }}</span>
         </form>
     </div>
-    {{ slider_comment_stop }}
     {% endif %}
-{% if show_side_panel %}
 
-<div class="top-panel">
-    <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
-    <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
-    <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
-</div>
+    {% if show_top_panel %}
+    <div class="top-panel">
+        <button id="darkModeSwitch" class="button-switch">{% if dark_mode %}☀ Light Mode{% else %}🌙 Dark Mode{% endif %}</button>
+        <button id="edgeToggleButton" class="button-switch">Hide Edges</button>
+        <button id="densityToggleButton" class="button-switch">{% if show_density %}Hide Density{% else %}Show Density{% endif %}</button>
+    </div>
+    {% endif %}
 
-{% endif %}
 </div>
 {% endif %}
 
@@ -239,8 +238,10 @@
         function positionSidePanels() {
             var headerRow = document.querySelector('.header-row') || document.querySelector('.top-panel');
             var panels = document.querySelectorAll('.stats-panel');
-            if (!headerRow || !panels.length) return;
-            var y = headerRow.getBoundingClientRect().bottom + 8;
+            if (!panels.length) return;
+            // No top chrome at all (show_top_panel=False and no slider): stack
+            // side panels from the top of the viewport instead of bailing out.
+            var y = headerRow ? (headerRow.getBoundingClientRect().bottom + 8) : 10;
             panels.forEach(function (panel) {
                 panel.style.top = y + 'px';
                 panel.style.left = '10px';
