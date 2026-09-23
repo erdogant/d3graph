@@ -194,19 +194,9 @@ class d3graph:
             Above this many visible edges, edges are drawn on a <canvas> layer instead of
             as individual SVG <line> elements. SVG's per-element DOM overhead is what makes
             tens of thousands of edges freeze the page; canvas draw calls stay cheap
-            regardless of edge count. Nodes always stay SVG (drag/click/tooltips). Only
-            applies once edges exceed this count, so small/medium graphs are unaffected -
-            note that in canvas mode, the "Save as SVG" export won't include edges, since
-            they no longer live in the SVG DOM.
+            regardless of edge count.
         show_density : bool, (default: False)
-            Adds a node-clustering heatmap layer (grid-binned density of node positions),
-            drawn on its own canvas beneath the edges and nodes, with a toggle button in
-            the UI ("Show/Hide Density") to turn it on/off regardless of this default.
-            Recomputed from live node positions each frame it's visible, so it tracks the
-            force layout as nodes settle, and it responds to the weight/component sliders
-            since it's based on whichever nodes are currently on screen. Color scheme is
-            a yellow-to-red heat gradient in light mode, single-hue blue in dark mode
-            (updates live when dark mode is toggled).
+            Adds a node-clustering heatmap layer (grid-binned density of node positions).
         density_grid_size : int, (default: 40)
             Grid resolution for the density heatmap (cells along the longer axis of the
             node bounding box). Higher = finer detail on tight clusters, more cells to draw.
@@ -216,26 +206,17 @@ class d3graph:
         density_opacity : float, (default: 0.6)
             Maximum heatmap opacity, reached at the highest-density grid cell.
         show_side_panel : bool, (default: True)
-            Whether to render the side panels (Export, Network Statistic, Physics, etc.)
-            at all. Set to False when embedding the generated HTML into an existing
-            page/app that provides its own UI chrome and doesn't need d3graph's built-in
-            side controls - the panels (and their JS wiring) are omitted entirely rather
-            than just hidden, so there's no extra DOM/clutter in the embed. The
-            weight/component sliders are controlled separately via show_slider; the Save
-            button specifically is also controlled via save_button, independent of this.
+            Render the side panels (Export, Network Statistic, Physics, etc.).
+            Set to False when embedding the generated HTML into an existing page/app that provides its own UI chrome (streamlit).
         show_top_panel : bool, (default: True)
-            Whether to render the top chrome (logo, search field, and the Dark Mode /
-            Hide Edges / Show Density buttons). Independent of show_side_panel and
-            show_slider. Set to False when embedding into a page that supplies its own
-            button chrome. When False and show_slider is True, only the edge-threshold
-            slider is shown in the header row.
+            Render the top chrome (logo, search field, and the Dark Mode / Hide Edges / Show Density buttons).
         highlight_full_network : bool, (default: True)
             Controls how much of the graph lights up when a node is clicked.
-            True: The entire connected network reachable from the clicked node (every node
-                and edge in its connected component, not just its direct neighbors) is
-                highlighted; everything outside that component is dimmed.
-            False: Only the clicked node's directly-connected neighbors/edges (one hop)
-                are highlighted, matching the old default behavior.
+            True: The entire connected network reachable from the clicked node is highlighted; everything outside that component is dimmed.
+            False: Only the clicked node's directly-connected neighbors/edges (one hop) are highlighted, matching the old default behavior.
+        return_html : bool, (default: False)
+                * True: Return the generated HTML string (useful for Streamlit, notebooks, embedding).
+                * False: Do not return HTML.
 
         Returns
         -------
@@ -269,8 +250,8 @@ class d3graph:
         self.config['density_grid_size'] = density_grid_size
         self.config['density_blur'] = density_blur
         self.config['density_opacity'] = density_opacity
-        self.config['show_side_panel'] = show_side_panel
         self.config['show_top_panel'] = show_top_panel
+        self.config['show_side_panel'] = show_side_panel
         self.config['highlight_full_network'] = highlight_full_network
 
         # Allow show() to override the link_tension set at __init__ time
