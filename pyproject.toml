@@ -39,7 +39,7 @@ dependencies = [
     'numpy',
     'colourmap',
     'networkx>2',
-    'ismember',
+    'ismember>=1.2.1',
     'jinja2',
     'packaging',
     'markupsafe',

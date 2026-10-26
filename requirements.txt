@@ -1,5 +1,5 @@
 colourmap
-ismember
+ismember>=1.2.1
 jinja2
 markupsafe
 networkx>2
